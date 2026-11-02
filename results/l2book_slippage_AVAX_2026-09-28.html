@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>l2Book slippage probe — coin universe (mainnet perps) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="l2book-slippage-probe-coin-universe-mainnet-perps">l2Book slippage probe — coin universe (mainnet perps)</h1>
+<p><em>One shot, read-only. Started 2026-09-28T13:13:14.789003+00:00, finished 2026-09-28T13:13:15.666990+00:00. Runner: <code>examples/probe_l2book_slippage.py</code>. Source: Hyperliquid mainnet Info <code>l2Book</code> (20 levels per side), one request per coin.</em></p>
+<p>Slippage = |volume-weighted average fill price / mid − 1| in bps for a taker order of the given notional, walking the asks (buy) or the bids (sell). It includes half the spread. <code>thin</code> = the 20 visible levels do not hold that notional. <strong>Measurements only: <code>PerAssetCostModel</code> is unchanged</strong> (its table: BTC 1, ETH 3, HYPE 2, SOL 5, ZEC 8, default 10 bps per side, calibrated 2026-05-27, valid to $5,000).</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th>book time (UTC)</th>
+<th style="text-align: right;">mid</th>
+<th style="text-align: right;">spread bps</th>
+<th style="text-align: right;">buy $1,000</th>
+<th style="text-align: right;">sell $1,000</th>
+<th style="text-align: right;">buy $5,000</th>
+<th style="text-align: right;">sell $5,000</th>
+<th>levels used ($5,000 buy / sell)</th>
+<th style="text-align: right;">visible depth ask / bid (USD)</th>
+<th style="text-align: right;">PerAssetCostModel bps</th>
+<th style="text-align: right;">worst measured / model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AVAX</td>
+<td>2026-09-28 13:13:13</td>
+<td style="text-align: right;">10.494</td>
+<td style="text-align: right;">3.81</td>
+<td style="text-align: right;">1.91</td>
+<td style="text-align: right;">1.91</td>
+<td style="text-align: right;">2.96</td>
+<td style="text-align: right;">1.91</td>
+<td>3 / 1</td>
+<td style="text-align: right;">166,944 / 226,883</td>
+<td style="text-align: right;">10 (default)</td>
+<td style="text-align: right;">0.30</td>
+</tr>
+</tbody>
+</table></div>
+<p>Coins probed: 1; with a book: 1; errors: 0.</p>
+<p>Caveats: a single snapshot per coin at one moment of one day; books move with volatility and time of day. The figures are what a taker would have paid at that instant, not an average. Citing them in a registration means citing this timestamp.</p>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

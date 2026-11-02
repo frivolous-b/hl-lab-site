@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H9 — always-on funding carry: spot long 1× + perp short 1× (BTC, ETH, 1h) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h9-always-on-funding-carry-spot-long-1-perp-short-1-btc-eth-1h">H9 — always-on funding carry: spot long 1× + perp short 1× (BTC, ETH, 1h)</h1>
+<p><em>Generated 2026-09-27T11:38:16.870541+00:00. Runner: <code>examples/run_h9_always_on_carry.py</code>. Engine: <code>backtest/pair_engine.py</code>. Rule: <code>strategies/always_on_carry.py</code>. Family: <code>daily_returns</code> + max DD &lt; 10 % (<code>validation/gate.py</code>). Spec: docs/HYPOTHESIS_LEDGER.md, H9.</em></p>
+<p><strong>Holdout LOCKED:</strong> nothing at or after 2026-06-28T00:00:00+00:00 enters any number below.</p>
+<p>Rule: pair on unless the trailing 168 h mean hourly funding &lt; 0; re-enter when &gt; 0; transitions at the next 1h open. $1,000 per leg on a $2,000 book per coin. Costs: HLFeeSchedule taker (spot 7.0 / perp 4.5 bps), PerAssetCostModel slippage on both legs (BTC 1, ETH 3 bps), funding received hourly on the short. Benchmark: cash (0 %). Per-coin cells BH-FDR q = 0.10; pooled Bonferroni α_adj = 0.10 / 11 = 0.00909; the family's 3-year threshold applies (registered before the run: the sample is ~0.65 years, so INSUFFICIENT_DATA is the expected verdict and the metrics are the content).</p>
+<h2 id="verdicts">Verdicts</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>cell</th>
+<th>verdict</th>
+<th>sample</th>
+<th style="text-align: right;">ann. return</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD</th>
+<th style="text-align: right;">days in position</th>
+<th style="text-align: right;">funding received</th>
+<th>reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H9.BTC.1h</td>
+<td><strong>INSUFFICIENT_DATA</strong></td>
+<td>2025-11-04 → 2026-06-27 (236 d, 0.65 y)</td>
+<td style="text-align: right;">-0.13 %</td>
+<td style="text-align: right;">-0.22</td>
+<td style="text-align: right;">-1.03 %</td>
+<td style="text-align: right;">194 / 236</td>
+<td style="text-align: right;">+23.37 USD</td>
+<td>236 days &lt; 1095 (3 years)</td>
+</tr>
+<tr>
+<td>H9.ETH.1h</td>
+<td><strong>INSUFFICIENT_DATA</strong></td>
+<td>2025-11-11 → 2026-06-27 (229 d, 0.63 y)</td>
+<td style="text-align: right;">+0.28 %</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">-0.91 %</td>
+<td style="text-align: right;">205 / 229</td>
+<td style="text-align: right;">+31.21 USD</td>
+<td>229 days &lt; 1095 (3 years)</td>
+</tr>
+<tr>
+<td>H9.pooled.1h</td>
+<td><strong>INSUFFICIENT_DATA</strong></td>
+<td>2025-11-11 → 2026-06-27 (229 d, 0.63 y)</td>
+<td style="text-align: right;">+0.03 %</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">-0.80 %</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td>229 days &lt; 1095 (3 years)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pooled: INSUFFICIENT_DATA</strong> — INSUFFICIENT_DATA vs benchmark (2025-11-11 → 2026-06-27): sample shorter than 3 years. Reason: 229 days &lt; 1095 (3 years).</p>
+<h2 id="btc">BTC</h2>
+<p>Common spot+perp 1h range: 2025-11-03 09:00:00+00:00 → 2026-06-27 23:00:00+00:00 (5679 bars). Spot market UBTC/UETH per <code>data/hyperliquid_spot.py</code>.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">days in position</th>
+<th style="text-align: right;">return %</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD %</th>
+<th style="text-align: right;">funding received USD</th>
+<th style="text-align: right;">fees + slippage USD</th>
+<th style="text-align: right;">basis P&amp;L USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">+0.46</td>
+<td style="text-align: right;">8.94</td>
+<td style="text-align: right;">-0.05</td>
+<td style="text-align: right;">+10.37</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">+0.00</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">-0.54</td>
+<td style="text-align: right;">-1.75</td>
+<td style="text-align: right;">-1.03</td>
+<td style="text-align: right;">+13.00</td>
+<td style="text-align: right;">27.83</td>
+<td style="text-align: right;">+1.73</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>final equity (from $2,000)</td>
+<td style="text-align: right;">$1,997.34 (-0.13 %)</td>
+</tr>
+<tr>
+<td>annualised return / Sharpe / max DD</td>
+<td style="text-align: right;">-0.13 % / -0.221 / -1.03 %</td>
+</tr>
+<tr>
+<td>entries / exits</td>
+<td style="text-align: right;">11 / 10</td>
+</tr>
+<tr>
+<td>hours in position</td>
+<td style="text-align: right;">4645 of 5679 (81.8 %)</td>
+</tr>
+<tr>
+<td>funding received</td>
+<td style="text-align: right;">+23.37 USD (4645 settlements, 0 missing)</td>
+</tr>
+<tr>
+<td>fees spot / perp</td>
+<td style="text-align: right;">14.43 / 9.28 USD</td>
+</tr>
+<tr>
+<td>slippage spot / perp</td>
+<td style="text-align: right;">2.06 / 2.06 USD</td>
+</tr>
+<tr>
+<td>basis P&amp;L realised / open-pair marked</td>
+<td style="text-align: right;">+2.03 / -0.30 USD</td>
+</tr>
+<tr>
+<td>worst basis excursion (mark-to-market leg P&amp;L while open)</td>
+<td style="text-align: right;">-1.90 USD = -19 bps of leg notional at 2025-11-17 21:00:00+00:00</td>
+</tr>
+<tr>
+<td>widest perp/spot basis</td>
+<td style="text-align: right;">31.5 bps</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Funding yield vs H8.</strong> Annualised sum of hourly HL funding rates on the perp notional: 4.9 % over the 4645 hours the pair was open, 4.2 % over the whole H9 sample (5679 h), 14.8 % over the H8 sample (2023-05-13 → cut, 26859 h). Received here: +23.37 USD on a $1,000 short over 194 days in position; H8's buy-and-hold perp paid 1,204.43 USD on a $1,000 long over 1,142 days. The two are the same stream with opposite sign, scaled by notional and time.</p>
+<h3 id="h9btc1h-btc-insufficient_data">H9.BTC.1h — BTC — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA vs benchmark (2025-11-04 → 2026-06-27): sample shorter than 3 years.</p>
+</blockquote>
+<p>Reason: 236 days &lt; 1095 (3 years)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2025-11-04 → 2026-06-27, 236 days = 0.65 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 0 per-coin cells, cutoff none significant (Bonferroni α_adj 0.00909, m = 11, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, Sharpe diff ≥ -0.5)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 0: 236 days &lt; 1095</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>-0.221 / 0.000 / -0.221</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>-0.13 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-1.03 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>-0.125 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>82.2 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">+0.46</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">8.940</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+8.940</td>
+<td style="text-align: right;">-0.05</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-0.54</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-1.749</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-1.749</td>
+<td style="text-align: right;">-1.03</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">76.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>11 entries / 10 exits; benchmark cash.</p>
+<h2 id="eth">ETH</h2>
+<p>Common spot+perp 1h range: 2025-11-10 14:00:00+00:00 → 2026-06-27 23:00:00+00:00 (5506 bars). Spot market UBTC/UETH per <code>data/hyperliquid_spot.py</code>.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">days in position</th>
+<th style="text-align: right;">return %</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD %</th>
+<th style="text-align: right;">funding received USD</th>
+<th style="text-align: right;">fees + slippage USD</th>
+<th style="text-align: right;">basis P&amp;L USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">+0.48</td>
+<td style="text-align: right;">7.91</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">+10.77</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">+0.00</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">154</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">-0.68</td>
+<td style="text-align: right;">-0.91</td>
+<td style="text-align: right;">+20.44</td>
+<td style="text-align: right;">30.41</td>
+<td style="text-align: right;">+0.81</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>final equity (from $2,000)</td>
+<td style="text-align: right;">$2,001.99 (+0.10 %)</td>
+</tr>
+<tr>
+<td>annualised return / Sharpe / max DD</td>
+<td style="text-align: right;">+0.28 % / 0.334 / -0.91 %</td>
+</tr>
+<tr>
+<td>entries / exits</td>
+<td style="text-align: right;">9 / 9</td>
+</tr>
+<tr>
+<td>hours in position</td>
+<td style="text-align: right;">4919 of 5506 (89.3 %)</td>
+</tr>
+<tr>
+<td>funding received</td>
+<td style="text-align: right;">+31.21 USD (4919 settlements, 0 missing)</td>
+</tr>
+<tr>
+<td>fees spot / perp</td>
+<td style="text-align: right;">12.16 / 7.82 USD</td>
+</tr>
+<tr>
+<td>slippage spot / perp</td>
+<td style="text-align: right;">5.21 / 5.21 USD</td>
+</tr>
+<tr>
+<td>basis P&amp;L realised / open-pair marked</td>
+<td style="text-align: right;">+0.81 / +0.00 USD</td>
+</tr>
+<tr>
+<td>worst basis excursion (mark-to-market leg P&amp;L while open)</td>
+<td style="text-align: right;">-3.48 USD = -35 bps of leg notional at 2026-05-18 22:00:00+00:00</td>
+</tr>
+<tr>
+<td>widest perp/spot basis</td>
+<td style="text-align: right;">30.7 bps</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Funding yield vs H8.</strong> Annualised sum of hourly HL funding rates on the perp notional: 6.0 % over the 4919 hours the pair was open, 5.1 % over the whole H9 sample (5506 h), 14.8 % over the H8 sample (2023-05-13 → cut, 26859 h). Received here: +31.21 USD on a $1,000 short over 205 days in position; H8's buy-and-hold perp paid 733.86 USD on a $1,000 long over 1,142 days. The two are the same stream with opposite sign, scaled by notional and time.</p>
+<h3 id="h9eth1h-eth-insufficient_data">H9.ETH.1h — ETH — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA vs benchmark (2025-11-11 → 2026-06-27): sample shorter than 3 years.</p>
+</blockquote>
+<p>Reason: 229 days &lt; 1095 (3 years)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2025-11-11 → 2026-06-27, 229 days = 0.63 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 0 per-coin cells, cutoff none significant (Bonferroni α_adj 0.00909, m = 11, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, Sharpe diff ≥ -0.5)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 0: 229 days &lt; 1095</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>0.334 / 0.000 / +0.334</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+0.28 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-0.91 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>0.304 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>89.5 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">+0.48</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">7.910</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+7.910</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-0.681</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-0.681</td>
+<td style="text-align: right;">-0.91</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">86.5</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>9 entries / 9 exits; benchmark cash.</p>
+<h2 id="pooled-equal-weight-btc-eth-common-days">Pooled (equal-weight BTC + ETH, common days)</h2>
+<h3 id="h9pooled1h-btceth-insufficient_data">H9.pooled.1h — BTC+ETH — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA vs benchmark (2025-11-11 → 2026-06-27): sample shorter than 3 years.</p>
+</blockquote>
+<p>Reason: 229 days &lt; 1095 (3 years)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2025-11-11 → 2026-06-27, 229 days = 0.63 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00909 (Bonferroni, m = 11 registered hypotheses)</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, Sharpe diff ≥ -0.5)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 0: 229 days &lt; 1095</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>0.066 / 0.000 / +0.066</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+0.03 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-0.80 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>0.043 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>85.6 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">+0.44</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">9.647</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+9.647</td>
+<td style="text-align: right;">-0.04</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-0.42</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-1.464</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-1.464</td>
+<td style="text-align: right;">-0.80</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">81.5</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>Equal-weight daily mean of the two coins over their common days; benchmark cash.</p>
+<h2 id="artefacts">Artefacts</h2>
+<ul>
+<li>Charts (gitignored): <code>reports/h9_always_on_carry_{COIN}.html</code> (equity vs cash, basis bps, pair on/off)</li>
+<li>Cache: stitched <code>hl_spot_{COIN}_1h_*</code> and <code>{COIN}_1h_*</code> snapshots; <code>funding_{COIN}_1640995200000_1790467200000</code>.</li>
+</ul>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

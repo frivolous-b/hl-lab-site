@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Method · hl lab</title>
+<link rel="stylesheet" href="assets/style.css"></head><body>
+<header class="top"><a class="brand" href="index.html">hl lab</a><nav><a href="index.html">Home</a><a href="method.html" class="on">Method</a><a href="ledger.html">Ledger</a><a href="results/index.html">Results</a><a href="digest.html">Digest</a></nav></header>
+<main>
+<h1 id="validation-gate-design">Validation Gate — design</h1>
+<p><em>Phase 1, step 1 of <span class="muted">ROADMAP.md</span>. Written 2026-09-26;
+owner decisions recorded the same day (section 6). Step 2 (section 5)
+implements it, starting with the signal interface and event engine.</em></p>
+<p>The gate is the single path from "signal idea" to "eligible for paper
+trading". It must (a) accept any kind of signal source without a new
+harness each time, (b) return one of <code>PASS</code> / <code>FAIL</code> /
+<code>INSUFFICIENT_DATA</code> under rules fixed before any new data is looked
+at, and (c) reproduce every negative result the lab already has
+(section 4) before it grades anything new.</p>
+<hr>
+<h2 id="1-problem">1. Problem</h2>
+<p>Two incompatible signal paths exist today.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>Candle path</th>
+<th>Event path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entry point</td>
+<td><code>backtest.engine.run_backtest(df, strategy)</code></td>
+<td><code>strategies.wallet_mirror.simulate_mirror_trade(signal, …)</code> / <code>strategies.wallet_bracket.simulate_bracket_trade(signal, …)</code></td>
+</tr>
+<tr>
+<td>Signal shape</td>
+<td><code>Strategy.on_bar(bars, position) -&gt; {-1,0,+1}</code> called every bar: a <strong>target position</strong></td>
+<td>one dict <code>{coin, side, entry_ts, exit_ts}</code>: <strong>one trade per external event</strong></td>
+</tr>
+<tr>
+<td>Positions</td>
+<td>one net position per run; flip = close + open on the same bar</td>
+<td>each signal is an independent trade; overlaps allowed</td>
+</tr>
+<tr>
+<td>Fills</td>
+<td>next bar open, cost model moves the fill price (<code>CandleEstimatedCostModel</code>, lagged volatility)</td>
+<td>next bar strictly after the event, raw <code>open</code>; slippage + fee deducted as flat bps × notional</td>
+</tr>
+<tr>
+<td>Exits</td>
+<td>only when the strategy changes target</td>
+<td>mirror: next bar after the wallet's exit; bracket: intrabar TP/SL, SL first if a bar spans both, fallback to the wallet exit</td>
+</tr>
+<tr>
+<td>Funding</td>
+<td><code>lookup_funding_rate</code> once <strong>per bar</strong>, mark-to-market notional</td>
+<td>every funding event in <code>(entry_fill, exit_fill]</code>, fixed notional</td>
+</tr>
+<tr>
+<td>Output</td>
+<td><code>BacktestResult</code>, graded by <code>validation/criteria.py</code></td>
+<td>per-trade dicts, graded by a one-off aggregate binomial in the runner script</td>
+</tr>
+</tbody>
+</table></div>
+<p>Consequences:</p>
+<ul>
+<li>Every new signal source has needed its own runner and its own grading
+  code. Wallet-following, funding harvest (pair engine in
+  <code>examples/run_funding_neutral_*.py</code>) and the Project 3 congruence
+  diagnostic each re-implemented part of the pipeline.</li>
+<li>Results from the two paths are not comparable. The paths differ in
+  slippage, funding accrual and exit timing, not only in signal logic.</li>
+<li>The event path never went through <code>criteria.py</code>. Its verdicts came
+  from ad-hoc tests in the runners.</li>
+</ul>
+<hr>
+<h2 id="2-universal-signal-interface-proposal">2. Universal signal interface (proposal)</h2>
+<h3 id="21-event-schema">2.1 Event schema</h3>
+<pre><code class="language-python">@dataclass(frozen=True)
+class SignalEvent:
+    ts: pd.Timestamp        # UTC; see timing rule below
+    asset: str              # HL coin symbol, e.g. &quot;ETH&quot;
+    side: Side              # LONG | SHORT | FLAT
+    strength: float = 1.0   # 0..1; sizing = base_notional * strength
+    source_id: str = &quot;&quot;     # &quot;&lt;source&gt;@&lt;version&gt;&quot;, e.g. &quot;rsi14_4h@v1&quot;
+    meta: dict = field(default_factory=dict)  # free-form; reserved keys below
+</code></pre>
+<p>Reserved <code>meta</code> keys: <code>ticket_id</code> (ticket position mode, 2.3),
+<code>exit_hint_ts</code> (a known future exit, used by the wallet source),
+<code>bracket</code> (per-event override of TP/SL ROE and leverage).</p>
+<p><strong>Timing rule (the no-lookahead invariant, one rule for all sources).</strong>
+<code>ts</code> lies inside the bar during which the information became
+available. The executor fills at the <strong>open of the first bar whose
+<code>timestamp</code> is strictly greater than <code>ts</code></strong>. For external events,
+<code>ts</code> is the event time. For candle strategies, it is the decision bar's
+<code>timestamp</code> (HL candles are labelled by open time, and the decision is
+made at that bar's close). Both cases give "fill at the open of the
+next bar", which is what both current paths do: the engine through
+<code>pending_target</code>, the wallet path through <code>searchsorted(side="right")</code>.</p>
+<p><code>strength</code> is 1.0 for every existing source. The step-2 gate ignores
+it beyond sizing.</p>
+<h3 id="22-adapters">2.2 Adapters</h3>
+<p><strong><code>CandleStrategyAdapter(strategy)</code></strong> wraps any <code>Strategy</code> without
+modification. The executor drives it bar by bar and calls
+<code>strategy.on_bar(df.iloc[:i+1], position)</code> with the <strong>actual</strong>
+position. When the returned target differs from the actual position,
+the adapter emits one event: <code>+1 → LONG</code>, <code>-1 → SHORT</code>, <code>0 → FLAT</code>,
+with <code>ts = bar.timestamp</code>.</p>
+<ul>
+<li>The strategy is pulled with position feedback. Its events are not
+  pre-generated, because <code>on_bar</code> reads <code>position</code>: the same bars can
+  give different targets depending on what is held. Pre-generating
+  would silently change behaviour once a bracket or max-hold exit
+  (2.3) moves the position underneath the strategy.</li>
+<li>Emitting on "target ≠ actual position" is exactly the engine's
+  <code>pending_target</code> / <code>_execute_fill</code> no-op rule. With brackets and max
+  hold off, the event stream and the fills are identical to
+  <code>run_backtest</code>.</li>
+<li>This covers the six candle strategies: <code>bollinger</code>, <code>ma_crossover</code>,
+  <code>rsi</code>, <code>donchian_breakout</code>, <code>funding_harvest</code> and
+  <code>funding_harvest_neutral</code>. The first five map directly to one
+  directional leg. <code>FundingHarvestNeutral</code> returns <code>+1</code> to mean "pair
+  open" (short perp + long spot). That is a two-leg position, which a
+  single-asset event cannot express. In step 2 it keeps running
+  through its existing pair simulator (<code>run_pair_backtest</code> +
+  <code>backtest/basis_pnl.py</code>) and reaches the gate through the same
+  trade-record interface (2.5). A multi-leg event (<code>meta["legs"]</code>) is
+  deferred until a Phase 2 hypothesis needs it.</li>
+</ul>
+<p><strong><code>EventSignalSource</code></strong> takes an external stream (wallet fills,
+funding-threshold crossings, listings, …) and yields <code>SignalEvent</code>s
+directly. It never sees future events: the executor consumes them in
+<code>ts</code> order. Built-in constructor for the existing data:
+<code>EventSignalSource.from_round_trips(signals)</code> turns each wallet
+round-trip <code>{coin, side, entry_ts, exit_ts}</code> into an entry event at
+<code>entry_ts</code> and a <code>FLAT</code> event at <code>exit_ts</code>, sharing one <code>ticket_id</code>.</p>
+<h3 id="23-execution-model">2.3 Execution model</h3>
+<p>One executor, <code>backtest/event_engine.py</code>, consumes events for one
+asset's candle series:</p>
+<ul>
+<li><strong>Entry:</strong> open of the next bar (timing rule 2.1).</li>
+<li><strong>Exits</strong>, whichever comes first:</li>
+<li>(a) an opposite-side or <code>FLAT</code> event, filled at the next bar's
+    open. An opposite-side event in net mode is a flip (close and open
+    on the same bar, one round-trip, as the engine does now);</li>
+<li>(b) an ROE bracket (default <code>tp_roe=0.12</code>, <code>sl_roe=0.08</code>,
+    <code>leverage=3</code>, the values in STRAT-BC <code>position_manager.py</code>),
+    walked on the bars after the entry bar, SL first if one bar spans
+    both levels, filled at the level price;</li>
+<li>(c) <code>max_hold_bars</code>, filled at the open of the bar after the
+    limit.</li>
+</ul>
+<p>(b) and (c) are off unless configured.
+- <strong>Costs:</strong> a <code>CostPolicy</code>, either
+  - <code>model_fill</code>: <code>backtest/cost_model.py</code> <code>fill()</code> moves the fill
+    price (current engine); or
+  - <code>flat_bps</code>: raw open fill, slippage + fee deducted as bps ×
+    notional per leg (current wallet path).
+- <strong>Funding:</strong> a <code>FundingPolicy</code>, one of
+  - <code>per_bar_lookup_mark</code>: the current engine; one rate per bar at
+    close, mark notional;
+  - <code>per_event_fixed_notional</code>: the current wallet path;
+  - <code>per_event_mark</code>: <code>backtest/funding_pnl.accrue_funding_for_position</code>,
+    every settlement in <code>(entry, exit]</code> at mark notional.
+- <strong>Position mode:</strong>
+  - <code>net</code>: one position per <code>(source_id, asset)</code>, as the engine does;
+  - <code>ticket</code>: each entry opens its own position, closed by the <code>FLAT</code>
+    event with the same <code>ticket_id</code> or by (b)/(c); overlapping tickets
+    are allowed, as the wallet path does.
+- <strong>End of data:</strong>
+  - <code>mark_to_market</code>: an open position stays unrealized and is in
+    equity but not in the round-trip count, as the engine does;
+  - <code>skip_ticket</code>: a ticket without an exit bar is skipped with a
+    reason, as the wallet path does.</p>
+<p>The executor returns a <code>BacktestResult</code>-compatible object, so
+<code>criteria.evaluate_window</code> grades it unchanged, plus a list of
+<code>TradeRecord</code>s for the pooled level (2.5).</p>
+<h3 id="24-regression-requirement-reproducing-both-paths-exactly">2.4 Regression requirement: reproducing both paths exactly</h3>
+<p>The old paths stay in place until parity is proven. Each path maps
+onto a fixed configuration of the executor:</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>Current path</th>
+<th>Source</th>
+<th>Config</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run_backtest(df, S, cost_model=M, funding_df=F)</code></td>
+<td><code>CandleStrategyAdapter(S)</code></td>
+<td><code>net</code>, <code>model_fill(M)</code>, <code>per_bar_lookup_mark(F)</code>, no bracket, no max hold, <code>mark_to_market</code></td>
+</tr>
+<tr>
+<td><code>simulate_mirror_trade(sig, …)</code></td>
+<td><code>from_round_trips([sig])</code></td>
+<td><code>ticket</code>, <code>flat_bps(slip, fee)</code>, <code>per_event_fixed_notional</code>, no bracket, <code>skip_ticket</code></td>
+</tr>
+<tr>
+<td><code>simulate_bracket_trade(sig, …)</code></td>
+<td><code>from_round_trips([sig])</code></td>
+<td>as mirror + <code>bracket(tp, sl, lev)</code> with fallback = the ticket's <code>FLAT</code> event</td>
+</tr>
+</tbody>
+</table></div>
+<p>Details that must be copied exactly, not "improved", during step 2:</p>
+<ol>
+<li><strong>Engine funding</strong> charges one rate per bar: the latest settlement
+   at or before the bar's open-time label. It charges at bar close,
+   on the entry bar, and not on the exit bar.</li>
+<li><strong>Engine fees</strong> are charged on <code>notional</code> for both legs, not on exit
+   value. <code>units = notional / entry_fill_px</code>, with the fill price
+   already slipped.</li>
+<li><strong>Engine flip</strong> is recorded as one <code>kind="flip"</code> trade and counts as
+   one round-trip.</li>
+<li><strong>Bracket levels</strong> are computed from the entry fill price (the raw
+   open in <code>flat_bps</code> mode). The walk starts at <code>entry_idx + 1</code> and
+   includes the fallback bar itself.</li>
+<li><strong>Wallet funding</strong> sums every event in <code>(entry_fill_ts,
+   exit_fill_ts]</code> × fixed notional, and rounds the result dict to
+   6 dp.</li>
+</ol>
+<p><strong>Parity test</strong> (step 2b):</p>
+<ul>
+<li>Every <code>examples/</code> result that feeds FINDINGS and is reproducible
+  from cache is re-run through the executor.</li>
+<li>Per-trade fields (timestamps, fill prices, realized P&amp;L, funding)
+  match to <code>1e-9</code> relative.</li>
+<li>Per-window <code>evaluate_window</code> outputs and <code>evaluate_overall</code> verdicts
+  are identical.</li>
+<li>The wallet check uses the recorded
+  <code>results/walletfollow_stage3_{mirror,bracket}_trades.csv</code> as golden
+  files: 45 signals each, 37 backtested and 8 skipped (no HL candles).
+  Both the P&amp;L and the skip reasons must match.</li>
+</ul>
+<p>Legacy quirks found while writing this (replicated during step 2,
+fixed only afterwards as separate commits with a before/after results
+delta):</p>
+<ul>
+<li><strong>4h/1d funding undercount — FIXED (2026-09-26).</strong> The engines
+  charged one hourly HL rate per bar: 1 of 4 settlements on 4h bars,
+  1 of 24 on 1d. Both engines now accrue every hourly settlement
+  inside the bar (<code>backtest.funding_pnl.accrue_bar_funding</code>), at the
+  bar-close mark notional, with no resampling of the funding series.
+  1h results are byte-identical to before (verified on all six candle
+  strategies × BTC/ETH). The ETH/RSI 4h funding line moved from
+  −$147.70 to −$576.50 (earned); its verdict did not change. A slot
+  with no usable record is skipped and counted in
+  <code>BacktestResult.funding_records_missing</code> (one warning per run).</li>
+<li><strong>Bracket fallback bar.</strong> The walk checks the fallback bar's
+  high/low even though the fallback exit fills at that bar's open, so
+  a TP/SL later in that bar can override an exit that should already
+  have happened.</li>
+</ul>
+<h3 id="25-what-the-gate-consumes">2.5 What the gate consumes</h3>
+<p>The gate never sees events. It sees, per walk-forward window, a train
+result and a test result (each <code>BacktestResult</code>-compatible), plus the
+test window's <code>TradeRecord</code>s:</p>
+<pre><code class="language-python">TradeRecord(source_id, asset, window, entry_ts, exit_ts, side,
+            net_pnl_usd, net_return_pct, funding_usd, regime_at_entry)
+</code></pre>
+<p>Anything that can produce these can be graded: the event executor,
+the funding pair simulator, or a future live-shadow replay. For
+parameter-free sources (wallet streams) there is nothing to fit.
+"Train" is simply the source run over the train slice, which gives
+<code>evaluate_window</code> the train win rate its decay check needs.</p>
+<p>The same <code>SignalEvent</code> is the return type of the <code>generate_candidates</code>
+hook that MERGE_INVENTORY §C-ENG proposes for the ported STRAT-BC
+engine, so one strategy object serves both backtest and paper trading.</p>
+<hr>
+<h2 id="3-gate-specification">3. Gate specification</h2>
+<p>Final verdict ∈ {<code>PASS</code>, <code>FAIL</code>, <code>INSUFFICIENT_DATA</code>}.</p>
+<p><strong>Statistic conventions:</strong></p>
+<ul>
+<li>Binomial tests are <strong>one-sided</strong>, as <code>validation/significance.py</code>
+  already does. FINDINGS quotes some two-sided figures (ETH/RSI
+  p = 0.229 two-sided = 0.114 one-sided); the gate records the
+  one-sided value.</li>
+<li>α = <code>P_VALUE_THRESHOLD</code> = 0.10. FAIL rules use α unadjusted (they
+  never promote anything). The PASS rule uses the Bonferroni-adjusted
+  α_i = 0.10 / m across the ledger (3.4, 3.6).</li>
+</ul>
+<p><strong>Test families (decision 1).</strong> Each hypothesis is registered with
+exactly one test family, and the family cannot change afterwards:</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>family</th>
+<th>for</th>
+<th>statistic behind <code>p_up</code> / <code>p_down</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>binomial</code></td>
+<td>mean-reversion-type signals (edge = win rate)</td>
+<td>exact one-sided binomial on wins vs 50 %</td>
+</tr>
+<tr>
+<td><code>mean_return</code></td>
+<td>trend-type signals (edge = payoff asymmetry; win rates of 24-39 % by design)</td>
+<td>one-sided bootstrap on the mean per-trade net return: resample the trades with replacement (B = 10,000, fixed seed) after centring them on 0; <code>p_up</code> = share of resampled means ≥ the observed mean, <code>p_down</code> = share ≤ it</td>
+</tr>
+<tr>
+<td><code>daily_returns</code> (added 2026-09-27, H8; section 3.7)</td>
+<td>exposure / allocation rules without discrete trades (edge = risk-adjusted return over a benchmark)</td>
+<td>circular block bootstrap (B = 10,000, block 20 days, fixed seed) of the paired daily strategy and benchmark returns on the difference of annualised Sharpe, strategy − benchmark, centred on 0; <code>p_up</code> = share of centred resampled differences ≥ the observed one, <code>p_down</code> = share ≤ it</td>
+</tr>
+</tbody>
+</table></div>
+<p>The family applies at both levels (<code>daily_returns</code> has its own two
+levels, section 3.7). At Level 1 it replaces the
+binomial p criterion inside <code>evaluate_window</code> for <code>mean_return</code>
+hypotheses. Implemented in <code>validation/criteria.py</code>
+(<code>evaluate_window_mean_return</code>) and <code>validation/gate.py</code>.</p>
+<h3 id="31-level-1-per-window">3.1 Level 1: per-window</h3>
+<p>This is the existing <code>validation/criteria.py</code>, unchanged:</p>
+<ul>
+<li>per window: PF ≥ 1.15, net return &gt; 0, binomial p &lt; α,
+  win-rate decay ≤ 20 %, ≥ <code>MIN_TRADES_PER_WINDOW</code> (5) trades and a
+  finite PF;</li>
+<li>overall: <code>evaluate_overall</code>.</li>
+</ul>
+<p>Mapping to L1:</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th><code>evaluate_overall</code> verdict</th>
+<th>L1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VALIDATED EDGE</code></td>
+<td><code>PASS</code></td>
+</tr>
+<tr>
+<td><code>WEAK CANDIDATE</code> / <code>REJECTED</code></td>
+<td><code>FAIL</code></td>
+</tr>
+<tr>
+<td><code>INSUFFICIENT_DATA</code></td>
+<td><code>INSUFFICIENT</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Window length scales with bar size</strong> (added 2026-09-26, H1b). The
+per-window level only grades windows with at least
+<code>MIN_TRADES_PER_WINDOW</code> (5) trades, and that constant does not change.
+What changes with the timeframe is how much calendar time a rule needs
+to produce 5 trades. The registered test-window lengths are:</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>bar size</th>
+<th>test window</th>
+<th>reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1h</td>
+<td>30 days</td>
+<td>Stage 4.1 / 5 (60 d train, 30 d test)</td>
+</tr>
+<tr>
+<td>4h</td>
+<td>30 days</td>
+<td>ETH/RSI 4h full history</td>
+</tr>
+<tr>
+<td>1d</td>
+<td>365 days</td>
+<td>H1b onward; H1 used 90 days and every one of its 45 windows was below 5 trades</td>
+</tr>
+</tbody>
+</table></div>
+<p>A hypothesis registers its window length with its cells, before it
+runs; changing it afterwards is a new registration. Windows are
+non-overlapping, tiled backwards from the holdout cut.</p>
+<h3 id="32-level-2-pooled">3.2 Level 2: pooled</h3>
+<p>Level 2 pools all closed OOS test-window trades across windows
+(n trades, w wins). Positions still open at a window's end are not
+round-trips; they stay in that window's return only (legacy
+behaviour). It uses three statistics:</p>
+<ul>
+<li><code>p_up</code>: edge direction (binomial P(X ≥ w | n, 0.5), or the
+  bootstrap equivalent, depending on the family);</li>
+<li><code>p_down</code>: adverse direction (binomial P(X ≤ w | n, 0.5), or the
+  bootstrap equivalent);</li>
+<li>pooled PF = Σ winning net P&amp;L / |Σ losing net P&amp;L|, and the pooled
+  net P&amp;L.</li>
+</ul>
+<p>Rules, applied in order:</p>
+<ol>
+<li>n &lt; <code>N_FAIL_FLOOR</code> (20) → <code>INSUFFICIENT</code></li>
+<li><code>p_down</code> &lt; α → <code>FAIL</code> (significantly worse than a coin flip)</li>
+<li>pooled net P&amp;L ≤ 0 or pooled PF &lt; 1.0 → <code>FAIL</code> (loses money in
+   aggregate)</li>
+<li><code>p_up</code> &lt; α_i (Bonferroni across the ledger) and pooled
+   PF ≥ <code>MIN_TEST_PF</code> (1.15) → <code>PASS</code></li>
+<li>otherwise (positive but not significant): n ≥ <code>N_MIN_POOLED</code> →
+   <code>FAIL</code> (adequately powered, no edge); else → <code>INSUFFICIENT</code></li>
+</ol>
+<p>Rules 2-3 make FAIL asymmetric on purpose. Power is needed to claim
+"no edge despite a positive estimate". It is not needed to stop
+promoting a strategy whose own sample points the wrong way. Without
+them ETH/RSI 4h (56 trades, below <code>N_MIN_POOLED</code>) could only ever be
+INSUFFICIENT_DATA, never the FAIL its record supports.</p>
+<h3 id="33-combining-levels">3.3 Combining levels</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>L1 \ L2</th>
+<th>PASS</th>
+<th>FAIL</th>
+<th>INSUFFICIENT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PASS</strong></td>
+<td><strong>PASS</strong></td>
+<td>FAIL</td>
+<td>INSUFFICIENT_DATA</td>
+</tr>
+<tr>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>FAIL</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td><strong>INSUFFICIENT</strong></td>
+<td>INSUFFICIENT_DATA ¹</td>
+<td>FAIL</td>
+<td>INSUFFICIENT_DATA</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>PASS requires both levels.</li>
+<li>Per-window INSUFFICIENT can become FAIL through the pooled level,
+  never PASS.</li>
+<li>L1 FAIL is final: the windows had enough trades and did not
+  replicate.</li>
+</ul>
+<p>¹ <strong>Accepted deviation (decision 2).</strong> Elsewhere INSUFFICIENT_DATA is
+final only when pooled n &lt; <code>N_MIN_POOLED</code>. This cell can have
+n ≥ <code>N_MIN_POOLED</code>: a significant pooled edge spread over windows too
+thin to test replication. It cannot be PASS, and FAIL would be wrong,
+so it is INSUFFICIENT_DATA with reason "re-window required". A longer
+test window must be registered as a new ledger row before the re-run,
+and the re-run counts as a new test toward m.</p>
+<h3 id="34-n_min_pooled-power-calculation">3.4 <code>N_MIN_POOLED</code>: power calculation</h3>
+<p>Setup: exact one-sided binomial vs 50 %, 80 % power, taking the
+smallest n from which power stays ≥ 80 % (the exact test's power is
+saw-toothed in n).</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>true win rate</th>
+<th style="text-align: right;">α = 0.10</th>
+<th style="text-align: right;">α = 0.05</th>
+<th style="text-align: right;">α = 0.02 (0.10 / 5)</th>
+<th style="text-align: right;">α = 0.01</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>55 %</td>
+<td style="text-align: right;">484</td>
+<td style="text-align: right;">654</td>
+<td style="text-align: right;">866</td>
+<td style="text-align: right;">1028</td>
+</tr>
+<tr>
+<td>60 %</td>
+<td style="text-align: right;"><strong>126</strong></td>
+<td style="text-align: right;">169</td>
+<td style="text-align: right;">222</td>
+<td style="text-align: right;">261</td>
+</tr>
+<tr>
+<td>65 %</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">119</td>
+</tr>
+</tbody>
+</table></div>
+<p>Power at the pooled sizes the lab has actually produced (α = 0.10):</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">55 %</th>
+<th style="text-align: right;">60 %</th>
+<th style="text-align: right;">65 %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.14</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.51</td>
+</tr>
+<tr>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.83</td>
+</tr>
+<tr>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.96</td>
+</tr>
+<tr>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">0.99</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Decision 3: <code>N_MIN_POOLED = 130</code></strong>, which is 80 % power to detect a
+true 60 % win rate at α = 0.10. It is the <strong>data threshold</strong>: it only
+decides between FAIL and INSUFFICIENT for a positive but
+non-significant pooled result (rule 5). <strong>PASS is a separate
+requirement</strong>: <code>p_up</code> &lt; α_i = 0.10 / m, where m counts every <code>H*</code> cell
+in the ledger (3.6). The two thresholds do different jobs, and
+<code>N_MIN_POOLED</code> is not re-derived when m grows. With m cells
+registered, a real 60 % edge needs roughly the α_i column of the table
+above to be likely to PASS (m = 5 → α_i = 0.02 → about 222 trades).
+Three consequences follow:</p>
+<ul>
+<li><strong>A 55 % edge is undetectable</strong> at the lab's current trade rates. It
+  needs about 480 pooled trades (about 870 after a 5-way Bonferroni).
+  The gate cannot distinguish a 55 % strategy from noise, and FINDINGS
+  should say so, not imply otherwise.</li>
+<li><strong>After Bonferroni</strong> the n a strategy needs to <em>pass</em> grows with m
+  (222 at α_i = 0.02), even though <code>N_MIN_POOLED</code> stays at 130. Between
+  130 and that number, a positive, non-significant result is a FAIL:
+  the lab spent its data and found no edge strong enough to survive
+  the correction. For the <code>mean_return</code> family the table does not apply
+  (power depends on the return distribution); 130 is used as the same
+  data threshold.</li>
+<li><strong><code>N_FAIL_FLOOR = 20</code></strong> (4 × <code>MIN_TRADES_PER_WINDOW</code>) is a policy
+  floor, not a power number. It stops rule 3 from closing a hypothesis
+  on a handful of trades.</li>
+</ul>
+<h3 id="35-regime-scoping">3.5 Regime scoping</h3>
+<p>Every verdict carries the regimes its OOS trades covered. It is never
+worded unconditionally: "no edge in {bull, range} over 2024-04-30 →
+2026-05-30", not "no edge". A PASS is worded "edge in regime X", as
+H1 requires.</p>
+<p><strong>Fixed classifier (decision 5).</strong> It uses the 200-day SMA of the
+traded asset's daily closes plus its slope, computed at the daily bar
+close:</p>
+<ul>
+<li><code>bull</code> = close &gt; SMA200 and SMA200 today &gt; SMA200 20 daily bars
+  earlier;</li>
+<li><code>bear</code> = close &lt; SMA200 and SMA200 today &lt; SMA200 20 daily bars
+  earlier;</li>
+<li><code>range</code> = otherwise, including the first 219 days, before both
+  SMA200 values exist.</li>
+</ul>
+<p>A trade's regime is the label at the last <strong>completed</strong> daily close at
+or before its entry decision, so an intraday trade never sees its own
+day's close. SMA length (200) and slope lookback (20) are frozen; a
+change is a new classifier version and invalidates earlier regime
+labels.</p>
+<p>Each <code>TradeRecord</code> stores <code>regime_at_entry</code>. The verdict reports n per
+regime. A regime with fewer than <code>N_FAIL_FLOOR</code> trades is listed as
+"not covered", with no claim either way.</p>
+<h3 id="36-multiple-comparison-ledger-and-holdout">3.6 Multiple-comparison ledger and holdout</h3>
+<p><a href="ledger.html"><code>docs/HYPOTHESIS_LEDGER.md</code></a> holds H1-H6 as
+registered hypotheses. Each hypothesis's spec expands it into test
+cells before anything runs. The full row format, one row per test
+cell:</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>id</th>
+<th>registered</th>
+<th>hypothesis / cell</th>
+<th>family</th>
+<th>data range (train+test)</th>
+<th>holdout cut</th>
+<th>α_i</th>
+<th>status</th>
+<th>verdict</th>
+<th>p_up (pooled)</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1.BTC.1d</td>
+<td>2026-10-xx</td>
+<td>bull-regime trend, BTC 1d</td>
+<td>P2</td>
+<td>…</td>
+<td>…</td>
+<td>0.10/m</td>
+<td>registered</td>
+<td>—</td>
+<td>—</td>
+<td>spec link</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>Row types:</strong></li>
+<li><code>H*</code>: Phase 2 hypotheses, which count toward m;</li>
+<li><code>CAL*</code>: calibration runs of known negatives, which are recorded but
+    do not count toward m, because no PASS is sought;</li>
+<li><code>PRIOR*</code>: the Stages 3-7 and Projects 2-3 tests, back-filled for
+    the record.</li>
+<li><strong>Rows are append-only.</strong> A verdict is filled in once. A re-run is a
+  new row that references the old one. The unpinned ETH/RSI re-run
+  (FINDINGS, 2026-09-26) is back-filled as a <code>PRIOR</code> row.</li>
+<li><strong>Bonferroni over hypotheses gives PASS</strong> (method fix 2026-09-27,
+  <code>validation/gate.py</code>): α_adj = 0.10 / m, where m = every
+  <strong>hypothesis (rule set)</strong> registered in the ledger, run or not: the
+  bare-id rows H1, H1b, H2a, H2b, H3 … (<code>registered_hypothesis_count</code>).
+  m only grows. α_adj applies to a hypothesis's <strong>pooled</strong> cell.
+  Per-coin cells of one hypothesis are sub-tests of the same rule set;
+  they are controlled with <strong>Benjamini-Hochberg FDR at q = 0.10</strong> over
+  that hypothesis's per-coin p_up values (<code>evaluate_hypothesis</code>): sort
+  the available p-values, largest k with p_(k) ≤ k/n · q, the k smallest
+  are significant for rule 4. Cells below <code>N_FAIL_FLOOR</code> have no p and
+  are never significant. FAIL rules use α = 0.10 unadjusted under both.
+  Before the fix m counted cells (H1 had m = 11, H1b m = 31); the
+  ledger records the re-grade of the one pooled cell that was ever
+  graded under the old count (H1b.pooled: FAIL either way, p = 0.317).</li>
+<li><strong>Holdout:</strong> the last 90 days, locked. The cut date is written in the
+  ledger header before any Phase 2 run. The data is snapshotted to the
+  parquet cache that day, because HL retention is rolling. Holdout rows
+  run once, only for cells that PASS on pre-holdout data, and the same
+  gate is applied. A holdout FAIL is final.</li>
+</ul>
+<hr>
+<h3 id="37-the-daily_returns-family-added-2026-09-27-h8">3.7 The <code>daily_returns</code> family (added 2026-09-27, H8)</h3>
+<p>For rules whose output is an exposure path rather than discrete
+trades, the unit of evidence is a day, and the question is whether the
+rule beats holding the instrument. <code>validation/gate.py:
+evaluate_daily_returns</code> takes, over the same days, the strategy's and a
+benchmark's daily returns (equity_t / equity_{t−1} − 1, both after
+costs and funding) plus the strategy's daily exposure flag.</p>
+<p>Metrics (both series): annualised return (geometric, 365-day year),
+Sharpe = daily mean / daily std × √365 with rf = 0, max drawdown of the
+cumulative equity, Calmar = annualised return / |max DD|, exposure =
+share of days with a position.</p>
+<p>Statistic: the difference of Sharpe, strategy − benchmark. Circular
+block bootstrap of the paired days (block length 20, B = 10,000, seed
+0), centred on 0 as for <code>mean_return</code>: <code>p_up</code> = share of centred
+resampled differences ≥ the observed difference, <code>p_down</code> = share ≤ it.</p>
+<p>Levels and verdict:</p>
+<ul>
+<li><strong>Data threshold:</strong> fewer than 3 years (1,095 days) →
+  <code>INSUFFICIENT_DATA</code>, nothing else is claimed.</li>
+<li><strong>Level 1, per calendar year</strong> (years with ≥ 60 days). <strong>v2, method
+  correction of 2026-09-27, applied after seeing the H9c and H9d
+  results</strong> (same category as the Phase 0 PF = inf fix: an instrument
+  defect exposed by a result, corrected openly, every affected cell
+  re-graded under both versions and both verdicts recorded):</li>
+<li>a year's Sharpe is undefined when the strategy's daily-return
+    standard deviation in that year is below <code>MIN_DAILY_STD</code> = 0.0005
+    (5 bps). A modelled-basis series (H9b-H9d: spot = perp mark) has
+    almost no daily variance, so its yearly Sharpe is an artefact — a
+    year that lost 0.6 % of capital showed a Sharpe of −3.5 and failed
+    the v1 floor;</li>
+<li>the floor for ALL <code>daily_returns</code> cells is now the calendar-year
+    <strong>net return ≥ <code>MIN_YEAR_RETURN</code> = −2.0 %</strong> (registered constant;
+    rationale: a carry or allocation strategy's "catastrophic year" is a
+    capital loss, not a Sharpe artefact);</li>
+<li>the v1 Sharpe-difference floor (≥ −0.5) remains an additional check
+    ONLY for years whose daily std is ≥ <code>MIN_DAILY_STD</code>.
+  Any graded year that breaches the applicable floor(s) → L1 FAIL.
+  <code>evaluate_daily_returns(..., version="v1")</code> reproduces the v1 rule
+  for the record. v1 (2026-09-27, H8 and H9c/H9d as first run): each
+  graded year's Sharpe difference ≥ −0.5.</li>
+<li><strong>Level 2, whole sample</strong>, rules in order: (1) <code>p_down</code> &lt; α = 0.10
+  → FAIL (the benchmark is significantly better); (2) strategy max DD
+  not strictly smaller in magnitude than the benchmark's → FAIL —
+  against a benchmark with no drawdown (cash) this relative condition
+  is vacuous, so a hypothesis may register an absolute cap
+  (<code>max_dd_cap</code>, H9: 10 %): rule 2 then passes iff (the benchmark has
+  no drawdown, or the strategy's is strictly smaller) and the
+  strategy's max DD is strictly below the cap; (3)
+  <code>p_up</code> &lt; α_adj (Bonferroni for a pooled cell, BH-FDR for per-coin
+  cells, section 3.6) → PASS; (4) otherwise FAIL (≥ 3 years of data
+  and no significant edge).</li>
+<li><strong>Verdict:</strong> PASS only if L1 and L2 both pass; FAIL otherwise.</li>
+</ul>
+<p><strong>Benchmark mode <code>hodl_btc</code></strong> (added 2026-09-27, ROADMAP "North
+star"). <code>DailyReturnsInput.hodl_btc(...)</code> / <code>hodl_btc_days(...)</code>: the
+strategy's daily returns are computed in BTC units, equity_btc =
+equity_usd / BTC close of the same day, and the benchmark series is
+zero excess (HODL BTC = constant 1.0 BTC). Everything else in the
+family is unchanged: the Sharpe difference is the strategy's
+BTC-denominated Sharpe against 0, the per-year floor is the
+BTC-denominated calendar-year return ≥ −2 % (Sharpe floor only where
+the year's daily std ≥ 5 bps), ≥ 3 years, block bootstrap, Bonferroni /
+BH. The benchmark has no drawdown in BTC units, so the relative max-DD
+rule is vacuous in this mode exactly as against cash; a hypothesis may
+register an absolute cap (<code>max_dd_cap</code>), otherwise the BTC-denominated
+max DD is reported and not graded.</p>
+<p>Verdicts are regime-scoped like every other family (3.5); a
+regime-only exposure rule is by construction "long in bull", so its
+scope statement is the benchmark comparison over the whole sample.</p>
+<h2 id="4-calibration-table">4. Calibration table</h2>
+<p>The gate must reproduce every row on existing cached data before it
+grades anything new. A PASS on any row means the gate is broken.</p>
+<p><strong>Remaining calibration set (2026-09-26):</strong></p>
+<ul>
+<li>vanilla rules → FAIL (rows 2a-2d);</li>
+<li>ETH/RSI 4h full history → FAIL (row 3);</li>
+<li>funding harvest (market-neutral) → INSUFFICIENT_DATA (row 5).</li>
+</ul>
+<p>Row numbers are kept as they were so older references still resolve.
+Rows 1 (wallet-following) and 4 (funding-aware RSI) were removed; see
+the corrections below.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>case</th>
+<th>producing script (data)</th>
+<th>L1</th>
+<th>L2</th>
+<th>final</th>
+<th>rule that fires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2a</td>
+<td>Bollinger 20/2, 1h, BTC/ETH</td>
+<td><code>run_strategy_survey.py</code> (Stage 3, 90d; PF 0.27-0.44). <strong>Never walk-forwarded</strong>, so calibration runs it through the gate on the pinned 180d cache used by #2c</td>
+<td>FAIL expected</td>
+<td>FAIL expected (rule 3)</td>
+<td><strong>FAIL</strong></td>
+<td>L1 FAIL, L2 rule 3</td>
+</tr>
+<tr>
+<td>2b</td>
+<td>MA crossover 12/26, 1h, BTC/ETH</td>
+<td>same as 2a (survey net −56 % / −68 %)</td>
+<td>FAIL expected</td>
+<td>FAIL expected (rule 3)</td>
+<td><strong>FAIL</strong></td>
+<td>L1 FAIL, L2 rule 3</td>
+</tr>
+<tr>
+<td>2c</td>
+<td>RSI(14), 1h, BTC/ETH (Stage 4.1)</td>
+<td><code>run_rsi_validation.py</code> (anchors to the prior 180d cache)</td>
+<td>BTC REJECTED, ETH WEAK (1/3 passed) → <strong>FAIL</strong></td>
+<td>computed at calibration</td>
+<td><strong>FAIL</strong></td>
+<td>3.3 row "L1 FAIL"</td>
+</tr>
+<tr>
+<td>2d</td>
+<td>Donchian 20/10/ATR2, 1h, BTC/ETH (Stage 5)</td>
+<td><code>run_donchian_validation.py</code> (same anchor)</td>
+<td>REJECTED both (0/3, mean PF 0.74-0.75, 16-21 trades/window) → <strong>FAIL</strong></td>
+<td>FAIL expected (rule 3)</td>
+<td><strong>FAIL</strong></td>
+<td>L1 FAIL</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ETH/RSI(14) 4h, full history</td>
+<td><code>run_eth_rsi_fullhistory.py --end-ms 1780164728512</code></td>
+<td><strong>INSUFFICIENT</strong> (23/23 windows &lt; 5 trades or PF undefined)</td>
+<td><strong>FAIL</strong>: n = 56, 33 wins, <code>p_up</code> = 0.114; Σ per-window net return ≈ −129 % of window capital</td>
+<td><strong>FAIL</strong></td>
+<td>L2 rule 3 (economic). Rule 4 fails too (not significant); rule 5 alone would give INSUFFICIENT (56 &lt; 130)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Funding harvest, market-neutral</td>
+<td>Stage 6 cells (<code>run_funding_neutral_stage6.py</code>, N ∈ {24, 72} × {maker, taker}); Stages 4-5 N = 3 baseline</td>
+<td>N=24/72: INSUFFICIENT (median 1-4 trips/window); N=3: REJECTED</td>
+<td>N=24: n ≈ 12, N=72: n ≈ 5 (&lt; 20) → INSUFFICIENT; N=3: n ≈ 41-47, net negative → FAIL</td>
+<td><strong>INSUFFICIENT_DATA</strong> for the Stage 6 cells; FAIL for N=3</td>
+<td>L2 rule 1 for N=24/72; rule 3 for N=3</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Funding-aware RSI (Project 3) is not in the calibration set
+(decision 4).</strong> Its grouping uses mean funding <strong>over the whole
+hold</strong>, which is not knowable at entry. It is a valid falsification
+diagnostic, not a signal stream the gate can grade. Replayed on the
+2026-05-29 cache (end_ms 1780069504902), pooled over 99 round-trips:</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>group</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">mean return</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONGRUENT</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">−2.46 %</td>
+</tr>
+<tr>
+<td>FIGHTING</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">1.13</td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Welch p = 0.053, in the <strong>wrong</strong> direction. Those 99 are also the same
+ETH trades seen on three correlated venues, not 99 independent trades.</p>
+<p>The tradeable version (entries only when trailing funding at entry is
+congruent) is registered as <strong>H6</strong> in the ledger. It is graded as a
+hypothesis, not assumed to fail.</p>
+<p><strong>Why #5 is INSUFFICIENT_DATA and not FAIL.</strong> At N=72 with maker fees
+the pair is roughly breakeven (BTC −$2.88, ETH −$9.91 over 90d) on
+about 5 round-trips. Rule 3 needs n ≥ 20 before an aggregate loss can
+close a hypothesis, and 5 trades cannot tell breakeven from a small
+edge either way. That matches the PARKED disposition. The N=3 cells
+had enough trades and lost money, so they FAIL.</p>
+<p><strong>Reproducibility caveat.</strong> <code>run_funding_neutral_stage6.py</code> fetches
+perp candles uncached, and the May 2026 200d window is beyond HL's 1h
+retention, so exact reproduction is impossible. Calibration row 5
+compares against the numbers recorded in commit <code>e2c4687</code>. A fresh run
+on currently available data is logged as a <code>CAL</code> ledger row.</p>
+<p>Rows 2c, 2d and 3 reproduce bit-exact from the anchored caches. Row
+2a/2b are new walk-forward runs of known losers: <code>CAL</code> rows, which do
+not count toward m.</p>
+<p><strong>CORRECTION (2026-09-26): row 1 removed. Wallet-following is no
+longer a known result.</strong> The row read:</p>
+<blockquote>
+<p>| 1 | Wallet-following direction, Veteran + Active, 37 RTs, mirror and bracket | <code>run_wallet_following_stage2_mirror.py</code>, <code>…stage3_bracket.py</code> (cached fills + 1h candles; golden CSVs in <code>results/</code>) | INSUFFICIENT (≈15 RTs/wallet over 8-16 mo) | <strong>FAIL</strong>: mirror 13/37, <code>p_down</code> = 0.049; bracket 12/37, <code>p_down</code> = 0.024 | <strong>FAIL</strong> | L2 rule 2 (adverse direction). Net P&amp;L is positive (mirror PF 1.48); the test is on direction, and the fat-tail residual stays PARKED as a separate spec |</p>
+</blockquote>
+<p>22 of those 37 trades were filled after a data-coverage bug (signal
+older than the candle series → filled at the first candle). On the 15
+valid trades the gate reads INSUFFICIENT_DATA (n &lt; <code>N_FAIL_FLOOR</code>),
+so the row cannot calibrate anything. The golden CSVs remain in use,
+but only as the legacy-parity fixture for the event engine (2.4).
+Wallet-following is now hypothesis H7 in the ledger.</p>
+<hr>
+<h2 id="5-migration-plan-step-2">5. Migration plan (step 2)</h2>
+<p>Each step is its own commit, with tests green before the next one
+starts. LOC estimates include docstrings.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>step</th>
+<th>what</th>
+<th>files</th>
+<th style="text-align: right;">est. LOC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2a</td>
+<td><code>SignalEvent</code>, <code>Side</code>, <code>TradeRecord</code> dataclasses + validation</td>
+<td><code>signals/events.py</code></td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr>
+<td>2b</td>
+<td><code>CandleStrategyAdapter</code>, <code>EventSignalSource</code> (+ <code>from_round_trips</code>)</td>
+<td><code>signals/candle_adapter.py</code>, <code>signals/event_source.py</code></td>
+<td style="text-align: right;">150</td>
+</tr>
+<tr>
+<td>2c</td>
+<td>Event executor: net/ticket books, next-bar fills, bracket, max hold, <code>CostPolicy</code>, <code>FundingPolicy</code>, end-of-data policies, <code>BacktestResult</code>-compatible output</td>
+<td><code>backtest/event_engine.py</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td>2d</td>
+<td><strong>Parity tests</strong>: executor vs <code>run_backtest</code> for the 5 directional candle strategies on synthetic data and pinned caches; vs <code>simulate_mirror_trade</code> / <code>simulate_bracket_trade</code> on synthetic data and the 45-signal golden CSVs; <code>evaluate_overall</code> verdicts identical for rows 2c, 2d, 3</td>
+<td><code>tests/test_event_engine_parity.py</code></td>
+<td style="text-align: right;">350</td>
+</tr>
+<tr>
+<td>2e</td>
+<td>Legacy-quirk fixes as separate commits (funding <code>per_event_mark</code> default; bracket fallback bar), each with a results-delta note in FINDINGS</td>
+<td>engine + docs</td>
+<td style="text-align: right;">60</td>
+</tr>
+<tr>
+<td>2f</td>
+<td>Pooled level + combination table + regime classifier + <code>GateVerdict</code> (with regimes and reasons)</td>
+<td><code>validation/gate.py</code>, <code>validation/regime.py</code></td>
+<td style="text-align: right;">250</td>
+</tr>
+<tr>
+<td>2g</td>
+<td>Gate unit tests: every 3.2 rule and every 3.3 cell, power-table regression, <code>N_MIN_POOLED</code> re-derivation</td>
+<td><code>tests/test_gate.py</code></td>
+<td style="text-align: right;">250</td>
+</tr>
+<tr>
+<td>2h</td>
+<td>Back-fill <code>PRIOR</code> rows into <code>docs/HYPOTHESIS_LEDGER.md</code> (H1-H6 already registered); holdout snapshot + lock helper</td>
+<td>docs + <code>data/holdout.py</code></td>
+<td style="text-align: right;">120</td>
+</tr>
+<tr>
+<td>2i</td>
+<td><code>--end-ms</code> pins on <code>run_strategy_survey.py</code> / wallet runners where missing; calibration runner producing the section-4 table</td>
+<td><code>examples/run_gate_calibration.py</code></td>
+<td style="text-align: right;">300</td>
+</tr>
+<tr>
+<td>2j</td>
+<td>Calibration run, results written to <code>results/gate_calibration.md</code>, FINDINGS/ROADMAP updated</td>
+<td>results + docs</td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Total ≈ 1,950 LOC, about half of it tests.</p>
+<p>Ordering constraint: nothing in 2e-2j starts until 2d is green. If
+parity fails, the executor is wrong, not the legacy path.</p>
+<hr>
+<h2 id="6-decisions-2026-09-26">6. Decisions (2026-09-26)</h2>
+<p>The owner's answers to the five open questions from the first draft.
+They are binding for step 2 and later.</p>
+<ol>
+<li><strong>Two test families, fixed at registration.</strong> Either <code>binomial</code>
+   (win rate vs 50 %, for mean-reversion signals) or <code>mean_return</code>
+   (mean per-trade net return &gt; 0, for trend signals). The family is
+   chosen when the hypothesis is registered and never changed. See 3.</li>
+<li><strong>The "re-window required" INSUFFICIENT_DATA deviation is
+   accepted.</strong> See 3.3 ¹.</li>
+<li><strong>Two thresholds.</strong> <code>N_MIN_POOLED = 130</code> is the data threshold
+   (FAIL vs INSUFFICIENT). PASS additionally requires <code>p_up</code> below
+   the Bonferroni-adjusted α_i = 0.10 / m across the ledger. See 3.4
+   and 3.6.</li>
+<li><strong>Funding-aware RSI is removed from the calibration set.</strong> Its
+   tradeable version is registered as H6. See section 4 and the
+   ledger.</li>
+<li><strong>Regime classifier fixed:</strong> the 200-day SMA of daily closes plus
+   its slope (20 daily bars), computed at bar close. See 3.5.</li>
+</ol>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

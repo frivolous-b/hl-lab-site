@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H9c — always-on carry over 3+ years, spot leg modelled (basis modeled — see H9 for measured basis) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h9c-always-on-carry-over-3-years-spot-leg-modelled-basis-modeled-see-h9-for-measured-basis">H9c — always-on carry over 3+ years, spot leg modelled (basis modeled — see H9 for measured basis)</h1>
+<p><em>Generated 2026-09-27T13:01:53.618341+00:00. Runner: <code>examples/run_h9c_carry_modeled_basis.py</code>. Engine: <code>backtest/pair_engine.py</code>. Rule: <code>strategies/always_on_carry.py</code>. Family: <code>daily_returns</code> + max DD &lt; 10 %. Spec: docs/HYPOTHESIS_LEDGER.md, H9c (as H9b except the sanity line).</em></p>
+<p><strong>Holdout LOCKED:</strong> nothing at or after 2026-06-28T00:00:00+00:00 enters any number below. <strong>basis modeled — see H9 for measured basis.</strong> The spot leg is the perp mark (basis 0); the stress variant charges H9's measured worst basis excursion (BTC 19 bps, ETH 35 bps of leg notional) on every entry. <strong>The gate grades the stress variant.</strong></p>
+<p>Per-coin cells BH-FDR q = 0.10; pooled Bonferroni α_adj = 0.10 / 13 = 0.00769. Costs: HLFeeSchedule taker (spot 7.0 / perp 4.5 bps), PerAssetCostModel slippage both legs, funding received hourly on the short. $1,000 per leg, $2,000 book per coin.</p>
+<h2 id="sanity-line-stop-rule">Sanity line (stop rule)</h2>
+<p>Funding per FLAT $1,000 short notional = sum of hourly rate x 1,000 over the on-hours inside H9's window (H9 side recomputed from H9's runner; path-independent, see the H9c registration).</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th>H9 window</th>
+<th style="text-align: right;">H9: rate sum x 1,000 (on-hours)</th>
+<th style="text-align: right;">H9c base: rate sum x 1,000 (on-hours)</th>
+<th style="text-align: right;">difference</th>
+<th style="text-align: center;">within 5 %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td>2025-11-04 -&gt; 2026-06-28</td>
+<td style="text-align: right;">+25.86 USD (4631 h)</td>
+<td style="text-align: right;">+25.86 USD (4631 h)</td>
+<td style="text-align: right;">0.0 %</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td>2025-11-11 -&gt; 2026-06-28</td>
+<td style="text-align: right;">+33.63 USD (4910 h)</td>
+<td style="text-align: right;">+33.63 USD (4910 h)</td>
+<td style="text-align: right;">0.0 %</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="verdicts-stress-variant-basis-modeled-see-h9-for-measured-basis">Verdicts (stress variant) — basis modeled — see H9 for measured basis</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>cell</th>
+<th>verdict</th>
+<th>L1</th>
+<th>L2 (rule)</th>
+<th style="text-align: right;">ann. return</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">p_down</th>
+<th style="text-align: right;">days on</th>
+<th>reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H9c.BTC.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>PASS (3)</td>
+<td style="text-align: right;">+8.85 %</td>
+<td style="text-align: right;">9.54</td>
+<td style="text-align: right;">-1.56 %</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">1012 / 1142</td>
+<td>at least one calendar year has Sharpe diff below the floor</td>
+</tr>
+<tr>
+<td>H9c.ETH.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>PASS (3)</td>
+<td style="text-align: right;">+7.28 %</td>
+<td style="text-align: right;">6.09</td>
+<td style="text-align: right;">-2.15 %</td>
+<td style="text-align: right;">0.0006</td>
+<td style="text-align: right;">0.9994</td>
+<td style="text-align: right;">1031 / 1142</td>
+<td>at least one calendar year has Sharpe diff below the floor</td>
+</tr>
+<tr>
+<td>H9c.pooled.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>PASS (3)</td>
+<td style="text-align: right;">+8.06 %</td>
+<td style="text-align: right;">8.77</td>
+<td style="text-align: right;">-1.55 %</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">—</td>
+<td>at least one calendar year has Sharpe diff below the floor</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pooled (stress): FAIL</strong> — FAIL vs buy-and-hold (2023-05-13 → 2026-06-27). Reason: at least one calendar year has Sharpe diff below the floor.</p>
+<h2 id="btc-basis-modeled-see-h9-for-measured-basis">BTC — basis modeled — see H9 for measured basis</h2>
+<p>Mark series: Binance 1h 21753 bars (2023-05-12 → 2025-11-03 08:00), HL perp 1h 5679 bars (2025-11-03 09:00 → cut), 0 gaps; on the 16-hour overlap HL closes sit -3.4 bps from Binance. Sample 2023-05-12 00:00:00+00:00 → 2026-06-27 23:00:00+00:00 (27432 bars).</p>
+<h3 id="btc-base-variant-haircut-0-bps-per-entry-basis-modeled-see-h9-for-measured-basis">BTC — base variant (haircut 0 bps per entry) — basis modeled — see H9 for measured basis</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">days on</th>
+<th style="text-align: right;">return %</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD %</th>
+<th style="text-align: right;">funding received USD</th>
+<th style="text-align: right;">funding % of $1,000 leg</th>
+<th style="text-align: right;">fees + slippage (+ haircut) USD</th>
+<th style="text-align: right;">entries</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">152</td>
+<td style="text-align: right;">+6.07</td>
+<td style="text-align: right;">11.33</td>
+<td style="text-align: right;">-0.56</td>
+<td style="text-align: right;">+133.89</td>
+<td style="text-align: right;">+13.39 %</td>
+<td style="text-align: right;">10.96</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">364</td>
+<td style="text-align: right;">+18.53</td>
+<td style="text-align: right;">16.71</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">+399.46</td>
+<td style="text-align: right;">+39.95 %</td>
+<td style="text-align: right;">6.15</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">360</td>
+<td style="text-align: right;">+5.64</td>
+<td style="text-align: right;">14.84</td>
+<td style="text-align: right;">-0.23</td>
+<td style="text-align: right;">+148.68</td>
+<td style="text-align: right;">+14.87 %</td>
+<td style="text-align: right;">6.80</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">-0.49</td>
+<td style="text-align: right;">-2.44</td>
+<td style="text-align: right;">-0.83</td>
+<td style="text-align: right;">+13.56</td>
+<td style="text-align: right;">+1.36 %</td>
+<td style="text-align: right;">27.98</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>final equity (from $2,000)</td>
+<td style="text-align: right;">$2,643.44 (+32.17 %)</td>
+</tr>
+<tr>
+<td>annualised return / Sharpe / max DD</td>
+<td style="text-align: right;">+9.32 % / 11.116 / -0.83 %</td>
+</tr>
+<tr>
+<td>entries / exits</td>
+<td style="text-align: right;">19 / 18</td>
+</tr>
+<tr>
+<td>hours in position</td>
+<td style="text-align: right;">24212 of 27432 (88.3 %)</td>
+</tr>
+<tr>
+<td>funding received</td>
+<td style="text-align: right;">+695.59 USD (24210 settlements, 2 missing)</td>
+</tr>
+<tr>
+<td>fees spot / perp; slippage spot / perp</td>
+<td style="text-align: right;">26.91 / 17.30; 3.84 / 3.84 USD</td>
+</tr>
+<tr>
+<td>basis haircut charged</td>
+<td style="text-align: right;">0.00 USD</td>
+</tr>
+<tr>
+<td>basis P&amp;L (modelled, 0 by construction)</td>
+<td style="text-align: right;">+0.04 USD</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="btc-stress-variant-haircut-19-bps-per-entry-basis-modeled-see-h9-for-measured-basis">BTC — stress variant (haircut 19 bps per entry) — basis modeled — see H9 for measured basis</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">days on</th>
+<th style="text-align: right;">return %</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD %</th>
+<th style="text-align: right;">funding received USD</th>
+<th style="text-align: right;">funding % of $1,000 leg</th>
+<th style="text-align: right;">fees + slippage (+ haircut) USD</th>
+<th style="text-align: right;">entries</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">152</td>
+<td style="text-align: right;">+5.60</td>
+<td style="text-align: right;">9.07</td>
+<td style="text-align: right;">-0.94</td>
+<td style="text-align: right;">+133.89</td>
+<td style="text-align: right;">+13.39 %</td>
+<td style="text-align: right;">18.56</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">364</td>
+<td style="text-align: right;">+18.43</td>
+<td style="text-align: right;">16.13</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">+399.46</td>
+<td style="text-align: right;">+39.95 %</td>
+<td style="text-align: right;">9.95</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">360</td>
+<td style="text-align: right;">+5.52</td>
+<td style="text-align: right;">12.74</td>
+<td style="text-align: right;">-0.33</td>
+<td style="text-align: right;">+148.68</td>
+<td style="text-align: right;">+14.87 %</td>
+<td style="text-align: right;">10.60</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">-1.21</td>
+<td style="text-align: right;">-3.47</td>
+<td style="text-align: right;">-1.56</td>
+<td style="text-align: right;">+13.56</td>
+<td style="text-align: right;">+1.36 %</td>
+<td style="text-align: right;">48.88</td>
+<td style="text-align: right;">10</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>final equity (from $2,000)</td>
+<td style="text-align: right;">$2,607.34 (+30.37 %)</td>
+</tr>
+<tr>
+<td>annualised return / Sharpe / max DD</td>
+<td style="text-align: right;">+8.85 % / 9.544 / -1.56 %</td>
+</tr>
+<tr>
+<td>entries / exits</td>
+<td style="text-align: right;">19 / 18</td>
+</tr>
+<tr>
+<td>hours in position</td>
+<td style="text-align: right;">24212 of 27432 (88.3 %)</td>
+</tr>
+<tr>
+<td>funding received</td>
+<td style="text-align: right;">+695.59 USD (24210 settlements, 2 missing)</td>
+</tr>
+<tr>
+<td>fees spot / perp; slippage spot / perp</td>
+<td style="text-align: right;">26.91 / 17.30; 3.84 / 3.84 USD</td>
+</tr>
+<tr>
+<td>basis haircut charged</td>
+<td style="text-align: right;">36.10 USD</td>
+</tr>
+<tr>
+<td>basis P&amp;L (modelled, 0 by construction)</td>
+<td style="text-align: right;">+0.04 USD</td>
+</tr>
+</tbody>
+</table></div>
+<p>Base → stress delta: -36.10 USD of equity = the haircut on 19 entries.</p>
+<h3 id="h9cbtc1h-btc-fail">H9c.BTC.1h — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL vs buy-and-hold (2023-05-13 → 2026-06-27).</p>
+</blockquote>
+<p>Reason: at least one calendar year has Sharpe diff below the floor</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 2 per-coin cells, cutoff p ≤ 0.00060 (Bonferroni α_adj 0.00769, m = 13, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, Sharpe diff ≥ -0.5)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>PASS</strong> — rule: 3: Sharpe diff +9.544 &gt; 0, p_up = 0.00000 significant under BH-FDR, max DD smaller</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>9.544 / 0.000 / +9.544</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.0000 / 1.0000</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+8.85 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-1.56 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>5.674 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>88.6 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">+5.60</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">9.073</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+9.073</td>
+<td style="text-align: right;">-0.94</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">65.2</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">+18.43</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">16.131</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+16.131</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">99.5</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">+5.52</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">12.738</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+12.738</td>
+<td style="text-align: right;">-0.33</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">98.6</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-1.21</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-3.470</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-3.470</td>
+<td style="text-align: right;">-1.56</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">76.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>Stress variant (haircut 19 bps per entry). basis modeled — see H9 for measured basis.</p>
+<h2 id="eth-basis-modeled-see-h9-for-measured-basis">ETH — basis modeled — see H9 for measured basis</h2>
+<p>Mark series: Binance 1h 21753 bars (2023-05-12 → 2025-11-03 08:00), HL perp 1h 5679 bars (2025-11-03 09:00 → cut), 0 gaps; on the 16-hour overlap HL closes sit -5.6 bps from Binance. Sample 2023-05-12 00:00:00+00:00 → 2026-06-27 23:00:00+00:00 (27432 bars).</p>
+<h3 id="eth-base-variant-haircut-0-bps-per-entry-basis-modeled-see-h9-for-measured-basis">ETH — base variant (haircut 0 bps per entry) — basis modeled — see H9 for measured basis</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">days on</th>
+<th style="text-align: right;">return %</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD %</th>
+<th style="text-align: right;">funding received USD</th>
+<th style="text-align: right;">funding % of $1,000 leg</th>
+<th style="text-align: right;">fees + slippage (+ haircut) USD</th>
+<th style="text-align: right;">entries</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">189</td>
+<td style="text-align: right;">+6.86</td>
+<td style="text-align: right;">11.97</td>
+<td style="text-align: right;">-0.26</td>
+<td style="text-align: right;">+149.65</td>
+<td style="text-align: right;">+14.97 %</td>
+<td style="text-align: right;">10.46</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">359</td>
+<td style="text-align: right;">+17.34</td>
+<td style="text-align: right;">16.67</td>
+<td style="text-align: right;">-0.28</td>
+<td style="text-align: right;">+378.66</td>
+<td style="text-align: right;">+37.87 %</td>
+<td style="text-align: right;">7.69</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">329</td>
+<td style="text-align: right;">+3.18</td>
+<td style="text-align: right;">5.96</td>
+<td style="text-align: right;">-1.03</td>
+<td style="text-align: right;">+119.09</td>
+<td style="text-align: right;">+11.91 %</td>
+<td style="text-align: right;">39.52</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">154</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">-1.06</td>
+<td style="text-align: right;">-0.75</td>
+<td style="text-align: right;">+19.99</td>
+<td style="text-align: right;">+2.00 %</td>
+<td style="text-align: right;">30.31</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>final equity (from $2,000)</td>
+<td style="text-align: right;">$2,579.26 (+28.96 %)</td>
+</tr>
+<tr>
+<td>annualised return / Sharpe / max DD</td>
+<td style="text-align: right;">+8.47 % / 9.682 / -1.03 %</td>
+</tr>
+<tr>
+<td>entries / exits</td>
+<td style="text-align: right;">25 / 25</td>
+</tr>
+<tr>
+<td>hours in position</td>
+<td style="text-align: right;">24697 of 27432 (90.0 %)</td>
+</tr>
+<tr>
+<td>funding received</td>
+<td style="text-align: right;">+667.39 USD (24695 settlements, 2 missing)</td>
+</tr>
+<tr>
+<td>fees spot / perp; slippage spot / perp</td>
+<td style="text-align: right;">35.18 / 22.63; 15.08 / 15.09 USD</td>
+</tr>
+<tr>
+<td>basis haircut charged</td>
+<td style="text-align: right;">0.00 USD</td>
+</tr>
+<tr>
+<td>basis P&amp;L (modelled, 0 by construction)</td>
+<td style="text-align: right;">+0.00 USD</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="eth-stress-variant-haircut-35-bps-per-entry-basis-modeled-see-h9-for-measured-basis">ETH — stress variant (haircut 35 bps per entry) — basis modeled — see H9 for measured basis</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">days on</th>
+<th style="text-align: right;">return %</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">max DD %</th>
+<th style="text-align: right;">funding received USD</th>
+<th style="text-align: right;">funding % of $1,000 leg</th>
+<th style="text-align: right;">fees + slippage (+ haircut) USD</th>
+<th style="text-align: right;">entries</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">189</td>
+<td style="text-align: right;">+6.16</td>
+<td style="text-align: right;">7.73</td>
+<td style="text-align: right;">-0.61</td>
+<td style="text-align: right;">+149.65</td>
+<td style="text-align: right;">+14.97 %</td>
+<td style="text-align: right;">20.96</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">359</td>
+<td style="text-align: right;">+17.13</td>
+<td style="text-align: right;">15.51</td>
+<td style="text-align: right;">-0.57</td>
+<td style="text-align: right;">+378.66</td>
+<td style="text-align: right;">+37.87 %</td>
+<td style="text-align: right;">14.69</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">329</td>
+<td style="text-align: right;">+1.65</td>
+<td style="text-align: right;">1.74</td>
+<td style="text-align: right;">-2.15</td>
+<td style="text-align: right;">+119.09</td>
+<td style="text-align: right;">+11.91 %</td>
+<td style="text-align: right;">78.02</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">154</td>
+<td style="text-align: right;">-1.44</td>
+<td style="text-align: right;">-2.21</td>
+<td style="text-align: right;">-1.71</td>
+<td style="text-align: right;">+19.99</td>
+<td style="text-align: right;">+2.00 %</td>
+<td style="text-align: right;">61.81</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>final equity (from $2,000)</td>
+<td style="text-align: right;">$2,491.76 (+24.59 %)</td>
+</tr>
+<tr>
+<td>annualised return / Sharpe / max DD</td>
+<td style="text-align: right;">+7.28 % / 6.095 / -2.15 %</td>
+</tr>
+<tr>
+<td>entries / exits</td>
+<td style="text-align: right;">25 / 25</td>
+</tr>
+<tr>
+<td>hours in position</td>
+<td style="text-align: right;">24697 of 27432 (90.0 %)</td>
+</tr>
+<tr>
+<td>funding received</td>
+<td style="text-align: right;">+667.39 USD (24695 settlements, 2 missing)</td>
+</tr>
+<tr>
+<td>fees spot / perp; slippage spot / perp</td>
+<td style="text-align: right;">35.18 / 22.63; 15.08 / 15.09 USD</td>
+</tr>
+<tr>
+<td>basis haircut charged</td>
+<td style="text-align: right;">87.50 USD</td>
+</tr>
+<tr>
+<td>basis P&amp;L (modelled, 0 by construction)</td>
+<td style="text-align: right;">+0.00 USD</td>
+</tr>
+</tbody>
+</table></div>
+<p>Base → stress delta: -87.50 USD of equity = the haircut on 25 entries.</p>
+<h3 id="h9ceth1h-eth-fail">H9c.ETH.1h — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL vs buy-and-hold (2023-05-13 → 2026-06-27).</p>
+</blockquote>
+<p>Reason: at least one calendar year has Sharpe diff below the floor</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 2 per-coin cells, cutoff p ≤ 0.00060 (Bonferroni α_adj 0.00769, m = 13, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, Sharpe diff ≥ -0.5)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>PASS</strong> — rule: 3: Sharpe diff +6.095 &gt; 0, p_up = 0.00060 significant under BH-FDR, max DD smaller</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>6.095 / 0.000 / +6.095</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.0006 / 0.9994</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+7.28 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-2.15 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>3.383 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>90.3 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">+6.16</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">7.726</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+7.726</td>
+<td style="text-align: right;">-0.61</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">81.1</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">+17.13</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">15.513</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+15.513</td>
+<td style="text-align: right;">-0.57</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">98.1</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">+1.65</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">1.742</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+1.742</td>
+<td style="text-align: right;">-2.15</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">90.1</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-1.44</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-2.206</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-2.206</td>
+<td style="text-align: right;">-1.71</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">86.5</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>Stress variant (haircut 35 bps per entry). basis modeled — see H9 for measured basis.</p>
+<h2 id="pooled-equal-weight-btc-eth-stress-basis-modeled-see-h9-for-measured-basis">Pooled (equal-weight BTC + ETH, stress) — basis modeled — see H9 for measured basis</h2>
+<h3 id="h9cpooled1h-btceth-fail">H9c.pooled.1h — BTC+ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL vs buy-and-hold (2023-05-13 → 2026-06-27).</p>
+</blockquote>
+<p>Reason: at least one calendar year has Sharpe diff below the floor</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00769 (Bonferroni, m = 13 registered hypotheses)</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, Sharpe diff ≥ -0.5)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>PASS</strong> — rule: 3: Sharpe diff +8.775 &gt; 0, p_up = 0.00000 &lt; alpha_adj 0.00769, max DD smaller</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>8.775 / 0.000 / +8.775</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.0000 / 1.0000</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+8.06 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-1.55 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>5.204 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>89.4 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">+5.88</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">9.908</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+9.908</td>
+<td style="text-align: right;">-0.45</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">73.2</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">+17.78</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">17.172</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+17.172</td>
+<td style="text-align: right;">-0.22</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">98.8</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">+3.57</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">6.294</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+6.294</td>
+<td style="text-align: right;">-1.11</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">94.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-1.32</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-3.419</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-3.419</td>
+<td style="text-align: right;">-1.55</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">81.5</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>Equal-weight daily mean of the two coins' stress variants; benchmark cash. basis modeled — see H9 for measured basis.</p>
+<h2 id="context-current-hl-funding-level-live-last-30-days-not-used-in-any-computation">Context: current HL funding level (live, last 30 days; not used in any computation)</h2>
+<ul>
+<li>BTC: +9.2 % annualised over 720 hourly settlements (2026-08-28 → 2026-09-27)</li>
+<li>ETH: +10.2 % annualised over 720 hourly settlements (2026-08-28 → 2026-09-27)</li>
+</ul>
+<h2 id="artefacts">Artefacts</h2>
+<ul>
+<li>Charts (gitignored): <code>reports/h9c_carry_modeled_basis_{COIN}.html</code> (base and stress equity vs cash, pair on/off)</li>
+<li>Cache: <code>binance_{COIN}_1h_1683849600000_1762214400000</code>, stitched <code>{COIN}_1h_*</code>, <code>funding_{COIN}_1640995200000_1790467200000</code>.</li>
+</ul>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

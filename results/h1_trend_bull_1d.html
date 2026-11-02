@@ -1,0 +1,1783 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H1 — bull-regime trend following, 1d (BTC, ETH, SOL) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h1-bull-regime-trend-following-1d-btc-eth-sol">H1 — bull-regime trend following, 1d (BTC, ETH, SOL)</h1>
+<p><em>Generated 2026-09-26T20:36:20.587734+00:00. Runner: <code>examples/run_h1_trend_bull_1d.py</code>. Strategy: <code>strategies/trend_bull_1d.py</code>. Gate: <code>validation/gate.py</code>. Spec: docs/HYPOTHESIS_LEDGER.md, H1.</em></p>
+<p><strong>Holdout LOCKED:</strong> everything from 2026-06-28T00:00:00+00:00 on is excluded from every number below and never printed. Cache snapshot 2026-09-26 (candles from 2022-01-01).</p>
+<p>α_adj = 0.10 / m, <strong>m = 11</strong> REGISTERED cells → <strong>0.00909</strong>. FAIL routes use α = 0.10. Family <code>mean_return</code> (bootstrap, B = 10,000, seed 0). Costs: CandleEstimatedCostModel, taker 4.5 bps, every hourly funding settlement inside each 1d bar. Start equity $1,000; risk 1 % per trade; notional ≤ 3 × equity. No parameter sweeps.</p>
+<h2 id="verdicts">Verdicts</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>cell</th>
+<th>verdict</th>
+<th>L1</th>
+<th>L2 (rule)</th>
+<th style="text-align: right;">n pooled</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">p_down</th>
+<th style="text-align: right;">PF pooled</th>
+<th style="text-align: right;">mean ret/trade</th>
+<th style="text-align: right;">net USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1.BTC.1d</td>
+<td><strong>INSUFFICIENT_DATA</strong></td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (5)</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">0.2327</td>
+<td style="text-align: right;">0.7673</td>
+<td style="text-align: right;">1.582</td>
+<td style="text-align: right;">+0.02241</td>
+<td style="text-align: right;">+29.52</td>
+</tr>
+<tr>
+<td>H1.ETH.1d</td>
+<td><strong>INSUFFICIENT_DATA</strong></td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (1)</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>H1.SOL.1d</td>
+<td><strong>INSUFFICIENT_DATA</strong></td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (1)</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>H1.pooled.1d</td>
+<td><strong>INSUFFICIENT_DATA</strong></td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (5)</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">0.1457</td>
+<td style="text-align: right;">0.8543</td>
+<td style="text-align: right;">2.291</td>
+<td style="text-align: right;">+0.06080</td>
+<td style="text-align: right;">+227.67</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="per-coin">Per coin</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>metric</th>
+<th style="text-align: right;">BTC</th>
+<th style="text-align: right;">ETH</th>
+<th style="text-align: right;">SOL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pre-holdout bars (1d)</td>
+<td style="text-align: right;">1639 (2022-01-01 → 2026-06-27)</td>
+<td style="text-align: right;">1639 (2022-01-01 → 2026-06-27)</td>
+<td style="text-align: right;">1639 (2022-01-01 → 2026-06-27)</td>
+</tr>
+<tr>
+<td>closed round trips</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr>
+<td>win rate</td>
+<td style="text-align: right;">30.4 %</td>
+<td style="text-align: right;">23.5 %</td>
+<td style="text-align: right;">41.7 %</td>
+</tr>
+<tr>
+<td><strong>mean return per trade</strong></td>
+<td style="text-align: right;">+0.0224</td>
+<td style="text-align: right;">-0.0333</td>
+<td style="text-align: right;">+0.2677</td>
+</tr>
+<tr>
+<td>median return per trade</td>
+<td style="text-align: right;">-0.0393</td>
+<td style="text-align: right;">-0.0682</td>
+<td style="text-align: right;">-0.0118</td>
+</tr>
+<tr>
+<td><strong>profit factor</strong></td>
+<td style="text-align: right;">1.582</td>
+<td style="text-align: right;">0.537</td>
+<td style="text-align: right;">10.925</td>
+</tr>
+<tr>
+<td><strong>max drawdown</strong> (continuous equity)</td>
+<td style="text-align: right;">-6.46 %</td>
+<td style="text-align: right;">-9.01 %</td>
+<td style="text-align: right;">-9.53 %</td>
+</tr>
+<tr>
+<td>final equity / total return</td>
+<td style="text-align: right;">$1,027.88 / +2.79 %</td>
+<td style="text-align: right;">$925.38 / -7.46 %</td>
+<td style="text-align: right;">$1,271.34 / +27.13 %</td>
+</tr>
+<tr>
+<td>net trade P&amp;L (after fees, before funding)</td>
+<td style="text-align: right;">+82.51 USD</td>
+<td style="text-align: right;">-49.53 USD</td>
+<td style="text-align: right;">+331.00 USD</td>
+</tr>
+<tr>
+<td>funding total (+ = paid)</td>
+<td style="text-align: right;">+52.99 USD (7871 settlements, 1489 missing)</td>
+<td style="text-align: right;">+24.22 USD (4247 settlements, 1609 missing)</td>
+<td style="text-align: right;">+59.09 USD (5688 settlements, 0 missing)</td>
+</tr>
+<tr>
+<td>fees / slippage</td>
+<td style="text-align: right;">3.33 / 78.63 USD</td>
+<td style="text-align: right;">1.72 / 54.72 USD</td>
+<td style="text-align: right;">1.30 / 62.87 USD</td>
+</tr>
+<tr>
+<td>modelled slippage per fill (cost-model diagnostic)</td>
+<td style="text-align: right;">110 bps vs 4.5 bps fee</td>
+<td style="text-align: right;">146 bps vs 4.5 bps fee</td>
+<td style="text-align: right;">197 bps vs 4.5 bps fee</td>
+</tr>
+<tr>
+<td>exposure (post-warm-up bars in position)</td>
+<td style="text-align: right;">27.5 %</td>
+<td style="text-align: right;">17.2 %</td>
+<td style="text-align: right;">16.7 %</td>
+</tr>
+<tr>
+<td>regime coverage (bull days / classified days)</td>
+<td style="text-align: right;">811 / 1420 = 57.1 % (warm-up 219 d)</td>
+<td style="text-align: right;">579 / 1420 = 40.8 % (warm-up 219 d)</td>
+<td style="text-align: right;">513 / 1420 = 36.1 % (warm-up 219 d)</td>
+</tr>
+<tr>
+<td>mean entry notional</td>
+<td style="text-align: right;">158 USD</td>
+<td style="text-align: right;">113 USD</td>
+<td style="text-align: right;">105 USD</td>
+</tr>
+<tr>
+<td>mean hold (days)</td>
+<td style="text-align: right;">17.0</td>
+<td style="text-align: right;">14.4</td>
+<td style="text-align: right;">19.8</td>
+</tr>
+<tr>
+<td>funding data from</td>
+<td style="text-align: right;">2023-05-12 (3 round trips closed before it, un-funded)</td>
+<td style="text-align: right;">2023-05-12 (4 round trips closed before it, un-funded)</td>
+<td style="text-align: right;">2023-05-12 (0 round trips closed before it, un-funded)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="btc-per-window-90-d-tiled-back-from-the-cut">BTC — per window (90 d, tiled back from the cut)</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+<th>equity start → end</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,000 → 1,000</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-4.97</td>
+<td style="text-align: right;">+0.56</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,000 → 1,006</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-11.06</td>
+<td style="text-align: right;">-2.42</td>
+<td style="text-align: right;">+2.46</td>
+<td>1,006 → 981</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-10.07</td>
+<td style="text-align: right;">-1.07</td>
+<td style="text-align: right;">+0.36</td>
+<td>981 → 971</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+54.29</td>
+<td style="text-align: right;">+5.03</td>
+<td style="text-align: right;">+16.01</td>
+<td>971 → 1,019</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+68.17</td>
+<td style="text-align: right;">+4.24</td>
+<td style="text-align: right;">+14.09</td>
+<td>1,019 → 1,063</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-16.13</td>
+<td style="text-align: right;">-1.67</td>
+<td style="text-align: right;">+1.50</td>
+<td>1,063 → 1,045</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-16.94</td>
+<td style="text-align: right;">-1.79</td>
+<td style="text-align: right;">+1.55</td>
+<td>1,045 → 1,026</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+38.53</td>
+<td style="text-align: right;">+2.94</td>
+<td style="text-align: right;">+8.32</td>
+<td>1,026 → 1,056</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-7.22</td>
+<td style="text-align: right;">-0.77</td>
+<td style="text-align: right;">+0.86</td>
+<td>1,056 → 1,048</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+14.84</td>
+<td style="text-align: right;">+1.20</td>
+<td style="text-align: right;">+2.17</td>
+<td>1,048 → 1,061</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-11.23</td>
+<td style="text-align: right;">-1.54</td>
+<td style="text-align: right;">+4.85</td>
+<td>1,061 → 1,045</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-15.71</td>
+<td style="text-align: right;">-1.59</td>
+<td style="text-align: right;">+0.82</td>
+<td>1,045 → 1,028</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,028 → 1,028</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,028 → 1,028</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h1btc1d-btc-insufficient_data">H1.BTC.1d — BTC — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2022-10-17 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2022-10-17 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00909 (m = 11 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/15 passed, 15 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 5: positive but not significant, n = 23 &lt; N_MIN_POOLED (130)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>23 / 7 / 30.4 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>1.582 / +29.52 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>+0.02241</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.2327 / 0.7673</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 811, bear 316, range 223, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 23</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.56</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-2.42</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.07</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+5.03</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+4.24</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.67</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.79</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+2.94</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.77</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+1.20</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.54</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.59</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2022-01-01 → holdout cut 2026-06-28, start equity $1,000; windows are 90-day slices tiled back from the cut (first decision bar 2022-08-08). Train side = round trips entered before the window (nothing fitted).</p>
+<h3 id="eth-per-window-90-d-tiled-back-from-the-cut">ETH — per window (90 d, tiled back from the cut)</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+<th>equity start → end</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,000 → 1,000</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-21.18</td>
+<td style="text-align: right;">-0.54</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,000 → 995</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-14.40</td>
+<td style="text-align: right;">-2.27</td>
+<td style="text-align: right;">+3.08</td>
+<td>995 → 972</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-1.17</td>
+<td style="text-align: right;">+0.30</td>
+<td>972 → 961</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-7.76</td>
+<td style="text-align: right;">-1.30</td>
+<td style="text-align: right;">+4.61</td>
+<td>961 → 948</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+43.20</td>
+<td style="text-align: right;">+3.50</td>
+<td style="text-align: right;">+9.93</td>
+<td>948 → 981</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-16.53</td>
+<td style="text-align: right;">-1.90</td>
+<td style="text-align: right;">+2.01</td>
+<td>981 → 963</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-12.87</td>
+<td style="text-align: right;">-1.40</td>
+<td style="text-align: right;">+0.58</td>
+<td>963 → 949</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+2.17</td>
+<td style="text-align: right;">-0.07</td>
+<td style="text-align: right;">+2.78</td>
+<td>949 → 949</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>949 → 949</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>949 → 949</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-10.90</td>
+<td style="text-align: right;">-1.24</td>
+<td style="text-align: right;">+0.83</td>
+<td>949 → 937</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-11.26</td>
+<td style="text-align: right;">-1.22</td>
+<td style="text-align: right;">+0.12</td>
+<td>937 → 925</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>925 → 925</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>925 → 925</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h1eth1d-eth-insufficient_data">H1.ETH.1d — ETH — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2022-10-17 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2022-10-17 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00909 (m = 11 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/15 passed, 15 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 17 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>17 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 579, bear 463, range 308, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 17</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.54</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-2.27</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.17</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.30</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+3.50</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.90</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.40</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.07</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.24</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.22</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2022-01-01 → holdout cut 2026-06-28, start equity $1,000; windows are 90-day slices tiled back from the cut (first decision bar 2022-08-08). Train side = round trips entered before the window (nothing fitted).</p>
+<h3 id="sol-per-window-90-d-tiled-back-from-the-cut">SOL — per window (90 d, tiled back from the cut)</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+<th>equity start → end</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,000 → 1,000</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,000 → 1,000</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+2.87</td>
+<td style="text-align: right;">+1.39</td>
+<td style="text-align: right;">+0.51</td>
+<td>1,000 → 1,014</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-12.68</td>
+<td style="text-align: right;">-2.46</td>
+<td style="text-align: right;">+0.59</td>
+<td>1,014 → 989</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+302.55</td>
+<td style="text-align: right;">+26.70</td>
+<td style="text-align: right;">+38.45</td>
+<td>989 → 1,253</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+34.57</td>
+<td style="text-align: right;">+1.87</td>
+<td style="text-align: right;">+11.07</td>
+<td>1,253 → 1,276</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-0.86</td>
+<td style="text-align: right;">-0.16</td>
+<td style="text-align: right;">+1.11</td>
+<td>1,276 → 1,274</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-2.59</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">+1.38</td>
+<td>1,274 → 1,270</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+19.57</td>
+<td style="text-align: right;">+1.15</td>
+<td style="text-align: right;">+4.93</td>
+<td>1,270 → 1,285</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-1.51</td>
+<td style="text-align: right;">-0.15</td>
+<td style="text-align: right;">+0.39</td>
+<td>1,285 → 1,283</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-8.59</td>
+<td style="text-align: right;">-0.68</td>
+<td style="text-align: right;">+0.04</td>
+<td>1,283 → 1,274</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-2.32</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">+0.62</td>
+<td>1,274 → 1,271</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,271 → 1,271</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,271 → 1,271</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td>1,271 → 1,271</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h1sol1d-sol-insufficient_data">H1.SOL.1d — SOL — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2022-10-17 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2022-10-17 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00909 (m = 11 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/15 passed, 15 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 12 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>12 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 513, bear 559, range 278, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 12</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+1.39</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-2.46</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+26.70</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+1.87</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.16</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.32</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+1.15</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.15</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.68</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2022-01-01 → holdout cut 2026-06-28, start equity $1,000; windows are 90-day slices tiled back from the cut (first decision bar 2022-08-08). Train side = round trips entered before the window (nothing fitted).</p>
+<h2 id="pooled-btc-eth-sol">Pooled (BTC + ETH + SOL)</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th>coins</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-26.15</td>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">+0.00</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-22.59</td>
+<td style="text-align: right;">-1.10</td>
+<td style="text-align: right;">+6.05</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-22.75</td>
+<td style="text-align: right;">-1.58</td>
+<td style="text-align: right;">+1.25</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+349.07</td>
+<td style="text-align: right;">+10.29</td>
+<td style="text-align: right;">+59.07</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+145.95</td>
+<td style="text-align: right;">+3.10</td>
+<td style="text-align: right;">+35.08</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-33.53</td>
+<td style="text-align: right;">-1.16</td>
+<td style="text-align: right;">+4.62</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-32.40</td>
+<td style="text-align: right;">-1.11</td>
+<td style="text-align: right;">+3.51</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+60.28</td>
+<td style="text-align: right;">+1.36</td>
+<td style="text-align: right;">+16.02</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-8.73</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">+1.25</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+6.25</td>
+<td style="text-align: right;">+0.12</td>
+<td style="text-align: right;">+2.22</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-24.45</td>
+<td style="text-align: right;">-0.95</td>
+<td style="text-align: right;">+6.30</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-26.98</td>
+<td style="text-align: right;">-0.86</td>
+<td style="text-align: right;">+0.94</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">+0.00</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h1pooled1d-btcethsol-insufficient_data">H1.pooled.1d — BTC+ETH+SOL — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {unclassified} (2022-10-17 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2022-10-17 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00909 (m = 11 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 1/15 passed, 8 insufficient, mean PF 1.962)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 5: positive but not significant, n = 52 &lt; N_MIN_POOLED (130)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>52 / 16 / 30.8 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>2.291 / +227.67 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>+0.06080</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.1457 / 0.8543</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>—</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2022-10-17 → 2023-01-15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2023-01-15 → 2023-04-15</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">0.924</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2023-04-15 → 2023-07-14</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">-1.10</td>
+<td style="text-align: right;">0.829</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2023-07-14 → 2023-10-12</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.58</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2023-10-12 → 2024-01-10</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">11.17</td>
+<td style="text-align: right;">+10.29</td>
+<td style="text-align: right;">0.108</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-01-10 → 2024-04-09</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">17.31</td>
+<td style="text-align: right;">+3.10</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-04-09 → 2024-07-08</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-1.16</td>
+<td style="text-align: right;">0.991</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2024-07-08 → 2024-10-06</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">-1.11</td>
+<td style="text-align: right;">0.990</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2024-10-06 → 2025-01-04</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+1.36</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-01-04 → 2025-04-04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-04 → 2025-07-03</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.12</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-07-03 → 2025-10-01</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">-0.95</td>
+<td style="text-align: right;">0.914</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-10-01 → 2025-12-30</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.86</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Pooled per window over the three coins' continuous runs (each its own $1,000 book): trades and funding summed, return = Σ net equity change / Σ equity at window start. Regime scoping is per coin (see the per-coin reports); the pooled cell has no single regime series.
+Regime scoping unavailable: no daily candles supplied.</p>
+<h2 id="caveats-facts-about-the-inputs-the-spec-is-not-revisited-here">Caveats (facts about the inputs; the spec is not revisited here)</h2>
+<ul>
+<li><strong>Cost model on 1d bars.</strong> CandleEstimatedCostModel prices slippage as 30 % of the mean intra-bar range plus a volume-impact term. On daily bars that is BTC 110 bps, ETH 146 bps, SOL 197 bps per fill, against a 4.5 bps fee — the same registered model the 1h/4h cells used, but it is range-scaled, so on 1d it is by far the largest cost line. Every number above includes it.</li>
+<li><strong>Pre-mainnet candles.</strong> HL's candleSnapshot returns 1d bars from 2022-01-01 with zero volume until 2023-02-26 (SOL 2023-03-04), i.e. before the venue traded; they behave like index history (the impact term is 0 there, the spread proxy still applies).</li>
+<li><strong>Funding gap.</strong> fundingHistory starts 2023-05-12; round trips closed before it carry no funding (BTC 3, ETH 4, SOL 0). Missing hourly settlements are counted, never zero-filled.</li>
+<li><strong>Single-trade concentration.</strong> SOL's PF and mean return come from one trade (window 2023-10-12 → 2024-01-10); its median per-trade return is negative. BTC and ETH win rates are 23-30 %, as expected for a trend rule.</li>
+<li><strong>Trade count.</strong> 12-23 round trips per coin over ~3.7 pre-holdout years, 0-4 per 90-day window: below MIN_TRADES_PER_WINDOW (5) in every window and below N_MIN_POOLED (130) pooled. That is what the INSUFFICIENT_DATA verdicts state.</li>
+</ul>
+<h2 id="artefacts">Artefacts</h2>
+<ul>
+<li>Equity-curve / trade charts (Plotly, gitignored like all reports): <code>reports/h1_trend_bull_1d_BTC.html</code>, <code>reports/h1_trend_bull_1d_ETH.html</code>, <code>reports/h1_trend_bull_1d_SOL.html</code></li>
+<li>Cache snapshot keys: <code>BTC_1d_1640995200000_1790467200000</code>, <code>ETH_1d_1640995200000_1790467200000</code>, <code>SOL_1d_1640995200000_1790467200000</code> and the matching <code>funding_*</code> files.</li>
+</ul>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

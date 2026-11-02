@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H1b pooled cell — re-grade under the multiple-comparison method fix · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h1b-pooled-cell-re-grade-under-the-multiple-comparison-method-fix">H1b pooled cell — re-grade under the multiple-comparison method fix</h1>
+<p><em>Generated 2026-09-27T07:43:50.218458+00:00. Runner: <code>examples/regrade_h1b_pooled.py</code>.</em></p>
+<p>Same run, same windows, same trades as results/h1b_trend_bull_1d_universe.md; only α_adj differs.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>grading</th>
+<th style="text-align: right;">m</th>
+<th style="text-align: right;">α_adj</th>
+<th style="text-align: right;">p_up</th>
+<th>L1</th>
+<th>L2 (rule)</th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>old: Bonferroni over cells</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.00323</td>
+<td style="text-align: right;">0.3170</td>
+<td>FAIL</td>
+<td>INSUFFICIENT (5: positive but not significant, n = 99 &lt; N_MIN_POOLED (130))</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>new: Bonferroni over hypotheses</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.01111</td>
+<td style="text-align: right;">0.3170</td>
+<td>FAIL</td>
+<td>INSUFFICIENT (5: positive but not significant, n = 99 &lt; N_MIN_POOLED (130))</td>
+<td><strong>FAIL</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Verdict unchanged.</strong> p_up = 0.3170 fails any α; Level 1 fails on replication regardless of α.</p>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

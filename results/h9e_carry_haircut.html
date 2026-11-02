@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H9e — H9d with the re-derived stress haircut (basis modeled — see H9 for measured basis) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h9e-h9d-with-the-re-derived-stress-haircut-basis-modeled-see-h9-for-measured-basis">H9e — H9d with the re-derived stress haircut (basis modeled — see H9 for measured basis)</h1>
+<p><em>Generated 2026-09-29T12:47:35.581607+00:00. Runner: <code>examples/run_h9e_carry_haircut.py</code>, which runs <code>examples/run_h9d_carry_threshold.py</code> unchanged except the per-entry stress haircut. Family <code>daily_returns</code> v2, max_dd_cap 0.10, α_adj 0.10 / 21 = 0.00476 (pooled), BH-FDR q = 0.10 per coin. Pre-holdout data only (2023-05-12 → 2026-06-28).</em></p>
+<p>Haircut per entry: H9e BTC 29.1 / ETH 29.1 bps; H9d BTC 19 / ETH 35 bps. Control: H9d's stress variant re-run in the same process reproduces its recorded v2 figures (PASS, same annualised return and max DD).</p>
+<h2 id="verdicts-h9e-vs-h9d-stress-variant-v2">Verdicts, H9e vs H9d (stress variant, v2)</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>cell</th>
+<th>H9e verdict</th>
+<th>L1</th>
+<th>L2 (rule)</th>
+<th style="text-align: right;">H9e ann. return</th>
+<th style="text-align: right;">H9d ann. return</th>
+<th style="text-align: right;">H9e max DD</th>
+<th style="text-align: right;">H9d max DD</th>
+<th style="text-align: right;">H9e Sharpe</th>
+<th style="text-align: right;">p_up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H9e.BTC.1h</td>
+<td><strong>PASS</strong></td>
+<td>PASS</td>
+<td>PASS (3)</td>
+<td style="text-align: right;">+9.13 %</td>
+<td style="text-align: right;">+9.28 %</td>
+<td style="text-align: right;">-1.17 %</td>
+<td style="text-align: right;">-0.94 %</td>
+<td style="text-align: right;">10.36</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr>
+<td>H9e.ETH.1h</td>
+<td><strong>PASS</strong></td>
+<td>PASS</td>
+<td>PASS (3)</td>
+<td style="text-align: right;">+8.28 %</td>
+<td style="text-align: right;">+8.18 %</td>
+<td style="text-align: right;">-0.60 %</td>
+<td style="text-align: right;">-0.68 %</td>
+<td style="text-align: right;">9.38</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr>
+<td>H9e.pooled.1h</td>
+<td><strong>PASS</strong></td>
+<td>PASS</td>
+<td>PASS (3)</td>
+<td style="text-align: right;">+8.71 %</td>
+<td style="text-align: right;">+8.73 %</td>
+<td style="text-align: right;">-0.81 %</td>
+<td style="text-align: right;">-0.74 %</td>
+<td style="text-align: right;">10.95</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="calendar-years-stress-h9e-vs-h9d">Calendar years (stress), H9e vs H9d</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th style="text-align: right;">year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">entries</th>
+<th style="text-align: right;">H9e return %</th>
+<th style="text-align: right;">H9d return %</th>
+<th style="text-align: right;">H9e max DD %</th>
+<th style="text-align: right;">H9e costs USD</th>
+<th style="text-align: right;">H9d costs USD</th>
+<th style="text-align: center;">year ok (v2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+6.24</td>
+<td style="text-align: right;">+6.34</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">5.78</td>
+<td style="text-align: right;">4.77</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>BTC</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">+18.47</td>
+<td style="text-align: right;">+18.49</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">6.40</td>
+<td style="text-align: right;">5.39</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>BTC</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+5.33</td>
+<td style="text-align: right;">+5.41</td>
+<td style="text-align: right;">-0.40</td>
+<td style="text-align: right;">12.60</td>
+<td style="text-align: right;">10.58</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>BTC</td>
+<td style="text-align: right;">2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">-0.85</td>
+<td style="text-align: right;">-0.62</td>
+<td style="text-align: right;">-1.17</td>
+<td style="text-align: right;">37.66</td>
+<td style="text-align: right;">30.59</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td style="text-align: right;">2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">+6.45</td>
+<td style="text-align: right;">+6.36</td>
+<td style="text-align: right;">-0.35</td>
+<td style="text-align: right;">12.78</td>
+<td style="text-align: right;">13.96</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td style="text-align: right;">2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">+16.73</td>
+<td style="text-align: right;">+16.69</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">13.54</td>
+<td style="text-align: right;">14.72</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td style="text-align: right;">2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">+3.61</td>
+<td style="text-align: right;">+3.52</td>
+<td style="text-align: right;">-0.46</td>
+<td style="text-align: right;">26.95</td>
+<td style="text-align: right;">29.31</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td style="text-align: right;">2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-0.37</td>
+<td style="text-align: right;">-0.47</td>
+<td style="text-align: right;">-0.60</td>
+<td style="text-align: right;">30.83</td>
+<td style="text-align: right;">33.78</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="v2-reports-h9e">v2 reports (H9e)</h2>
+<h3 id="h9ebtc1h-btc-pass">H9e.BTC.1h — BTC — <strong>PASS</strong></h3>
+<blockquote>
+<p>PASS vs buy-and-hold (2023-05-13 → 2026-06-27): higher Sharpe with smaller drawdown; the claim is relative to the benchmark.</p>
+</blockquote>
+<p>Reason: both levels pass</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>benchmark mode</td>
+<td>series</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 2 per-coin cells, cutoff p ≤ 0.00000 (Bonferroni α_adj 0.00476, m = 21, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>family version</td>
+<td>v2</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, net return ≥ -2 %; Sharpe diff ≥ -0.5 only where the year's daily std ≥ 5 bps)</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>PASS</strong> — rule: 3: Sharpe diff +10.358 &gt; 0, p_up = 0.00000 significant under BH-FDR, max DD smaller</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>10.358 / 0.000 / +10.358</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.0000 / 1.0000</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+9.13 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-1.17 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>7.805 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>85.7 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">daily std bps</th>
+<th style="text-align: center;">Sharpe floor applies</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">+6.24</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">11.222</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+11.222</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">61.8</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">+18.47</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">16.423</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+16.423</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-0.34</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">98.6</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">+5.33</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">12.101</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+12.101</td>
+<td style="text-align: right;">2.2</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.40</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">97.3</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-0.85</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-2.992</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-2.992</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-1.17</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">66.9</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Stress variant, haircut 29.1 bps. basis modeled — see H9 for measured basis.</p>
+<h3 id="h9eeth1h-eth-pass">H9e.ETH.1h — ETH — <strong>PASS</strong></h3>
+<blockquote>
+<p>PASS vs buy-and-hold (2023-05-13 → 2026-06-27): higher Sharpe with smaller drawdown; the claim is relative to the benchmark.</p>
+</blockquote>
+<p>Reason: both levels pass</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>benchmark mode</td>
+<td>series</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 2 per-coin cells, cutoff p ≤ 0.00000 (Bonferroni α_adj 0.00476, m = 21, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>family version</td>
+<td>v2</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, net return ≥ -2 %; Sharpe diff ≥ -0.5 only where the year's daily std ≥ 5 bps)</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>PASS</strong> — rule: 3: Sharpe diff +9.378 &gt; 0, p_up = 0.00000 significant under BH-FDR, max DD smaller</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>9.378 / 0.000 / +9.378</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.0000 / 1.0000</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+8.28 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-0.60 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>13.900 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>84.9 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">daily std bps</th>
+<th style="text-align: center;">Sharpe floor applies</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">+6.45</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">10.630</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+10.630</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.35</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">79.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">+16.73</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">15.606</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+15.606</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">97.0</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">+3.61</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">6.875</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+6.875</td>
+<td style="text-align: right;">2.7</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.46</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">82.7</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-0.37</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-1.355</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-1.355</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.60</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">71.3</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Stress variant, haircut 29.1 bps. basis modeled — see H9 for measured basis.</p>
+<h3 id="h9epooled1h-btceth-pass">H9e.pooled.1h — BTC+ETH — <strong>PASS</strong></h3>
+<blockquote>
+<p>PASS vs buy-and-hold (2023-05-13 → 2026-06-27): higher Sharpe with smaller drawdown; the claim is relative to the benchmark.</p>
+</blockquote>
+<p>Reason: both levels pass</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>benchmark mode</td>
+<td>series</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00476 (Bonferroni, m = 21 registered hypotheses)</td>
+</tr>
+<tr>
+<td>family version</td>
+<td>v2</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, net return ≥ -2 %; Sharpe diff ≥ -0.5 only where the year's daily std ≥ 5 bps)</td>
+<td><strong>PASS</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>PASS</strong> — rule: 3: Sharpe diff +10.947 &gt; 0, p_up = 0.00000 &lt; alpha_adj 0.00476, max DD smaller</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>10.947 / 0.000 / +10.947</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.0000 / 1.0000</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+8.71 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-0.81 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>10.804 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>85.3 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">daily std bps</th>
+<th style="text-align: center;">Sharpe floor applies</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">+6.34</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">12.557</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+12.557</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.18</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">70.6</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">+17.60</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">17.325</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+17.325</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.14</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">97.8</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">+4.47</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">10.963</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+10.963</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.37</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">90.0</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">-0.61</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-3.135</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-3.135</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: right;">-0.81</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">69.1</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Equal-weight stress variants. basis modeled — see H9 for measured basis.</p>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

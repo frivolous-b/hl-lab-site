@@ -1,0 +1,1802 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gate calibration · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="gate-calibration">Gate calibration</h1>
+<p><em>Generated 2026-09-26T20:04:33.133502+00:00. Runner: <code>examples/run_gate_calibration.py</code>. Gate: <code>validation/gate.py</code>.</em></p>
+<p>alpha_adj = 0.10 / m with <strong>m = 8</strong> REGISTERED cells in docs/HYPOTHESIS_LEDGER.md → <strong>0.01250</strong>. FAIL routes use α = 0.10.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>case</th>
+<th>family</th>
+<th>expected</th>
+<th>actual</th>
+<th>L1</th>
+<th>L2 (rule)</th>
+<th style="text-align: right;">n pooled</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">p_down</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">net USD</th>
+<th>regimes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CAL.vanilla.bollinger.BTC.1h</td>
+<td>binomial</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (3)</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">0.8358</td>
+<td style="text-align: right;">0.2319</td>
+<td style="text-align: right;">0.270</td>
+<td style="text-align: right;">-6288</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.vanilla.ma_crossover.BTC.1h</td>
+<td>mean_return</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (2)</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">0.9897</td>
+<td style="text-align: right;">0.0103</td>
+<td style="text-align: right;">0.554</td>
+<td style="text-align: right;">-4243</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.vanilla.rsi.BTC.1h</td>
+<td>binomial</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (3)</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.7142</td>
+<td style="text-align: right;">0.4253</td>
+<td style="text-align: right;">0.381</td>
+<td style="text-align: right;">-2547</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.vanilla.donchian.BTC.1h</td>
+<td>mean_return</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (3)</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">0.8335</td>
+<td style="text-align: right;">0.1665</td>
+<td style="text-align: right;">0.722</td>
+<td style="text-align: right;">-1810</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.vanilla.bollinger.ETH.1h</td>
+<td>binomial</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (2)</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">0.9768</td>
+<td style="text-align: right;">0.0408</td>
+<td style="text-align: right;">0.226</td>
+<td style="text-align: right;">-8325</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.vanilla.ma_crossover.ETH.1h</td>
+<td>mean_return</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (2)</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">0.9402</td>
+<td style="text-align: right;">0.0598</td>
+<td style="text-align: right;">0.599</td>
+<td style="text-align: right;">-4454</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.vanilla.rsi.ETH.1h</td>
+<td>binomial</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (3)</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.2366</td>
+<td style="text-align: right;">0.8595</td>
+<td style="text-align: right;">0.573</td>
+<td style="text-align: right;">-2062</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.vanilla.donchian.ETH.1h</td>
+<td>mean_return</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>FAIL</td>
+<td>FAIL (3)</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">0.7637</td>
+<td style="text-align: right;">0.2363</td>
+<td style="text-align: right;">0.776</td>
+<td style="text-align: right;">-1916</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.eth_rsi_4h.fullhistory</td>
+<td>binomial</td>
+<td>FAIL</td>
+<td>✓ FAIL</td>
+<td>INSUFFICIENT</td>
+<td>FAIL (3)</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">0.1144</td>
+<td style="text-align: right;">0.9296</td>
+<td style="text-align: right;">0.480</td>
+<td style="text-align: right;">-10557</td>
+<td>{bull, bear, range}</td>
+</tr>
+<tr>
+<td>CAL.funding_neutral.BTC.N24.maker</td>
+<td>binomial</td>
+<td>INSUFFICIENT_DATA</td>
+<td>✓ INSUFFICIENT_DATA</td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (1)</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.funding_neutral.BTC.N72.maker</td>
+<td>binomial</td>
+<td>INSUFFICIENT_DATA</td>
+<td>✓ INSUFFICIENT_DATA</td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (1)</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.funding_neutral.ETH.N24.maker</td>
+<td>binomial</td>
+<td>INSUFFICIENT_DATA</td>
+<td>✓ INSUFFICIENT_DATA</td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (1)</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td>{unclassified}</td>
+</tr>
+<tr>
+<td>CAL.funding_neutral.ETH.N72.maker</td>
+<td>binomial</td>
+<td>INSUFFICIENT_DATA</td>
+<td>✓ INSUFFICIENT_DATA</td>
+<td>INSUFFICIENT</td>
+<td>INSUFFICIENT (1)</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td>{unclassified}</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Result: 13 / 13 as expected.</strong></p>
+<hr>
+<h2 id="reports">Reports</h2>
+<h3 id="calvanillabollinger-btc-fail">CAL.vanilla.bollinger — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/3 passed, 0 insufficient, mean PF 0.293)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 3: loses money in aggregate (net -6288.41 USD, PF 0.270)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>67 / 30 / 44.8 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.270 / -6288.41 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00935</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.8358 / 0.2319</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 67</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">-32.37</td>
+<td style="text-align: right;">0.655</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">-25.30</td>
+<td style="text-align: right;">0.593</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">-10.65</td>
+<td style="text-align: right;">0.924</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calvanillama_crossover-btc-fail">CAL.vanilla.ma_crossover — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/3 passed, 0 insufficient, mean PF 0.628)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 2: adverse direction (mean return &lt; 0), p_down = 0.0103 &lt; 0.1</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>82 / 20 / 24.4 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.554 / -4243.25 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00522</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.9897 / 0.0103</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 82</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">1.15</td>
+<td style="text-align: right;">+4.52</td>
+<td style="text-align: right;">0.393</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">-22.50</td>
+<td style="text-align: right;">0.971</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">-24.57</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calvanillarsi-btc-fail">CAL.vanilla.rsi — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/3 passed, 0 insufficient, mean PF 0.989)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 3: loses money in aggregate (net -2547.00 USD, PF 0.381)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>28 / 13 / 46.4 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.381 / -2547.00 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00904</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.7142 / 0.4253</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 28</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">-23.04</td>
+<td style="text-align: right;">0.965</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">-7.29</td>
+<td style="text-align: right;">0.828</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">2.39</td>
+<td style="text-align: right;">+2.60</td>
+<td style="text-align: right;">0.172</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calvanilladonchian-btc-fail">CAL.vanilla.donchian — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/3 passed, 0 insufficient, mean PF 0.752)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 3: loses money in aggregate (net -1809.75 USD, PF 0.722)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>58 / 17 / 29.3 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.722 / -1809.75 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00314</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.8335 / 0.1665</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 58</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">-4.93</td>
+<td style="text-align: right;">0.602</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">1.17</td>
+<td style="text-align: right;">+1.85</td>
+<td style="text-align: right;">0.375</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">-16.18</td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calvanillabollinger-eth-fail">CAL.vanilla.bollinger — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/3 passed, 0 insufficient, mean PF 0.228)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 2: adverse direction (win rate &lt; 50 %), p_down = 0.0408 &lt; 0.1</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>65 / 25 / 38.5 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.226 / -8324.89 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.01285</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.9768 / 0.0408</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 65</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-38.83</td>
+<td style="text-align: right;">0.808</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">-33.12</td>
+<td style="text-align: right;">0.979</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">-17.48</td>
+<td style="text-align: right;">0.846</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calvanillama_crossover-eth-fail">CAL.vanilla.ma_crossover — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/3 passed, 0 insufficient, mean PF 0.593)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 2: adverse direction (mean return &lt; 0), p_down = 0.0598 &lt; 0.1</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>68 / 19 / 27.9 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.599 / -4454.26 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00651</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.9402 / 0.0598</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 68</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">1.02</td>
+<td style="text-align: right;">+2.50</td>
+<td style="text-align: right;">0.459</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">-22.95</td>
+<td style="text-align: right;">0.895</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">-23.68</td>
+<td style="text-align: right;">0.997</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calvanillarsi-eth-fail">CAL.vanilla.rsi — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: WEAK CANDIDATE, 1/3 passed, 0 insufficient, mean PF 2.815)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 3: loses money in aggregate (net -2062.41 USD, PF 0.573)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>31 / 18 / 58.1 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.573 / -2062.41 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00674</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.2366 / 0.8595</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 31</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">-23.50</td>
+<td style="text-align: right;">0.828</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">-9.63</td>
+<td style="text-align: right;">0.623</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">7.70</td>
+<td style="text-align: right;">+10.16</td>
+<td style="text-align: right;">0.033</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calvanilladonchian-eth-fail">CAL.vanilla.donchian — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2026-01-28 → 2026-04-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-01-28 → 2026-04-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/3 passed, 0 insufficient, mean PF 0.742)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 3: loses money in aggregate (net -1916.35 USD, PF 0.776)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>55 / 17 / 30.9 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.776 / -1916.35 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00345</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.7637 / 0.2363</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 0, range 0, warmup 91</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 55</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-01-28 → 2026-02-27</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">+7.17</td>
+<td style="text-align: right;">0.358</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-02-27 → 2026-03-29</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">-10.34</td>
+<td style="text-align: right;">0.721</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-03-29 → 2026-04-28</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">-17.30</td>
+<td style="text-align: right;">0.994</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>91 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="caleth_rsi_4h-eth-fail">CAL.eth_rsi_4h — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-29 → 2026-05-20).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-29 → 2026-05-20</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/23 passed, 23 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 3: loses money in aggregate (net -10556.78 USD, PF 0.480)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>56 / 33 / 58.9 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.480 / -10556.78 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.01988</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.1144 / 0.9296</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 132, bear 252, range 147, warmup 160</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>unclassified 14, bull 11, range 14, bear 17</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-29 → 2024-07-29</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-7.94</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2024-07-29 → 2024-08-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-19.20</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2024-08-28 → 2024-09-27</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+3.58</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>2024-09-27 → 2024-10-27</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-5.64</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>2024-10-27 → 2024-11-26</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-13.45</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>2024-11-26 → 2024-12-26</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-6.87</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>2024-12-26 → 2025-01-25</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-2.04</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>2025-01-25 → 2025-02-24</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-9.77</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>2025-02-24 → 2025-03-26</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+16.83</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>2025-03-26 → 2025-04-25</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-3.30</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>2025-04-25 → 2025-05-25</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-30.85</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>2025-05-25 → 2025-06-24</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+5.24</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>2025-06-24 → 2025-07-24</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-29.23</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>2025-07-24 → 2025-08-23</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-11.24</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>2025-08-23 → 2025-09-22</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.68</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td>2025-09-22 → 2025-10-22</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-8.96</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td>2025-10-22 → 2025-11-21</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.47</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td>2025-11-21 → 2025-12-21</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">inf</td>
+<td style="text-align: right;">+24.10</td>
+<td style="text-align: right;">0.031</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td>2025-12-21 → 2026-01-20</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-3.23</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td>2026-01-20 → 2026-02-19</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-24.81</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td>2026-02-19 → 2026-03-21</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+8.66</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td>2026-03-21 → 2026-04-20</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.99</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td>2026-04-20 → 2026-05-20</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.65</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Pinned to end_ms 1780164728512 (2026-05-30 run). Funding: every hourly settlement inside each 4h bar (fix of 2026-09-26; before it the engine charged 1 of 4).
+160 OOS day(s) fall in the classifier warm-up (fewer than 220 daily closes of history) and are unclassified.</p>
+<h3 id="calfunding_neutraln24-btc-insufficient_data">CAL.funding_neutral.N24 — BTC — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {unclassified} (2026-03-01 → 2026-05-30).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-03-01 → 2026-05-30</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/3 passed, 3 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 12 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>12 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>—</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-03-01 → 2026-03-31</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-31 → 2026-04-30</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-04-30 → 2026-05-30</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Count-only input from commit e2c4687 (Stage 6, N=24, maker costs): 12 round-trips over 3 test windows. Per-window split assumed [4, 4, 4]. Trade outcomes were not needed: every window is below MIN_TRADES_PER_WINDOW and the pool is below N_FAIL_FLOOR. No candles: regime scoping unavailable.
+Regime scoping unavailable: no daily candles supplied.</p>
+<h3 id="calfunding_neutraln72-btc-insufficient_data">CAL.funding_neutral.N72 — BTC — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {unclassified} (2026-03-01 → 2026-05-30).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-03-01 → 2026-05-30</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/3 passed, 3 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 5 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>5 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>—</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-03-01 → 2026-03-31</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-31 → 2026-04-30</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-04-30 → 2026-05-30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Count-only input from commit e2c4687 (Stage 6, N=72, maker costs): 5 round-trips over 3 test windows. Per-window split assumed [2, 2, 1]. Trade outcomes were not needed: every window is below MIN_TRADES_PER_WINDOW and the pool is below N_FAIL_FLOOR. No candles: regime scoping unavailable.
+Regime scoping unavailable: no daily candles supplied.</p>
+<h3 id="calfunding_neutraln24-eth-insufficient_data">CAL.funding_neutral.N24 — ETH — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {unclassified} (2026-03-01 → 2026-05-30).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-03-01 → 2026-05-30</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/3 passed, 3 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 12 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>12 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>—</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-03-01 → 2026-03-31</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-31 → 2026-04-30</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-04-30 → 2026-05-30</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Count-only input from commit e2c4687 (Stage 6, N=24, maker costs): 12 round-trips over 3 test windows. Per-window split assumed [4, 4, 4]. Trade outcomes were not needed: every window is below MIN_TRADES_PER_WINDOW and the pool is below N_FAIL_FLOOR. No candles: regime scoping unavailable.
+Regime scoping unavailable: no daily candles supplied.</p>
+<h3 id="calfunding_neutraln72-eth-insufficient_data">CAL.funding_neutral.N72 — ETH — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {unclassified} (2026-03-01 → 2026-05-30).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-03-01 → 2026-05-30</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01250 (m = 8 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/3 passed, 3 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 5 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>5 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>—</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-03-01 → 2026-03-31</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-31 → 2026-04-30</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>2026-04-30 → 2026-05-30</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Count-only input from commit e2c4687 (Stage 6, N=72, maker costs): 5 round-trips over 3 test windows. Per-window split assumed [2, 2, 1]. Trade outcomes were not needed: every window is below MIN_TRADES_PER_WINDOW and the pool is below N_FAIL_FLOOR. No candles: regime scoping unavailable.
+Regime scoping unavailable: no daily candles supplied.</p>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

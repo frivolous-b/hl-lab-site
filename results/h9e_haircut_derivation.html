@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H9e — basis haircut re-derived (rule registered 2026-09-29) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h9e-basis-haircut-re-derived-rule-registered-2026-09-29">H9e — basis haircut re-derived (rule registered 2026-09-29)</h1>
+<p><em>Generated 2026-09-29T12:45:16.477810+00:00. Runner: <code>examples/derive_h9e_haircut.py</code>. Measurement = H9d holdout check (b), reproduced with <code>examples/run_h9d_holdout.py</code>'s own functions.</em></p>
+<p>Rule: haircut = max(1.5 × worst adverse basis excursion over the check (b) window, 1.5 × the worst excursion of the paper run, BTC −19.4 bps). Rounded to 0.1 bps.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th>window (1h bars, real HL spot + perp)</th>
+<th style="text-align: right;">bars</th>
+<th style="text-align: right;">worst excursion (bps)</th>
+<th>at</th>
+<th>reproduces check (b)</th>
+<th style="text-align: right;">1.5 × worst</th>
+<th style="text-align: right;">floor 1.5 × 19.4</th>
+<th style="text-align: right;"><strong>haircut (bps)</strong></th>
+<th style="text-align: right;">H9d haircut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td>2026-06-28 00:00 → 2026-09-27 13:00 UTC</td>
+<td style="text-align: right;">2198</td>
+<td style="text-align: right;">-18.699</td>
+<td>2026-09-21 18:00</td>
+<td>yes (-18.7)</td>
+<td style="text-align: right;">28.05</td>
+<td style="text-align: right;">29.10</td>
+<td style="text-align: right;"><strong>29.1</strong></td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td>2026-06-28 00:00 → 2026-09-27 00:00 UTC</td>
+<td style="text-align: right;">2185</td>
+<td style="text-align: right;">-18.745</td>
+<td>2026-07-22 14:00</td>
+<td>yes (-18.7)</td>
+<td style="text-align: right;">28.12</td>
+<td style="text-align: right;">29.10</td>
+<td style="text-align: right;"><strong>29.1</strong></td>
+<td style="text-align: right;">35</td>
+</tr>
+</tbody>
+</table></div>
+<p>Paper run (hl-executor, 2026-09-27 20:30 → 2026-09-28 16:30 UTC), worst leg P&amp;L from the journal: BTC -19.436 bps, ETH -7.849 bps. The rule's floor uses the run's worst excursion, BTC −19.4 bps, for both coins.</p>
+<p>The check (b) window is consumed as a holdout (H9d). It is used here to calibrate a risk parameter, not as test data.</p>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

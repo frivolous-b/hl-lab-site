@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H3 — cross-venue funding z-score mean reversion (1h, BTC/ETH/SOL) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h3-cross-venue-funding-z-score-mean-reversion-1h-btcethsol">H3 — cross-venue funding z-score mean reversion (1h, BTC/ETH/SOL)</h1>
+<p><em>Generated 2026-09-27T07:50:39.192856+00:00. Runner: <code>examples/run_h3_cross_venue_funding.py</code>. Signal: <code>data/funding_spread.py</code>. Strategy: <code>strategies/cross_venue_funding_z.py</code>. Gate: <code>validation/gate.py</code>. Spec: docs/HYPOTHESIS_LEDGER.md, H3.</em></p>
+<p><strong>Holdout LOCKED:</strong> nothing at or after 2026-06-28T00:00:00+00:00 enters any number below.</p>
+<p>Rule: z &gt; +2 → SHORT, z &lt; −2 → LONG, exit |z| &lt; 0.5 or 48 h; z = 30-day trailing z-score of HL − mean(Binance, Bybit) per-hour funding. Fixed $1,000 notional, PerAssetCostModel + hourly HL funding. Family <code>binomial</code>. Per-coin cells: BH-FDR q = 0.10; pooled: Bonferroni α_adj = 0.10 / 9 = 0.01111 (m = registered hypotheses). FAIL routes use α = 0.10. No parameter sweeps.</p>
+<h2 id="verdicts">Verdicts</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>cell</th>
+<th>verdict</th>
+<th>L1</th>
+<th>L2 (rule)</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">win rate</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">p_down</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">net USD</th>
+<th>significance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H3.BTC.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>INSUFFICIENT (5)</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">40.0 %</td>
+<td style="text-align: right;">0.9231</td>
+<td style="text-align: right;">0.1341</td>
+<td style="text-align: right;">1.314</td>
+<td style="text-align: right;">+62.09</td>
+<td>BH cutoff —</td>
+</tr>
+<tr>
+<td>H3.ETH.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>FAIL (3)</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">47.5 %</td>
+<td style="text-align: right;">0.6955</td>
+<td style="text-align: right;">0.3991</td>
+<td style="text-align: right;">0.923</td>
+<td style="text-align: right;">-25.04</td>
+<td>BH cutoff —</td>
+</tr>
+<tr>
+<td>H3.SOL.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>FAIL (2)</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">32.3 %</td>
+<td style="text-align: right;">0.9853</td>
+<td style="text-align: right;">0.0354</td>
+<td style="text-align: right;">0.831</td>
+<td style="text-align: right;">-32.01</td>
+<td>BH cutoff —</td>
+</tr>
+<tr>
+<td>H3.pooled.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>FAIL (2)</td>
+<td style="text-align: right;">132</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">41.7 %</td>
+<td style="text-align: right;">0.9776</td>
+<td style="text-align: right;">0.0336</td>
+<td style="text-align: right;">0.987</td>
+<td style="text-align: right;">+5.04</td>
+<td>α_adj 0.01111</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Pooled: FAIL</strong> — FAIL in regimes {unclassified} (2025-12-30 → 2026-06-28). Reason: pooled level fails.</p>
+<h2 id="per-coin">Per coin</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>metric</th>
+<th style="text-align: right;">BTC</th>
+<th style="text-align: right;">ETH</th>
+<th style="text-align: right;">SOL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1h bars (pre-holdout)</td>
+<td style="text-align: right;">5679 (2025-11-03 → 2026-06-27)</td>
+<td style="text-align: right;">5679 (2025-11-03 → 2026-06-27)</td>
+<td style="text-align: right;">2886 (2026-02-27 → 2026-06-27)</td>
+</tr>
+<tr>
+<td>closed round trips (long / short)</td>
+<td style="text-align: right;">56 (52 / 4)</td>
+<td style="text-align: right;">77 (62 / 15) +1 open</td>
+<td style="text-align: right;">37 (25 / 12)</td>
+</tr>
+<tr>
+<td>win rate</td>
+<td style="text-align: right;">44.6 %</td>
+<td style="text-align: right;">41.6 %</td>
+<td style="text-align: right;">35.1 %</td>
+</tr>
+<tr>
+<td>mean return per trade</td>
+<td style="text-align: right;">+0.00263</td>
+<td style="text-align: right;">-0.00166</td>
+<td style="text-align: right;">-0.00206</td>
+</tr>
+<tr>
+<td>median return per trade</td>
+<td style="text-align: right;">-0.00108</td>
+<td style="text-align: right;">-0.00131</td>
+<td style="text-align: right;">-0.00168</td>
+</tr>
+<tr>
+<td>profit factor</td>
+<td style="text-align: right;">1.616</td>
+<td style="text-align: right;">0.776</td>
+<td style="text-align: right;">0.717</td>
+</tr>
+<tr>
+<td>max drawdown</td>
+<td style="text-align: right;">-7.56 %</td>
+<td style="text-align: right;">-21.67 %</td>
+<td style="text-align: right;">-18.23 %</td>
+</tr>
+<tr>
+<td>final equity / total return</td>
+<td style="text-align: right;">$1,128.02 / +12.80 %</td>
+<td style="text-align: right;">$843.09 / -15.69 %</td>
+<td style="text-align: right;">$912.21 / -8.78 %</td>
+</tr>
+<tr>
+<td>exposure (bars in position)</td>
+<td style="text-align: right;">13.1 %</td>
+<td style="text-align: right;">13.9 %</td>
+<td style="text-align: right;">9.7 %</td>
+</tr>
+<tr>
+<td>mean hold (h)</td>
+<td style="text-align: right;">13.3</td>
+<td style="text-align: right;">9.9</td>
+<td style="text-align: right;">7.6</td>
+</tr>
+<tr>
+<td>exits: z rule / max hold</td>
+<td style="text-align: right;">56 / 0</td>
+<td style="text-align: right;">75 / 2</td>
+<td style="text-align: right;">37 / 0</td>
+</tr>
+<tr>
+<td>net trade P&amp;L (after fees+slippage, before funding)</td>
+<td style="text-align: right;">+147.48 USD</td>
+<td style="text-align: right;">-128.11 USD</td>
+<td style="text-align: right;">-76.16 USD</td>
+</tr>
+<tr>
+<td>funding (+ = paid)</td>
+<td style="text-align: right;">-5.74 USD (746 settlements, 0 missing)</td>
+<td style="text-align: right;">-7.48 USD (790 settlements, 0 missing)</td>
+<td style="text-align: right;">-5.02 USD (281 settlements, 0 missing)</td>
+</tr>
+<tr>
+<td>fees / slippage</td>
+<td style="text-align: right;">50.40 / 11.20 USD (1 bps/side)</td>
+<td style="text-align: right;">69.75 / 46.50 USD (3 bps/side)</td>
+<td style="text-align: right;">33.30 / 37.00 USD (5 bps/side)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="btc-per-window-90-d-tiled-back-from-the-cut">BTC — per window (90 d, tiled back from the cut)</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+<th>equity start → end</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">+15.57</td>
+<td style="text-align: right;">+0.87</td>
+<td style="text-align: right;">-2.83</td>
+<td>1,084 → 1,093</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">+41.26</td>
+<td style="text-align: right;">+3.17</td>
+<td style="text-align: right;">-2.43</td>
+<td>1,093 → 1,128</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="eth-per-window-90-d-tiled-back-from-the-cut">ETH — per window (90 d, tiled back from the cut)</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+<th>equity start → end</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">+108.10</td>
+<td style="text-align: right;">+10.41</td>
+<td style="text-align: right;">-3.44</td>
+<td>898 → 992</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">-139.71</td>
+<td style="text-align: right;">-14.98</td>
+<td style="text-align: right;">-3.13</td>
+<td>992 → 843</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="sol-per-window-90-d-tiled-back-from-the-cut">SOL — per window (90 d, tiled back from the cut)</h3>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+<th>equity start → end</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">-35.75</td>
+<td style="text-align: right;">-4.80</td>
+<td style="text-align: right;">-3.74</td>
+<td>958 → 912</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="signal-count-sanity-check">Signal-count sanity check</h2>
+<p>Grid hours per calendar month with z &gt; +2 and z &lt; −2, over the full funding history (z defined from 30 days after 2023-05-12). Months inside each coin's candle range are the ones the rule could act on. Entries taken are in the per-coin table above.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>month</th>
+<th style="text-align: right;">BTC z&gt;2</th>
+<th style="text-align: right;">BTC z&lt;−2</th>
+<th style="text-align: right;">ETH z&gt;2</th>
+<th style="text-align: right;">ETH z&lt;−2</th>
+<th style="text-align: right;">SOL z&gt;2</th>
+<th style="text-align: right;">SOL z&lt;−2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023-05</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>2023-06</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>2023-07</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>2023-08</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">83</td>
+</tr>
+<tr>
+<td>2023-09</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr>
+<td>2023-10</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr>
+<td>2023-11</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>2023-12</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>2024-01</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr>
+<td>2024-02</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>2024-03</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td>2024-04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>2024-05</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr>
+<td>2024-06</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr>
+<td>2024-07</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>2024-08</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr>
+<td>2024-09</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr>
+<td>2024-10</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>2024-11</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">121</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>2024-12</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr>
+<td>2025-01</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr>
+<td>2025-02</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr>
+<td>2025-03</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr>
+<td>2025-04</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr>
+<td>2025-05</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr>
+<td>2025-06</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr>
+<td>2025-07</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr>
+<td>2025-08</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>2025-09</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td>2025-10</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>2025-11</td>
+<td style="text-align: right;"><strong>11</strong></td>
+<td style="text-align: right;"><strong>23</strong></td>
+<td style="text-align: right;"><strong>8</strong></td>
+<td style="text-align: right;"><strong>13</strong></td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr>
+<td>2025-12</td>
+<td style="text-align: right;"><strong>0</strong></td>
+<td style="text-align: right;"><strong>65</strong></td>
+<td style="text-align: right;"><strong>13</strong></td>
+<td style="text-align: right;"><strong>41</strong></td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>2026-01</td>
+<td style="text-align: right;"><strong>4</strong></td>
+<td style="text-align: right;"><strong>46</strong></td>
+<td style="text-align: right;"><strong>19</strong></td>
+<td style="text-align: right;"><strong>46</strong></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">71</td>
+</tr>
+<tr>
+<td>2026-02</td>
+<td style="text-align: right;"><strong>0</strong></td>
+<td style="text-align: right;"><strong>32</strong></td>
+<td style="text-align: right;"><strong>20</strong></td>
+<td style="text-align: right;"><strong>45</strong></td>
+<td style="text-align: right;"><strong>13</strong></td>
+<td style="text-align: right;"><strong>29</strong></td>
+</tr>
+<tr>
+<td>2026-03</td>
+<td style="text-align: right;"><strong>0</strong></td>
+<td style="text-align: right;"><strong>25</strong></td>
+<td style="text-align: right;"><strong>6</strong></td>
+<td style="text-align: right;"><strong>33</strong></td>
+<td style="text-align: right;"><strong>11</strong></td>
+<td style="text-align: right;"><strong>26</strong></td>
+</tr>
+<tr>
+<td>2026-04</td>
+<td style="text-align: right;"><strong>0</strong></td>
+<td style="text-align: right;"><strong>26</strong></td>
+<td style="text-align: right;"><strong>2</strong></td>
+<td style="text-align: right;"><strong>39</strong></td>
+<td style="text-align: right;"><strong>2</strong></td>
+<td style="text-align: right;"><strong>4</strong></td>
+</tr>
+<tr>
+<td>2026-05</td>
+<td style="text-align: right;"><strong>2</strong></td>
+<td style="text-align: right;"><strong>41</strong></td>
+<td style="text-align: right;"><strong>0</strong></td>
+<td style="text-align: right;"><strong>24</strong></td>
+<td style="text-align: right;"><strong>12</strong></td>
+<td style="text-align: right;"><strong>20</strong></td>
+</tr>
+<tr>
+<td>2026-06</td>
+<td style="text-align: right;"><strong>0</strong></td>
+<td style="text-align: right;"><strong>16</strong></td>
+<td style="text-align: right;"><strong>14</strong></td>
+<td style="text-align: right;"><strong>55</strong></td>
+<td style="text-align: right;"><strong>8</strong></td>
+<td style="text-align: right;"><strong>32</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Totals over the full funding history (hours z&gt;2 / z&lt;−2 / z defined): BTC 879 / 620 / 26698; ETH 836 / 813 / 26698; SOL 885 / 675 / 26698.
+Bold = months inside the coin's candle range.</p>
+<h2 id="pooled-per-window">Pooled per window</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th>coins</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td>BTC+ETH</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">+123.67</td>
+<td style="text-align: right;">+5.19</td>
+<td style="text-align: right;">-6.27</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td>BTC+ETH+SOL</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">-134.21</td>
+<td style="text-align: right;">-5.25</td>
+<td style="text-align: right;">-9.30</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h3pooled1h-btcethsol-fail">H3.pooled.1h — BTC+ETH+SOL — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2025-12-30 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2025-12-30 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.01111 (Bonferroni, m = 9 registered hypotheses)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 0 insufficient, mean PF 1.067)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 2: adverse direction (win rate &lt; 50 %), p_down = 0.0336 &lt; 0.1</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>132 / 55 / 41.7 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.987 / +5.04 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00008</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.9776 / 0.0336</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>—</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">1.40</td>
+<td style="text-align: right;">+5.19</td>
+<td style="text-align: right;">0.552</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">-5.25</td>
+<td style="text-align: right;">0.996</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>Pooled per 90-day window over the three coins' continuous runs (each its own $1,000 book): trades and funding summed, return = Σ net equity change / Σ equity at window start over the coins present. Regime scoping per coin.
+Regime scoping unavailable: no daily candles supplied.</p>
+<h2 id="per-coin-gate-reports">Per-coin gate reports</h2>
+<h3 id="h3btc1h-btc-fail">H3.BTC.1h — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bear} (2025-12-30 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2025-12-30 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 3 per-coin cells, cutoff none significant (Bonferroni α_adj 0.01111, m = 9 hypotheses, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: WEAK CANDIDATE, 0/2 passed, 0 insufficient, mean PF 1.482)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 5: positive but not significant, n = 40 &lt; N_MIN_POOLED (130)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>40 / 16 / 40.0 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>1.314 / +62.09 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>+0.00142</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.9231 / 0.1341</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 180, range 0, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bear 40</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">1.12</td>
+<td style="text-align: right;">+0.87</td>
+<td style="text-align: right;">0.868</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">1.85</td>
+<td style="text-align: right;">+3.17</td>
+<td style="text-align: right;">0.868</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2025-11-03 09:00:00+00:00 → holdout cut 2026-06-28 (5679 1h bars, stitched HL snapshots); z from funding since 2023-05-12. 90-day windows tiled back from the cut. Train side = round trips entered before the window (nothing fitted). PerAssetCostModel BTC: 1 bps/side + 4.5 bps taker; hourly HL funding accrued.</p>
+<h3 id="h3eth1h-eth-fail">H3.ETH.1h — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bear, range} (2025-12-30 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2025-12-30 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 3 per-coin cells, cutoff none significant (Bonferroni α_adj 0.01111, m = 9 hypotheses, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 0 insufficient, mean PF 1.017)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 3: loses money in aggregate (net -25.04 USD, PF 0.923)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>61 / 29 / 47.5 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.923 / -25.04 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00052</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.6955 / 0.3991</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 143, range 37, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>range 20, bear 41</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-12-30 → 2026-03-30</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">1.62</td>
+<td style="text-align: right;">+10.41</td>
+<td style="text-align: right;">0.314</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">-14.98</td>
+<td style="text-align: right;">0.953</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2025-11-03 09:00:00+00:00 → holdout cut 2026-06-28 (5679 1h bars, stitched HL snapshots); z from funding since 2023-05-12. 90-day windows tiled back from the cut. Train side = round trips entered before the window (nothing fitted). PerAssetCostModel ETH: 3 bps/side + 4.5 bps taker; hourly HL funding accrued.</p>
+<h3 id="h3sol1h-sol-fail">H3.SOL.1h — SOL — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bear} (2026-03-30 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: pooled level fails</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>binomial</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2026-03-30 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / significance (PASS)</td>
+<td>0.1 / BH-FDR q = 0.1 over 3 per-coin cells, cutoff none significant (Bonferroni α_adj 0.01111, m = 9 hypotheses, applies to the pooled cell)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/1 passed, 0 insufficient, mean PF 0.831)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 2: adverse direction (win rate &lt; 50 %), p_down = 0.0354 &lt; 0.1</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>31 / 10 / 32.3 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>0.831 / -32.01 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>-0.00115</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.9853 / 0.0354</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 0, bear 90, range 0, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bear 31</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2026-03-30 → 2026-06-28</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">-4.80</td>
+<td style="text-align: right;">0.985</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2026-02-27 18:00:00+00:00 → holdout cut 2026-06-28 (2886 1h bars, stitched HL snapshots); z from funding since 2023-05-12. 90-day windows tiled back from the cut. Train side = round trips entered before the window (nothing fitted). PerAssetCostModel SOL: 5 bps/side + 4.5 bps taker; hourly HL funding accrued.</p>
+<h2 id="artefacts">Artefacts</h2>
+<ul>
+<li>Charts (gitignored): <code>reports/h3_cross_venue_funding_{COIN}.html</code></li>
+<li>Cache: HL funding <code>funding_{COIN}_1640995200000_1790467200000</code>, venue funding <code>funding_{binance,bybit}_{COIN}_1683849600000_1790467200000</code>, 1h candles = stitched <code>{COIN}_1h_*</code> snapshots.</li>
+</ul>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

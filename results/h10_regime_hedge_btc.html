@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H10 / H10b — regime hedge, BTC-denominated (benchmark HODL BTC = 1.0) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h10-h10b-regime-hedge-btc-denominated-benchmark-hodl-btc-10">H10 / H10b — regime hedge, BTC-denominated (benchmark HODL BTC = 1.0)</h1>
+<p><em>Generated 2026-09-27T20:23:12.128571+00:00. Runner: <code>examples/run_h10_regime_hedge_btc.py</code>. Engine: <code>strategies/regime_hedge_btc.py</code>. Family: <code>daily_returns</code> v2, benchmark mode <code>hodl_btc</code>. Spec: docs/HYPOTHESIS_LEDGER.md, H10 / H10b.</em></p>
+<p><strong>Data:</strong> pre-holdout only, everything before 2026-06-28; the consumed window 2026-06-28 → 2026-09-27 is excluded; the holdout (2026-09-27 onward) is locked. <strong>Basis modelled</strong> (spot = perp mark).</p>
+<p>Rule: hold the coin as spot; unhedged while its v1 regime is bull; outside bull, H9d's carry rule adds a perp short 1× (enter when the 7-day mean funding, annualised, &gt; breakeven BTC 3.285 % / ETH 4.258 %; exit &lt; 0 after 7 days; a flip to bull closes the hedge). Funding converted to the coin at receipt. Costs: perp taker 4.5 bps + PerAssetCostModel slippage on the hedge. Single-cell hypotheses: Bonferroni α_adj = 0.10 / 17 = 0.00588. No max-DD cap registered.</p>
+<h2 id="verdicts">Verdicts</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>cell</th>
+<th>verdict</th>
+<th>L1</th>
+<th>L2 (rule)</th>
+<th style="text-align: right;">BTC-denominated ann. return vs HODL (0 %)</th>
+<th style="text-align: right;">final book (HODL = 1.0)</th>
+<th style="text-align: right;">max DD (BTC terms)</th>
+<th style="text-align: right;">Sharpe diff</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">p_down</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H10.BTC.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>FAIL (4)</td>
+<td style="text-align: right;">+3.02 %</td>
+<td style="text-align: right;">1.0975</td>
+<td style="text-align: right;">-38.37 %</td>
+<td style="text-align: right;">+0.244</td>
+<td style="text-align: right;">0.3221</td>
+<td style="text-align: right;">0.6779</td>
+</tr>
+<tr>
+<td>H10b.ETH.1h</td>
+<td><strong>FAIL</strong></td>
+<td>FAIL</td>
+<td>FAIL (4)</td>
+<td style="text-align: right;">-21.10 %</td>
+<td style="text-align: right;">0.4764</td>
+<td style="text-align: right;">-73.07 %</td>
+<td style="text-align: right;">-0.400</td>
+<td style="text-align: right;">0.7632</td>
+<td style="text-align: right;">0.2368</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="h10-btc">H10 — BTC</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">book in BTC at year end (HODL = 1.0)</th>
+<th style="text-align: right;">BTC-denominated return %</th>
+<th style="text-align: right;">max DD in the year %</th>
+<th style="text-align: right;">days hedged</th>
+<th style="text-align: right;">days bull</th>
+<th style="text-align: right;">funding converted (BTC)</th>
+<th style="text-align: right;">funding as % of the starting BTC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">0.9371</td>
+<td style="text-align: right;">-6.29</td>
+<td style="text-align: right;">-7.57</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">175</td>
+<td style="text-align: right;">+0.000214</td>
+<td style="text-align: right;">+0.58 %</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">0.7869</td>
+<td style="text-align: right;">-16.02</td>
+<td style="text-align: right;">-26.08</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">271</td>
+<td style="text-align: right;">+0.000881</td>
+<td style="text-align: right;">+2.38 %</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">0.7672</td>
+<td style="text-align: right;">-2.51</td>
+<td style="text-align: right;">-22.75</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">268</td>
+<td style="text-align: right;">+0.000417</td>
+<td style="text-align: right;">+1.12 %</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">1.0975</td>
+<td style="text-align: right;">+43.06</td>
+<td style="text-align: right;">-24.42</td>
+<td style="text-align: right;">125</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.000338</td>
+<td style="text-align: right;">+0.91 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>book in BTC at the end (HODL = 1.0)</td>
+<td style="text-align: right;">1.0975</td>
+</tr>
+<tr>
+<td>USD context: book $994 → $2,441.65; HODL BTC of the same start → $2,224.66</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>regime switches (bull ↔ not bull, label in force)</td>
+<td style="text-align: right;">31</td>
+</tr>
+<tr>
+<td>hours bull / hedged / total</td>
+<td style="text-align: right;">17135 / 7811 / 27432 (62.5 % / 28.5 %)</td>
+</tr>
+<tr>
+<td>hedge entries</td>
+<td style="text-align: right;">20 (exits by carry rule 6, by bull flip 13, open at the end 1)</td>
+</tr>
+<tr>
+<td>funding received, converted at receipt</td>
+<td style="text-align: right;">+124.56 USD = +0.001849 BTC = +4.99 % of the starting BTC (7810 settlements, 1 missing)</td>
+</tr>
+<tr>
+<td>costs on the hedge: fees / slippage</td>
+<td style="text-align: right;">39.77 / 8.84 USD (0.000531 BTC of fees)</td>
+</tr>
+<tr>
+<td>perp leg realised P&amp;L (sum over closed hedges)</td>
+<td style="text-align: right;">-305.05 USD</td>
+</tr>
+<tr>
+<td>max drawdown in BTC terms</td>
+<td style="text-align: right;">-38.37 %</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h10btc1h-btc-fail">H10.BTC.1h — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL vs HODL BTC (returns in BTC units) (2023-05-13 → 2026-06-27).</p>
+</blockquote>
+<p>Reason: whole-sample level fails and at least one calendar year is catastrophic</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>benchmark mode</td>
+<td>hodl_btc — returns in BTC units (equity_usd / BTC close), benchmark HODL BTC = 1.0, zero excess</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00588 (Bonferroni, m = 17 registered hypotheses)</td>
+</tr>
+<tr>
+<td>family version</td>
+<td>v2</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, net return ≥ -2 %; Sharpe diff ≥ -0.5 only where the year's daily std ≥ 5 bps)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 4: no significant Sharpe edge (diff +0.244, p_up = 0.3221) with sufficient data</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>0.244 / 0.000 / +0.244</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.3221 / 0.6779</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>+3.02 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-38.37 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>0.079 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>28.6 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">daily std bps</th>
+<th style="text-align: center;">Sharpe floor applies</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">-6.29</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-0.995</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-0.995</td>
+<td style="text-align: right;">51.0</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-7.57</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">10.3</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">-16.02</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-0.561</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-0.561</td>
+<td style="text-align: right;">132.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-26.08</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">-2.51</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">0.010</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+0.010</td>
+<td style="text-align: right;">123.2</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-22.75</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">24.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">+43.06</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">1.854</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+1.854</td>
+<td style="text-align: right;">235.5</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-24.42</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">66.9</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Regime hedge on BTC; equity in USD converted to BTC at the BTC mark of the same day, normalised to 1.0 at 2023-05-12; HODL BTC = 1.0. Basis modelled (spot = perp mark); costs = perp taker fee + slippage on the hedge only.</p>
+<h2 id="h10b-eth">H10b — ETH</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">book in BTC at year end (HODL = 1.0)</th>
+<th style="text-align: right;">BTC-denominated return %</th>
+<th style="text-align: right;">max DD in the year %</th>
+<th style="text-align: right;">days hedged</th>
+<th style="text-align: right;">days bull</th>
+<th style="text-align: right;">funding converted (ETH)</th>
+<th style="text-align: right;">funding as % of the starting BTC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">234</td>
+<td style="text-align: right;">0.7507</td>
+<td style="text-align: right;">-24.93</td>
+<td style="text-align: right;">-32.76</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">141</td>
+<td style="text-align: right;">+0.020519</td>
+<td style="text-align: right;">+3.00 %</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">0.4630</td>
+<td style="text-align: right;">-38.32</td>
+<td style="text-align: right;">-49.87</td>
+<td style="text-align: right;">122</td>
+<td style="text-align: right;">235</td>
+<td style="text-align: right;">+0.026750</td>
+<td style="text-align: right;">+2.69 %</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">0.3336</td>
+<td style="text-align: right;">-27.95</td>
+<td style="text-align: right;">-40.16</td>
+<td style="text-align: right;">194</td>
+<td style="text-align: right;">113</td>
+<td style="text-align: right;">+0.031203</td>
+<td style="text-align: right;">+2.34 %</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">0.4764</td>
+<td style="text-align: right;">+42.80</td>
+<td style="text-align: right;">-21.81</td>
+<td style="text-align: right;">132</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">+0.007359</td>
+<td style="text-align: right;">+0.59 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>book in BTC at the end (HODL = 1.0)</td>
+<td style="text-align: right;">0.4764</td>
+</tr>
+<tr>
+<td>USD context: book $1,007 → $1,074.47; HODL BTC of the same start → $2,255.47</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>regime switches (bull ↔ not bull, label in force)</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr>
+<td>hours bull / hedged / total</td>
+<td style="text-align: right;">11735 / 12424 / 27432 (42.8 % / 45.3 %)</td>
+</tr>
+<tr>
+<td>hedge entries</td>
+<td style="text-align: right;">21 (exits by carry rule 12, by bull flip 9, open at the end 0)</td>
+</tr>
+<tr>
+<td>funding received, converted at receipt</td>
+<td style="text-align: right;">+227.34 USD = +0.085831 ETH = +8.62 % of the starting BTC (12423 settlements, 1 missing)</td>
+</tr>
+<tr>
+<td>costs on the hedge: fees / slippage</td>
+<td style="text-align: right;">23.92 / 15.95 USD (0.009584 ETH of fees)</td>
+</tr>
+<tr>
+<td>perp leg realised P&amp;L (sum over closed hedges)</td>
+<td style="text-align: right;">-626.29 USD</td>
+</tr>
+<tr>
+<td>max drawdown in BTC terms</td>
+<td style="text-align: right;">-73.07 %</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h10beth1h-eth-fail">H10b.ETH.1h — ETH — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL vs HODL BTC (returns in BTC units) (2023-05-13 → 2026-06-27).</p>
+</blockquote>
+<p>Reason: whole-sample level fails and at least one calendar year is catastrophic</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>daily_returns</code> (VALIDATION_GATE 3.7)</td>
+</tr>
+<tr>
+<td>benchmark mode</td>
+<td>hodl_btc — returns in BTC units (equity_usd / BTC close), benchmark HODL BTC = 1.0, zero excess</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>2023-05-13 → 2026-06-27, 1142 days = 3.13 years (threshold 1095)</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00588 (Bonferroni, m = 17 registered hypotheses)</td>
+</tr>
+<tr>
+<td>family version</td>
+<td>v2</td>
+</tr>
+<tr>
+<td>Level 1 (per calendar year, net return ≥ -2 %; Sharpe diff ≥ -0.5 only where the year's daily std ≥ 5 bps)</td>
+<td><strong>FAIL</strong></td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>FAIL</strong> — rule: 4: no significant Sharpe edge (diff -0.400, p_up = 0.7632) with sufficient data</td>
+</tr>
+<tr>
+<td>Sharpe: strategy / benchmark / diff</td>
+<td>-0.400 / 0.000 / -0.400</td>
+</tr>
+<tr>
+<td>p_up / p_down (block bootstrap, block 20 d)</td>
+<td>0.7632 / 0.2368</td>
+</tr>
+<tr>
+<td>annualised return: strategy / benchmark</td>
+<td>-21.10 % / +0.00 %</td>
+</tr>
+<tr>
+<td>max drawdown: strategy / benchmark</td>
+<td>-73.07 % / 0.00 %</td>
+</tr>
+<tr>
+<td>Calmar: strategy / benchmark</td>
+<td>-0.289 / —</td>
+</tr>
+<tr>
+<td>exposure (strategy)</td>
+<td>45.4 %</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>year</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">strat ret %</th>
+<th style="text-align: right;">bench ret %</th>
+<th style="text-align: right;">strat Sharpe</th>
+<th style="text-align: right;">bench Sharpe</th>
+<th style="text-align: right;">diff</th>
+<th style="text-align: right;">daily std bps</th>
+<th style="text-align: center;">Sharpe floor applies</th>
+<th style="text-align: right;">strat DD %</th>
+<th style="text-align: right;">bench DD %</th>
+<th style="text-align: right;">exposure %</th>
+<th style="text-align: center;">graded</th>
+<th style="text-align: center;">ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023</td>
+<td style="text-align: right;">233</td>
+<td style="text-align: right;">-24.93</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-1.556</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-1.556</td>
+<td style="text-align: right;">139.2</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-32.76</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">34.8</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td>2024</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">-38.32</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-0.870</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-0.870</td>
+<td style="text-align: right;">231.3</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-49.87</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">32.8</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td>2025</td>
+<td style="text-align: right;">365</td>
+<td style="text-align: right;">-27.95</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">-0.565</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">-0.565</td>
+<td style="text-align: right;">221.3</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-40.16</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">52.3</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td>2026</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">+42.80</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">2.091</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">+2.091</td>
+<td style="text-align: right;">201.4</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: right;">-21.81</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">71.3</td>
+<td style="text-align: center;">Y</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Regime hedge on ETH; equity in USD converted to BTC at the BTC mark of the same day, normalised to 1.0 at 2023-05-12; HODL BTC = 1.0. Basis modelled (spot = perp mark); costs = perp taker fee + slippage on the hedge only.</p>
+<h2 id="artefacts">Artefacts</h2>
+<ul>
+<li>Charts in BTC units vs the HODL line (gitignored): <code>reports/h10_regime_hedge_BTC.html</code>, <code>reports/h10b_regime_hedge_ETH.html</code></li>
+</ul>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

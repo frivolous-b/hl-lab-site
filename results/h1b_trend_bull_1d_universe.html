@@ -1,0 +1,2709 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H1b — H1 rules, corrected instrument, coin universe (1d, long only) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h1b-h1-rules-corrected-instrument-coin-universe-1d-long-only">H1b — H1 rules, corrected instrument, coin universe (1d, long only)</h1>
+<p><em>Generated 2026-09-26T20:58:25.928799+00:00. Runner: <code>examples/run_h1b_trend_bull_1d_universe.py</code>. Strategy (unchanged from H1): <code>strategies/trend_bull_1d.py</code>. Gate: <code>validation/gate.py</code>. Spec: docs/HYPOTHESIS_LEDGER.md, H1b.</em></p>
+<p><strong>Holdout LOCKED:</strong> everything from 2026-06-28T00:00:00+00:00 on is excluded from every number below and never printed.</p>
+<p>α_adj = 0.10 / m, <strong>m = 31</strong> REGISTERED cells → <strong>0.00323</strong>. FAIL routes use α = 0.10. Family <code>mean_return</code> (bootstrap, B = 10,000, seed 0). Instrument: PerAssetCostModel (l2Book 2026-05-27 table + 4.5 bps taker, fills ≤ $5k enforced), data start per coin = max(2023-05-12, first funding record), 365-day windows, every hourly funding settlement inside each bar. Start equity $1,000 per coin; risk 1 % per trade; notional ≤ 3 × equity. No parameter sweeps.</p>
+<h2 id="pooled-verdict">Pooled verdict</h2>
+<p><strong>FAIL</strong> — FAIL in regimes {unclassified} (2024-06-28 → 2026-06-28). Reason: per-window level fails (enough trades, no replication).</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>coins / total round trips</td>
+<td>19 / 150</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>99 / 24 / 24.2 %</td>
+</tr>
+<tr>
+<td><strong>mean return per trade</strong></td>
+<td>+0.01063</td>
+</tr>
+<tr>
+<td><strong>pooled PF</strong></td>
+<td>1.231</td>
+</tr>
+<tr>
+<td>aggregate net (after funding)</td>
+<td>+11.42 USD</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.3170 / 0.6830</td>
+</tr>
+<tr>
+<td>Level 1 / Level 2</td>
+<td>FAIL / INSUFFICIENT (5: positive but not significant, n = 99 &lt; N_MIN_POOLED (130))</td>
+</tr>
+<tr>
+<td><strong>max drawdown</strong>, worst coin / median coin</td>
+<td>-15.32 % (BNB) / -3.83 %</td>
+</tr>
+<tr>
+<td>combined book (19 × $1,000)</td>
+<td>$19,223.03 final, +1.17 %</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="per-coin">Per coin</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th style="text-align: right;">OI rank</th>
+<th>data start</th>
+<th style="text-align: right;">bars</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">win rate</th>
+<th style="text-align: right;">mean ret/trade</th>
+<th style="text-align: right;">median</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">max DD</th>
+<th style="text-align: right;">exposure</th>
+<th>bull days / classified</th>
+<th style="text-align: right;">slip bps</th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td style="text-align: right;">1</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">37.5 %</td>
+<td style="text-align: right;">+0.0353</td>
+<td style="text-align: right;">-0.0191</td>
+<td style="text-align: right;">2.33</td>
+<td style="text-align: right;">-4.36 %</td>
+<td style="text-align: right;">25.2 %</td>
+<td>553 / 924 (60 %)</td>
+<td style="text-align: right;">1</td>
+<td>FAIL (1)</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td style="text-align: right;">2</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">40.0 %</td>
+<td style="text-align: right;">+0.0014</td>
+<td style="text-align: right;">-0.0593</td>
+<td style="text-align: right;">1.27</td>
+<td style="text-align: right;">-6.66 %</td>
+<td style="text-align: right;">14.2 %</td>
+<td>362 / 924 (39 %)</td>
+<td style="text-align: right;">3</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>SOL</td>
+<td style="text-align: right;">3</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">80.0 %</td>
+<td style="text-align: right;">+0.0965</td>
+<td style="text-align: right;">+0.0309</td>
+<td style="text-align: right;">13.04</td>
+<td style="text-align: right;">-2.01 %</td>
+<td style="text-align: right;">16.6 %</td>
+<td>397 / 924 (43 %)</td>
+<td style="text-align: right;">5</td>
+<td>FAIL (1)</td>
+</tr>
+<tr>
+<td>NEAR</td>
+<td style="text-align: right;">4</td>
+<td>2023-11-01</td>
+<td style="text-align: right;">970</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.0 %</td>
+<td style="text-align: right;">-0.0867</td>
+<td style="text-align: right;">-0.0867</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-1.71 %</td>
+<td style="text-align: right;">1.9 %</td>
+<td>57 / 751 (8 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>XRP</td>
+<td style="text-align: right;">5</td>
+<td>2023-06-18</td>
+<td style="text-align: right;">1106</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">37.5 %</td>
+<td style="text-align: right;">+0.2404</td>
+<td style="text-align: right;">-0.0233</td>
+<td style="text-align: right;">6.89</td>
+<td style="text-align: right;">-7.19 %</td>
+<td style="text-align: right;">12.9 %</td>
+<td>353 / 887 (40 %)</td>
+<td style="text-align: right;">10*</td>
+<td>FAIL (1)</td>
+</tr>
+<tr>
+<td>ENA</td>
+<td style="text-align: right;">6</td>
+<td>2024-04-02</td>
+<td style="text-align: right;">817</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">33.3 %</td>
+<td style="text-align: right;">-0.0999</td>
+<td style="text-align: right;">-0.1057</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">-2.10 %</td>
+<td style="text-align: right;">2.7 %</td>
+<td>106 / 598 (18 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>DOGE</td>
+<td style="text-align: right;">7</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">42.9 %</td>
+<td style="text-align: right;">+0.0625</td>
+<td style="text-align: right;">-0.0321</td>
+<td style="text-align: right;">3.67</td>
+<td style="text-align: right;">-3.83 %</td>
+<td style="text-align: right;">9.0 %</td>
+<td>317 / 924 (34 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>UNI</td>
+<td style="text-align: right;">8</td>
+<td>2023-08-11</td>
+<td style="text-align: right;">1052</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">25.0 %</td>
+<td style="text-align: right;">+0.0454</td>
+<td style="text-align: right;">-0.0989</td>
+<td style="text-align: right;">1.43</td>
+<td style="text-align: right;">-3.60 %</td>
+<td style="text-align: right;">6.7 %</td>
+<td>208 / 833 (25 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>LINK</td>
+<td style="text-align: right;">9</td>
+<td>2023-05-18</td>
+<td style="text-align: right;">1137</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">42.9 %</td>
+<td style="text-align: right;">-0.0089</td>
+<td style="text-align: right;">-0.0978</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">-3.48 %</td>
+<td style="text-align: right;">9.8 %</td>
+<td>284 / 918 (31 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>TAO</td>
+<td style="text-align: right;">10</td>
+<td>2024-02-19</td>
+<td style="text-align: right;">860</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.0 %</td>
+<td style="text-align: right;">-0.0643</td>
+<td style="text-align: right;">-0.0415</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-2.41 %</td>
+<td style="text-align: right;">5.9 %</td>
+<td>108 / 641 (17 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>SUI</td>
+<td style="text-align: right;">11</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">27.3 %</td>
+<td style="text-align: right;">+0.0054</td>
+<td style="text-align: right;">-0.0291</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">-4.72 %</td>
+<td style="text-align: right;">15.3 %</td>
+<td>338 / 924 (37 %)</td>
+<td style="text-align: right;">10*</td>
+<td>FAIL (1)</td>
+</tr>
+<tr>
+<td>ONDO</td>
+<td style="text-align: right;">12</td>
+<td>2024-01-20</td>
+<td style="text-align: right;">890</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">50.0 %</td>
+<td style="text-align: right;">+0.2280</td>
+<td style="text-align: right;">+0.2280</td>
+<td style="text-align: right;">5.09</td>
+<td style="text-align: right;">-2.52 %</td>
+<td style="text-align: right;">4.9 %</td>
+<td>108 / 671 (16 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>AAVE</td>
+<td style="text-align: right;">13</td>
+<td>2023-07-18</td>
+<td style="text-align: right;">1076</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">23.1 %</td>
+<td style="text-align: right;">-0.0251</td>
+<td style="text-align: right;">-0.0431</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">-5.76 %</td>
+<td style="text-align: right;">16.8 %</td>
+<td>354 / 857 (41 %)</td>
+<td style="text-align: right;">10*</td>
+<td>FAIL (1)</td>
+</tr>
+<tr>
+<td>WLD</td>
+<td style="text-align: right;">14</td>
+<td>2023-07-24</td>
+<td style="text-align: right;">1070</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.0 %</td>
+<td style="text-align: right;">-0.1661</td>
+<td style="text-align: right;">-0.1661</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-1.49 %</td>
+<td style="text-align: right;">1.3 %</td>
+<td>120 / 851 (14 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>ZRO</td>
+<td style="text-align: right;">15</td>
+<td>2023-09-07</td>
+<td style="text-align: right;">1025</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0 %</td>
+<td style="text-align: right;">-0.0026</td>
+<td style="text-align: right;">-0.0026</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-0.03 %</td>
+<td style="text-align: right;">0.1 %</td>
+<td>88 / 806 (11 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>LTC</td>
+<td style="text-align: right;">16</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">9.1 %</td>
+<td style="text-align: right;">-0.0529</td>
+<td style="text-align: right;">-0.0218</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">-6.10 %</td>
+<td style="text-align: right;">10.0 %</td>
+<td>262 / 924 (28 %)</td>
+<td style="text-align: right;">10*</td>
+<td>INSUFFICIENT_DATA (1)</td>
+</tr>
+<tr>
+<td>BNB</td>
+<td style="text-align: right;">17</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">8.7 %</td>
+<td style="text-align: right;">+0.0010</td>
+<td style="text-align: right;">-0.0417</td>
+<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">-15.32 %</td>
+<td style="text-align: right;">28.8 %</td>
+<td>563 / 924 (61 %)</td>
+<td style="text-align: right;">10*</td>
+<td>FAIL (1)</td>
+</tr>
+<tr>
+<td>ADA</td>
+<td style="text-align: right;">18</td>
+<td>2023-10-22</td>
+<td style="text-align: right;">980</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">16.7 %</td>
+<td style="text-align: right;">-0.0740</td>
+<td style="text-align: right;">-0.1088</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">-6.56 %</td>
+<td style="text-align: right;">5.5 %</td>
+<td>170 / 761 (22 %)</td>
+<td style="text-align: right;">10*</td>
+<td>FAIL (1)</td>
+</tr>
+<tr>
+<td>kPEPE</td>
+<td style="text-align: right;">19</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">1143</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">40.0 %</td>
+<td style="text-align: right;">+0.1786</td>
+<td style="text-align: right;">-0.0485</td>
+<td style="text-align: right;">3.39</td>
+<td style="text-align: right;">-5.19 %</td>
+<td style="text-align: right;">12.0 %</td>
+<td>325 / 924 (35 %)</td>
+<td style="text-align: right;">10*</td>
+<td>FAIL (1)</td>
+</tr>
+</tbody>
+</table></div>
+<p>* default 10 bps (coin not in the l2Book table).</p>
+<h2 id="cost-breakdown-pre-holdout-all-coins">Cost breakdown (pre-holdout, all coins)</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>component</th>
+<th style="text-align: right;">USD</th>
+<th style="text-align: right;">share of gross</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gross price P&amp;L at mid</td>
+<td style="text-align: right;">+449.12</td>
+<td style="text-align: right;">100 %</td>
+</tr>
+<tr>
+<td>slippage (both legs)</td>
+<td style="text-align: right;">-21.70</td>
+<td style="text-align: right;">4.8 %</td>
+</tr>
+<tr>
+<td>taker fees (both legs)</td>
+<td style="text-align: right;">-12.99</td>
+<td style="text-align: right;">2.9 %</td>
+</tr>
+<tr>
+<td>funding (+ = received)</td>
+<td style="text-align: right;">-185.00</td>
+<td style="text-align: right;">41.2 %</td>
+</tr>
+<tr>
+<td><strong>net after all costs</strong></td>
+<td style="text-align: right;">+229.43</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th style="text-align: right;">gross at mid</th>
+<th style="text-align: right;">slippage</th>
+<th style="text-align: right;">fees</th>
+<th style="text-align: right;">funding</th>
+<th style="text-align: right;">net</th>
+<th style="text-align: right;">slippage per fill (bps)</th>
+<th style="text-align: right;">fees per fill (bps)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td style="text-align: right;">+89.22</td>
+<td style="text-align: right;">-0.52</td>
+<td style="text-align: right;">-2.35</td>
+<td style="text-align: right;">-35.07</td>
+<td style="text-align: right;">+51.28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td style="text-align: right;">+16.72</td>
+<td style="text-align: right;">-0.67</td>
+<td style="text-align: right;">-1.01</td>
+<td style="text-align: right;">-18.75</td>
+<td style="text-align: right;">-3.71</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>SOL</td>
+<td style="text-align: right;">+76.43</td>
+<td style="text-align: right;">-0.90</td>
+<td style="text-align: right;">-0.81</td>
+<td style="text-align: right;">-19.56</td>
+<td style="text-align: right;">+55.16</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>NEAR</td>
+<td style="text-align: right;">-10.60</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">-0.31</td>
+<td style="text-align: right;">-11.26</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>XRP</td>
+<td style="text-align: right;">+204.94</td>
+<td style="text-align: right;">-1.85</td>
+<td style="text-align: right;">-0.83</td>
+<td style="text-align: right;">-17.40</td>
+<td style="text-align: right;">+184.86</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>ENA</td>
+<td style="text-align: right;">-16.08</td>
+<td style="text-align: right;">-0.30</td>
+<td style="text-align: right;">-0.14</td>
+<td style="text-align: right;">+0.21</td>
+<td style="text-align: right;">-16.30</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>DOGE</td>
+<td style="text-align: right;">+55.20</td>
+<td style="text-align: right;">-1.14</td>
+<td style="text-align: right;">-0.51</td>
+<td style="text-align: right;">-18.75</td>
+<td style="text-align: right;">+34.80</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>UNI</td>
+<td style="text-align: right;">+11.28</td>
+<td style="text-align: right;">-0.53</td>
+<td style="text-align: right;">-0.24</td>
+<td style="text-align: right;">-4.90</td>
+<td style="text-align: right;">+5.61</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>LINK</td>
+<td style="text-align: right;">-0.89</td>
+<td style="text-align: right;">-1.01</td>
+<td style="text-align: right;">-0.45</td>
+<td style="text-align: right;">-9.26</td>
+<td style="text-align: right;">-11.61</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>TAO</td>
+<td style="text-align: right;">-14.13</td>
+<td style="text-align: right;">-0.40</td>
+<td style="text-align: right;">-0.18</td>
+<td style="text-align: right;">-2.08</td>
+<td style="text-align: right;">-16.79</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>SUI</td>
+<td style="text-align: right;">-2.47</td>
+<td style="text-align: right;">-1.35</td>
+<td style="text-align: right;">-0.61</td>
+<td style="text-align: right;">-6.86</td>
+<td style="text-align: right;">-11.28</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>ONDO</td>
+<td style="text-align: right;">+28.13</td>
+<td style="text-align: right;">-0.23</td>
+<td style="text-align: right;">-0.11</td>
+<td style="text-align: right;">+0.14</td>
+<td style="text-align: right;">+27.93</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>AAVE</td>
+<td style="text-align: right;">-16.54</td>
+<td style="text-align: right;">-1.78</td>
+<td style="text-align: right;">-0.80</td>
+<td style="text-align: right;">-10.96</td>
+<td style="text-align: right;">-30.09</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>WLD</td>
+<td style="text-align: right;">-14.38</td>
+<td style="text-align: right;">-0.16</td>
+<td style="text-align: right;">-0.07</td>
+<td style="text-align: right;">-0.29</td>
+<td style="text-align: right;">-14.91</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>ZRO</td>
+<td style="text-align: right;">+0.02</td>
+<td style="text-align: right;">-0.13</td>
+<td style="text-align: right;">-0.06</td>
+<td style="text-align: right;">-0.10</td>
+<td style="text-align: right;">-0.27</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>LTC</td>
+<td style="text-align: right;">-46.62</td>
+<td style="text-align: right;">-1.70</td>
+<td style="text-align: right;">-0.77</td>
+<td style="text-align: right;">-6.67</td>
+<td style="text-align: right;">-55.76</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>BNB</td>
+<td style="text-align: right;">+35.77</td>
+<td style="text-align: right;">-6.65</td>
+<td style="text-align: right;">-2.99</td>
+<td style="text-align: right;">-14.97</td>
+<td style="text-align: right;">+11.17</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>ADA</td>
+<td style="text-align: right;">-31.96</td>
+<td style="text-align: right;">-0.84</td>
+<td style="text-align: right;">-0.38</td>
+<td style="text-align: right;">-2.20</td>
+<td style="text-align: right;">-35.37</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+<tr>
+<td>kPEPE</td>
+<td style="text-align: right;">+85.07</td>
+<td style="text-align: right;">-1.29</td>
+<td style="text-align: right;">-0.58</td>
+<td style="text-align: right;">-17.22</td>
+<td style="text-align: right;">+65.98</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">4.5</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="comparison-with-h1-btc-eth-sol-effect-of-each-instrument-correction">Comparison with H1 (BTC, ETH, SOL) — effect of each instrument correction</h2>
+<p>Descriptive only (no gate verdicts): the same rule set under the H1 instrument as recorded, then with each correction added. Window length (c) changes only the gate, not these statistics; its effect is the per-coin verdicts above (365 d) versus H1's (90 d, all INSUFFICIENT).</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th>instrument</th>
+<th>data from</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">win rate</th>
+<th style="text-align: right;">mean ret/trade</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">max DD</th>
+<th style="text-align: right;">slippage USD</th>
+<th style="text-align: right;">fees USD</th>
+<th style="text-align: right;">funding USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td>H1 as recorded (CandleEstimated cost, data 2022-01-01, 90 d windows)</td>
+<td>2022-01-01</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">30.4 %</td>
+<td style="text-align: right;">+0.0224</td>
+<td style="text-align: right;">1.582</td>
+<td style="text-align: right;">-6.46 %</td>
+<td style="text-align: right;">78.63</td>
+<td style="text-align: right;">3.33</td>
+<td style="text-align: right;">+52.99</td>
+</tr>
+<tr>
+<td>BTC</td>
+<td>(a) + PerAssetCostModel</td>
+<td>2022-01-01</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">39.1 %</td>
+<td style="text-align: right;">+0.0451</td>
+<td style="text-align: right;">2.682</td>
+<td style="text-align: right;">-4.36 %</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">3.48</td>
+<td style="text-align: right;">+55.40</td>
+</tr>
+<tr>
+<td>BTC</td>
+<td>(a)+(b) + data start 2023-05-12 (= H1b instrument)</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">37.5 %</td>
+<td style="text-align: right;">+0.0353</td>
+<td style="text-align: right;">2.334</td>
+<td style="text-align: right;">-4.36 %</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">2.35</td>
+<td style="text-align: right;">+35.07</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td>H1 as recorded (CandleEstimated cost, data 2022-01-01, 90 d windows)</td>
+<td>2022-01-01</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">23.5 %</td>
+<td style="text-align: right;">-0.0333</td>
+<td style="text-align: right;">0.537</td>
+<td style="text-align: right;">-9.01 %</td>
+<td style="text-align: right;">54.72</td>
+<td style="text-align: right;">1.72</td>
+<td style="text-align: right;">+24.22</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td>(a) + PerAssetCostModel</td>
+<td>2022-01-01</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">35.3 %</td>
+<td style="text-align: right;">-0.0053</td>
+<td style="text-align: right;">1.047</td>
+<td style="text-align: right;">-6.66 %</td>
+<td style="text-align: right;">1.18</td>
+<td style="text-align: right;">1.77</td>
+<td style="text-align: right;">+25.20</td>
+</tr>
+<tr>
+<td>ETH</td>
+<td>(a)+(b) + data start 2023-05-12 (= H1b instrument)</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">40.0 %</td>
+<td style="text-align: right;">+0.0014</td>
+<td style="text-align: right;">1.274</td>
+<td style="text-align: right;">-6.66 %</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">+18.75</td>
+</tr>
+<tr>
+<td>SOL</td>
+<td>H1 as recorded (CandleEstimated cost, data 2022-01-01, 90 d windows)</td>
+<td>2022-01-01</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">41.7 %</td>
+<td style="text-align: right;">+0.2677</td>
+<td style="text-align: right;">10.925</td>
+<td style="text-align: right;">-9.53 %</td>
+<td style="text-align: right;">62.87</td>
+<td style="text-align: right;">1.30</td>
+<td style="text-align: right;">+59.09</td>
+</tr>
+<tr>
+<td>SOL</td>
+<td>(a) + PerAssetCostModel</td>
+<td>2022-01-01</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">75.0 %</td>
+<td style="text-align: right;">+0.3222</td>
+<td style="text-align: right;">23.210</td>
+<td style="text-align: right;">-8.20 %</td>
+<td style="text-align: right;">1.50</td>
+<td style="text-align: right;">1.35</td>
+<td style="text-align: right;">+61.00</td>
+</tr>
+<tr>
+<td>SOL</td>
+<td>(a)+(b) + data start 2023-05-12 (= H1b instrument)</td>
+<td>2023-05-12</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">80.0 %</td>
+<td style="text-align: right;">+0.0965</td>
+<td style="text-align: right;">13.043</td>
+<td style="text-align: right;">-2.01 %</td>
+<td style="text-align: right;">0.90</td>
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">+19.56</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="pooled-per-window">Pooled per window</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>period</th>
+<th style="text-align: right;">coins</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">wins</th>
+<th style="text-align: right;">net USD</th>
+<th style="text-align: right;">window ret %</th>
+<th style="text-align: right;">funding USD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">+203.90</td>
+<td style="text-align: right;">+0.76</td>
+<td style="text-align: right;">+77.44</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-98.45</td>
+<td style="text-align: right;">-0.60</td>
+<td style="text-align: right;">+16.58</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="h1bpooled1d-19-coins-fail">H1b.pooled.1d — 19 coins — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {unclassified} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 0 insufficient, mean PF 1.035)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 5: positive but not significant, n = 99 &lt; N_MIN_POOLED (130)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>99 / 24 / 24.2 %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>1.231 / +11.42 USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>+0.01063</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>0.3170 / 0.6830</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>—</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">1.69</td>
+<td style="text-align: right;">+0.76</td>
+<td style="text-align: right;">0.187</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">-0.60</td>
+<td style="text-align: right;">0.992</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>Pooled per 365-day window over 19 coins' continuous runs (each its own $1,000 book): trades and funding summed, return = Σ net equity change / Σ equity at window start over the coins present. Regime scoping is per coin (per-coin reports).
+Regime scoping unavailable: no daily candles supplied.</p>
+<h2 id="universe">Universe</h2>
+<p>Top-30 HL perps by open interest (metaAndAssetCtxs, 2026-09-26T20:41Z), kept if ≥ 700 days from the coin's data start (max of 2023-05-12 and its first funding record) to the holdout cut. Kept (19): BTC, ETH, SOL, NEAR, XRP, ENA, DOGE, UNI, LINK, TAO, SUI, ONDO, AAVE, WLD, ZRO, LTC, BNB, ADA, kPEPE.</p>
+<p>Excluded: .</p>
+<h2 id="per-coin-gate-reports">Per-coin gate reports</h2>
+<h3 id="h1bbtc1d-btc-fail">H1b.BTC.1d — BTC — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: WEAK CANDIDATE, 0/2 passed, 1 insufficient, mean PF 3.447)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 11 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>11 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 360, bear 227, range 143, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 11</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">6.89</td>
+<td style="text-align: right;">+3.90</td>
+<td style="text-align: right;">0.112</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.91</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel BTC: 1 bps/side + 4.5 bps taker.</p>
+<h3 id="h1beth1d-eth-insufficient_data">H1b.ETH.1d — ETH — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 5 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>5 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 169, bear 352, range 209, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 5</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.84</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.51</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel ETH: 3 bps/side + 4.5 bps taker.</p>
+<h3 id="h1bsol1d-sol-fail">H1b.SOL.1d — SOL — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: WEAK CANDIDATE, 0/2 passed, 1 insufficient, mean PF 2.368)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 6 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>6 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 206, bear 343, range 181, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 6</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">4.74</td>
+<td style="text-align: right;">+1.67</td>
+<td style="text-align: right;">0.103</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.07</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel SOL: 5 bps/side + 4.5 bps taker.</p>
+<h3 id="h1bnear1d-near-insufficient_data">H1b.NEAR.1d — NEAR — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 2 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>2 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 41, bear 454, range 235, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 2</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.65</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.48</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-11-01 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-06-07). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel NEAR: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bxrp1d-xrp-fail">H1b.XRP.1d — XRP — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: WEAK CANDIDATE, 0/2 passed, 1 insufficient, mean PF 6.057)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 7 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>7 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 322, bear 266, range 142, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 7</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">12.11</td>
+<td style="text-align: right;">+19.82</td>
+<td style="text-align: right;">0.231</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.21</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-06-18 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-01-23). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel XRP: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bena1d-ena-insufficient_data">H1b.ENA.1d — ENA — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2025-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2025-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/1 passed, 1 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 1 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>1 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 50, bear 242, range 73, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 1</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.67</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2024-04-02 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-11-07). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel ENA: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bdoge1d-doge-insufficient_data">H1b.DOGE.1d — DOGE — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 3 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>3 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 133, bear 299, range 298, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 3</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.91</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel DOGE: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1buni1d-uni-insufficient_data">H1b.UNI.1d — UNI — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 2 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>2 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 131, bear 353, range 246, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 2</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+3.13</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.16</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-08-11 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-03-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel UNI: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1blink1d-link-insufficient_data">H1b.LINK.1d — LINK — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 2 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>2 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 150, bear 374, range 206, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 2</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.54</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-18 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-23). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel LINK: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1btao1d-tao-insufficient_data">H1b.TAO.1d — TAO — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2025-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2025-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/1 passed, 1 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 1 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>1 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 29, bear 211, range 125, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 1</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.05</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2024-02-19 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-09-25). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel TAO: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bsui1d-sui-fail">H1b.SUI.1d — SUI — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 1 insufficient, mean PF 0.600)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 8 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>8 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 220, bear 310, range 200, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 8</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">+0.01</td>
+<td style="text-align: right;">0.348</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.30</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel SUI: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bondo1d-ondo-insufficient_data">H1b.ONDO.1d — ONDO — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2025-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2025-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/1 passed, 1 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 0 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>0 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 8, bear 252, range 105, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2024-01-20 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-08-26). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel ONDO: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1baave1d-aave-fail">H1b.AAVE.1d — AAVE — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 1 insufficient, mean PF 0.318)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 10 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>10 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 291, bear 257, range 182, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 10</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">-2.14</td>
+<td style="text-align: right;">0.663</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-07-18 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-02-22). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel AAVE: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bwld1d-wld-insufficient_data">H1b.WLD.1d — WLD — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 0 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>0 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 25, bear 570, range 135, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-07-24 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-02-28). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel WLD: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bzro1d-zro-insufficient_data">H1b.ZRO.1d — ZRO — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 1 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>1 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 62, bear 575, range 93, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 1</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">+0.00</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.03</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-09-07 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-04-13). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel ZRO: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bltc1d-ltc-insufficient_data">H1b.LTC.1d — LTC — <strong>INSUFFICIENT_DATA</strong></h3>
+<blockquote>
+<p>INSUFFICIENT_DATA in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: not enough trades at either level</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>INSUFFICIENT</strong> (evaluate_overall: INSUFFICIENT_DATA, 0/2 passed, 2 insufficient, mean PF 0.000)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 8 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>8 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 167, bear 353, range 210, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 8</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.36</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-2.90</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel LTC: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bbnb1d-bnb-fail">H1b.BNB.1d — BNB — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 0 insufficient, mean PF 0.727)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 19 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>19 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 386, bear 137, range 207, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 19</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">-8.63</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.45</td>
+<td style="text-align: right;">+0.68</td>
+<td style="text-align: right;">0.268</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel BNB: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bada1d-ada-fail">H1b.ADA.1d — ADA — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 1 insufficient, mean PF 0.204)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 6 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>6 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 170, bear 406, range 154, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 6</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">-2.51</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-1.07</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-10-22 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2024-05-28). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel ADA: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h3 id="h1bkpepe1d-kpepe-fail">H1b.kPEPE.1d — kPEPE — <strong>FAIL</strong></h3>
+<blockquote>
+<p>FAIL in regimes {bull, bear, range} (2024-06-28 → 2026-06-28).</p>
+</blockquote>
+<p>Reason: per-window level fails (enough trades, no replication)</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test family</td>
+<td><code>mean_return</code></td>
+</tr>
+<tr>
+<td>OOS range</td>
+<td>2024-06-28 → 2026-06-28</td>
+</tr>
+<tr>
+<td>α (FAIL routes) / α_adj (PASS)</td>
+<td>0.1 / 0.00323 (m = 31 REGISTERED cells)</td>
+</tr>
+<tr>
+<td>Level 1</td>
+<td><strong>FAIL</strong> (evaluate_overall: REJECTED, 0/2 passed, 1 insufficient, mean PF 0.889)</td>
+</tr>
+<tr>
+<td>Level 2</td>
+<td><strong>INSUFFICIENT</strong> — rule: 1: n = 7 &lt; N_FAIL_FLOOR (20)</td>
+</tr>
+<tr>
+<td>pooled n / wins / win rate</td>
+<td>7 / — / — %</td>
+</tr>
+<tr>
+<td>pooled PF / aggregate net</td>
+<td>— / — USD</td>
+</tr>
+<tr>
+<td>mean per-trade return</td>
+<td>—</td>
+</tr>
+<tr>
+<td>p_up / p_down</td>
+<td>— / —</td>
+</tr>
+<tr>
+<td>regime days in OOS range</td>
+<td>bull 180, bear 362, range 188, warmup 0</td>
+</tr>
+<tr>
+<td>trades per regime (at entry)</td>
+<td>bull 7</td>
+</tr>
+</tbody>
+</table></div>
+<div class="wide"><table>
+<thead>
+<tr>
+<th style="text-align: right;">w</th>
+<th>test period</th>
+<th style="text-align: right;">trades</th>
+<th style="text-align: right;">PF</th>
+<th style="text-align: right;">ret %</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: center;">pass</th>
+<th style="text-align: center;">insufficient</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>2024-06-28 → 2025-06-28</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">1.78</td>
+<td style="text-align: right;">+1.16</td>
+<td style="text-align: right;">0.264</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">N</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>2025-06-28 → 2026-06-28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">-0.95</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: center;">N</td>
+<td style="text-align: center;">Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>One continuous run 2023-05-12 → holdout cut 2026-06-28, start equity $1,000; 365-day windows tiled back from the cut (first decision bar 2023-12-17). Train side = round trips entered before the window (nothing fitted). Cost model PerAssetCostModel kPEPE: 10 bps/side (default, not in the l2Book table) + 4.5 bps taker.</p>
+<h2 id="artefacts">Artefacts</h2>
+<ul>
+<li>Equity/trade charts (gitignored): <code>reports/h1b_trend_bull_1d_{COIN}.html</code></li>
+<li>Cache snapshot keys: <code>{COIN}_1d_1640995200000_1790467200000</code>, <code>funding_{COIN}_1640995200000_1790467200000</code>.</li>
+</ul>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>

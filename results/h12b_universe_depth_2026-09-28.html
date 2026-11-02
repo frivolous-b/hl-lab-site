@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H12b universe filter — listing and top-20 book depth (mainnet perps) · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html" class="on">Results</a><a href="../digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h12b-universe-filter-listing-and-top-20-book-depth-mainnet-perps">H12b universe filter — listing and top-20 book depth (mainnet perps)</h1>
+<p><em>One shot, read-only. Started 2026-09-28T12:59:29.311615+00:00, finished 2026-09-28T12:59:40.692792+00:00. Runner: <code>examples/probe_h12_universe_depth.py</code>. Source: Hyperliquid mainnet Info <code>meta</code> (listing) and <code>l2Book</code> (20 levels per side), one request per coin.</em></p>
+<p>Filter registered with H12b: listed and not delisted, and visible depth ≥ $50,000 on <strong>each</strong> side (asks and bids) of the 20-level book. Depth = Σ price × size over the visible levels.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>coin</th>
+<th>listed</th>
+<th>book time (UTC)</th>
+<th style="text-align: right;">mid</th>
+<th style="text-align: right;">depth asks (USD)</th>
+<th style="text-align: right;">depth bids (USD)</th>
+<th style="text-align: right;">min side (USD)</th>
+<th>in universe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTC</td>
+<td>yes</td>
+<td>2026-09-28 12:59:29</td>
+<td style="text-align: right;">83525.5</td>
+<td style="text-align: right;">1,602,673</td>
+<td style="text-align: right;">11,947,468</td>
+<td style="text-align: right;">1,602,673</td>
+<td><strong>yes</strong></td>
+</tr>
+<tr>
+<td>ETH</td>
+<td>yes</td>
+<td>2026-09-28 12:59:30</td>
+<td style="text-align: right;">2689.65</td>
+<td style="text-align: right;">8,279,517</td>
+<td style="text-align: right;">8,814,824</td>
+<td style="text-align: right;">8,279,517</td>
+<td><strong>yes</strong></td>
+</tr>
+<tr>
+<td>SOL</td>
+<td>yes</td>
+<td>2026-09-28 12:59:31</td>
+<td style="text-align: right;">119.985</td>
+<td style="text-align: right;">3,947,425</td>
+<td style="text-align: right;">4,199,768</td>
+<td style="text-align: right;">3,947,425</td>
+<td><strong>yes</strong></td>
+</tr>
+<tr>
+<td>SUI</td>
+<td>yes</td>
+<td>2026-09-28 12:59:31</td>
+<td style="text-align: right;">1.19295</td>
+<td style="text-align: right;">210,173</td>
+<td style="text-align: right;">234,001</td>
+<td style="text-align: right;">210,173</td>
+<td><strong>yes</strong></td>
+</tr>
+<tr>
+<td>AVAX</td>
+<td>yes</td>
+<td>2026-09-28 12:59:32</td>
+<td style="text-align: right;">10.5445</td>
+<td style="text-align: right;">184,988</td>
+<td style="text-align: right;">325,736</td>
+<td style="text-align: right;">184,988</td>
+<td><strong>yes</strong></td>
+</tr>
+<tr>
+<td>NEAR</td>
+<td>yes</td>
+<td>2026-09-28 12:59:33</td>
+<td style="text-align: right;">5.2164</td>
+<td style="text-align: right;">31,565</td>
+<td style="text-align: right;">250,634</td>
+<td style="text-align: right;">31,565</td>
+<td>no</td>
+</tr>
+<tr>
+<td>APT</td>
+<td>yes</td>
+<td>2026-09-28 12:59:34</td>
+<td style="text-align: right;">0.83965</td>
+<td style="text-align: right;">91,107</td>
+<td style="text-align: right;">31,442</td>
+<td style="text-align: right;">31,442</td>
+<td>no</td>
+</tr>
+<tr>
+<td>TIA</td>
+<td>yes</td>
+<td>2026-09-28 12:59:35</td>
+<td style="text-align: right;">0.46824</td>
+<td style="text-align: right;">38,169</td>
+<td style="text-align: right;">45,621</td>
+<td style="text-align: right;">38,169</td>
+<td>no</td>
+</tr>
+<tr>
+<td>ARB</td>
+<td>yes</td>
+<td>2026-09-28 12:59:36</td>
+<td style="text-align: right;">0.21169</td>
+<td style="text-align: right;">53,854</td>
+<td style="text-align: right;">27,779</td>
+<td style="text-align: right;">27,779</td>
+<td>no</td>
+</tr>
+<tr>
+<td>OP</td>
+<td>yes</td>
+<td>2026-09-28 12:59:37</td>
+<td style="text-align: right;">0.13969</td>
+<td style="text-align: right;">47,959</td>
+<td style="text-align: right;">90,542</td>
+<td style="text-align: right;">47,959</td>
+<td>no</td>
+</tr>
+<tr>
+<td>INJ</td>
+<td>yes</td>
+<td>2026-09-28 12:59:38</td>
+<td style="text-align: right;">7.5139</td>
+<td style="text-align: right;">11,221</td>
+<td style="text-align: right;">8,238</td>
+<td style="text-align: right;">8,238</td>
+<td>no</td>
+</tr>
+<tr>
+<td>SEI</td>
+<td>yes</td>
+<td>2026-09-28 12:59:38</td>
+<td style="text-align: right;">0.081075</td>
+<td style="text-align: right;">34,685</td>
+<td style="text-align: right;">47,960</td>
+<td style="text-align: right;">34,685</td>
+<td>no</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Final H12b universe (5): BTC, ETH, SOL, SUI, AVAX.</strong></p>
+<p>Caveat: one snapshot at one moment. The universe is fixed by this snapshot for the whole H12b run and is not re-evaluated.</p>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>27c7e8a</code> · updated 2026-11-02<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>
