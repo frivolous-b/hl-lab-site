@@ -27,6 +27,7 @@ pre{background:var(--panel-2);padding:10px;overflow:auto;border-radius:6px}pre c
 blockquote{margin:0;padding:4px 12px;border-left:3px solid var(--border);color:var(--muted)}
 .muted{color:var(--muted)}.small{font-size:13px}
 details.status summary{cursor:pointer;color:var(--muted)}
+.paper{margin:6px 0}.paper .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;color:var(--amber);border:1px solid var(--amber);border-radius:4px;padding:0 5px;margin-right:4px}
 svg{max-width:100%;height:auto}
 .pipeline text{fill:var(--text);font:12px "Segoe UI",system-ui,sans-serif}
 .pipeline rect{fill:var(--panel);stroke:var(--border)}

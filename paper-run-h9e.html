@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>H9e paper run (testnet, 30 days) · hl lab</title>
+<link rel="stylesheet" href="assets/style.css"></head><body>
+<header class="top"><a class="brand" href="index.html">hl lab</a><nav><a href="index.html">Home</a><a href="method.html">Method</a><a href="ledger.html" class="on">Ledger</a><a href="results/index.html">Results</a><a href="digest.html">Digest</a></nav></header>
+<main>
+<h1 id="h9e-paper-run-testnet-30-days">H9e paper run (testnet, 30 days)</h1>
+<p>Published on the site only. The section below is copied verbatim from
+<code>docs/PAPER_RUN.md</code> of hl-executor (private repository), commit <code>3a29d08</code>,
+on 2026-11-03. The ledger is not edited by it: recording a paper-run result
+there is the owner's step. To refresh, re-copy the section; the site's
+note (dates, verdict, criteria) is generated from it by <code>scripts/build_site.py</code>.</p>
+<h2 id="h9e-run-closing-record">H9e run: closing record</h2>
+<p>Written 2026-11-02 from D1 (read-only <code>SELECT</code>s of every table, 17:39 UTC).
+Graded <strong>as of the 2026-10-29 14:00 slot</strong>: every row up to and
+including that tick, nothing after it. That tick is the run's closing mark
+and accrues the 720th hourly settlement (09-29 15:00 → 10-29 14:00); both
+pairs entered just after the 09-29 14:00 settlement. Computed with the
+Worker's own <code>buildStatus</code> on a copy of the database cut at the slot, the
+state rebuilt from that tick's <code>positions_snapshot</code> and the
+<code>basis_samples</code> up to it (one entry per coin, no exit: every cost field is
+the entry's). Cross-check: the rebuilt shadow P&amp;L equals the
+<code>positions_snapshot.shadow_pnl</code> the 14:00 tick wrote, to the last digit
+(BTC +0.742240, ETH +0.494907 USD).</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start (UTC)</td>
+<td>2026-09-29 14:00 (first tick); both entries in that tick</td>
+</tr>
+<tr>
+<td>End (UTC)</td>
+<td><strong>2026-10-29 14:00</strong>, start + 30 days. Not stopped: no auto-stop, no kill switch over the 30 days.</td>
+</tr>
+<tr>
+<td>Positions held</td>
+<td>720 h, both coins <code>ON</code> throughout; one entry each, no exit (the rule never asked for one)</td>
+</tr>
+<tr>
+<td>Afterwards</td>
+<td>Not flattened, not halted: positions kept by owner decision until the H9f start, managed by the same rule. Not archived; the database is the run's (<code>3ee998de-…</code>).</td>
+</tr>
+<tr>
+<td>Ledger</td>
+<td>Not edited from here. The result is for the owner to record in backtest-lab.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Criteria</strong> (H9e: S2 at 29.1 bps on both coins):</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>criterion</th>
+<th>result</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>every entry and exit within one tick of the signal</td>
+<td>✅</td>
+<td>2 filled, 0 missed, 0 unanswered (the two entries, 09-29 14:00, both filled inside the cap in the deciding tick)</td>
+</tr>
+<tr>
+<td>S2 BTC</td>
+<td>basis excursion never beyond the haircut (29.1 bps)</td>
+<td>✅</td>
+<td>worst −20.14 bps (2026-10-23 14:00)</td>
+</tr>
+<tr>
+<td>S2 ETH</td>
+<td>as above</td>
+<td>✅</td>
+<td>worst −10.70 bps (2026-10-21 13:15)</td>
+</tr>
+<tr>
+<td>S3a BTC</td>
+<td>graded P&amp;L within ±1 % of capital of the expectation</td>
+<td>✅</td>
+<td>−0.48 USD = −0.053 % of 900</td>
+</tr>
+<tr>
+<td>S3a ETH</td>
+<td>as above</td>
+<td>✅</td>
+<td>−0.04 USD = −0.004 % of 900</td>
+</tr>
+<tr>
+<td>S3a pooled</td>
+<td>as above</td>
+<td>✅</td>
+<td>−0.51 USD = −0.028 % of 1,800</td>
+</tr>
+<tr>
+<td>S3b</td>
+<td>informational: simulated spot fee + slippage</td>
+<td>ℹ️</td>
+<td>BTC −0.36 USD, ETH −0.45 USD</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>zero unreconciled positions</td>
+<td>✅</td>
+<td>0 unreconciled ticks (2,881 ticks; testnet <code>szi</code> −0.00534 BTC, −0.1647 ETH at the close, as booked)</td>
+</tr>
+</tbody>
+</table></div>
+<p>S2 is measured on the ticks that read mainnet: 2,771 basis samples per
+coin over the 2,881 ticks (110 ticks lost the mainnet read, below).</p>
+<p><strong>Shadow P&amp;L at the close</strong> (USD, stress haircut charged; spot leg SIMULATED;
+the pairs are open, so the basis is unrealised, at the 14:00 mainnet mids):</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">BTC</th>
+<th style="text-align: right;">ETH</th>
+<th style="text-align: right;">book</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>funding received (mainnet, 720 settlements)</td>
+<td style="text-align: right;">+3.14</td>
+<td style="text-align: right;">+2.63</td>
+<td style="text-align: right;">+5.76</td>
+</tr>
+<tr>
+<td>fees perp / spot</td>
+<td style="text-align: right;">−0.20 / −0.31</td>
+<td style="text-align: right;">−0.20 / −0.31</td>
+<td style="text-align: right;">−1.03</td>
+</tr>
+<tr>
+<td>slippage perp (paid) / spot (model)</td>
+<td style="text-align: right;">−0.00 / −0.04</td>
+<td style="text-align: right;">−0.01 / −0.13</td>
+<td style="text-align: right;">−0.19</td>
+</tr>
+<tr>
+<td>stress haircut (29.1 bps)</td>
+<td style="text-align: right;">−1.31</td>
+<td style="text-align: right;">−1.31</td>
+<td style="text-align: right;">−2.62</td>
+</tr>
+<tr>
+<td>basis unrealised (open pair)</td>
+<td style="text-align: right;">−0.52</td>
+<td style="text-align: right;">−0.16</td>
+<td style="text-align: right;">−0.68</td>
+</tr>
+<tr>
+<td><strong>total</strong></td>
+<td style="text-align: right;"><strong>+0.74</strong></td>
+<td style="text-align: right;"><strong>+0.49</strong></td>
+<td style="text-align: right;"><strong>+1.24</strong></td>
+</tr>
+<tr>
+<td>expected (model)</td>
+<td style="text-align: right;">+1.22</td>
+<td style="text-align: right;">+0.53</td>
+<td style="text-align: right;">+1.75</td>
+</tr>
+<tr>
+<td>testnet funding (journaled only)</td>
+<td style="text-align: right;">−26.31</td>
+<td style="text-align: right;">−81.02</td>
+<td style="text-align: right;">−107.33</td>
+</tr>
+</tbody>
+</table></div>
+<p>Equity 1,801.24 of 1,800 at the close; peak 1,801.81 (10-28 20:15); the
+largest drawdown 0.23 % (09-30 15:30, the entry costs before any funding).
+The book is 0.51 USD below the model, all of it the open pairs' basis
+(−0.68 USD unrealised), partly offset by less perp slippage than
+modelled (+0.17 USD). Funding ran at the 7-day signal: BTC 5.2 to
+10.3 %/yr (breakeven 3.285), ETH 4.0 to 11.3 %/yr (breakeven 4.258; it dipped
+below the breakeven, which only gates an entry; an exit needs the 7-day
+mean below zero, and neither came near).</p>
+<p><strong>Operations over the run</strong> (2,881 ticks, 09-29 14:00 → 10-29 14:00 inclusive):</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ticks</td>
+<td>2,881 of 2,881: 0 missing, 0 unfinished, 0 unreconciled; 5 slots ran twice (Cloudflare retry, both runs ok)</td>
+</tr>
+<tr>
+<td>Not <code>ok</code></td>
+<td>123 ticks: 110 lost the mainnet read to HTTP 429, 12 a funding history call to 429, 2 the testnet read to HTTP 502 (10-03 07:30 and 10-26 02:30; never two in a row, the halt is at 4)</td>
+</tr>
+<tr>
+<td>Mainnet 429</td>
+<td>1,476 requests answered 429, in 602 of 2,881 ticks; 5,691 mainnet requests in all. Worst days 09-30 / 10-01 (88 and 93 ticks with a 429) and <strong>10-21 → 10-24</strong> (44 ticks without a mainnet read on 10-22 alone)</td>
+</tr>
+<tr>
+<td>Decisions lost</td>
+<td>BTC 25 and ETH 22 of 721 decision hours, mostly 10-21 → 10-24. No order was due in any of them: both coins were <code>ON</code> past the 7-day minimum hold and the 7-day mean stayed above zero (above +4 %/yr), so each could only have been HOLD.</td>
+</tr>
+<tr>
+<td>Funding</td>
+<td>All 720 settlements accrued for both coins; those of ticks without a mainnet read caught up on the next tick that read it</td>
+</tr>
+<tr>
+<td>Tick time</td>
+<td>median 1.7 s, max 27.9 s (wall time, the 429 backoff included)</td>
+</tr>
+<tr>
+<td>Alerts</td>
+<td>2, both fill alerts of the entry, both sent. No auto-stop, no kill switch, no manual stop, no resume.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The 429s are the shared-egress limit of the 2026-09-28 incident (I21 to
+I27): the backoff and the funding cache kept every tick finishing and
+every settlement accrued, but did not stop lost reads. The fallback
+read through hl-collector (handover 2026-10-24) is not built.</p>
+<p><strong>After the end</strong> (2026-10-29 14:15 → 2026-11-02 17:30, 398 ticks;
+reported, <strong>not graded</strong>):</p>
+<ul>
+<li>Both coins <code>ON</code>, every decision HOLD; 0 missing, 0 unfinished,
+  0 unreconciled. ETH lost one decision (10-30 15:00).</li>
+<li>BTC's worst leg P&amp;L went to <strong>−21.41 bps</strong> (10-30 03:30): within the
+  haircut, and the number <code>/status</code> shows as the run's worst today; the
+  graded figure is −20.14 above.</li>
+<li>Mainnet 429: 31 requests in 14 ticks; 4 ticks without a mainnet
+  read; 1 testnet 502.</li>
+<li>Shadow P&amp;L at 11-02 17:30: +2.27 USD against the model's +2.39 (S3a
+  pooled −0.12 USD); funding since the end +0.50 BTC, +0.14 ETH.</li>
+<li><strong>ETH spot-mid outlier</strong>, 10-29 21:30: mainnet spot mid 2,331.95
+  against a perp mid of 2,281.85 (basis −214.8 bps, leg P&amp;L +185 bps,
+  in the book's favour), gone by the next sample. It set the stored peak
+  equity to 1,809.87 USD, so the drawdown <code>/status</code> shows since (0.42 %
+  today) is measured from an artefact. Harmless at 3 %, noted as a risk.</li>
+</ul>
+<p><strong>Final flatten</strong> (2026-11-02 20:15 UTC; reported, <strong>not graded</strong>). Kill
+switch set 20:02 ("H9e run closed, switching to H9f", owner approval of
+the H9f testnet run); the 20:15 tick flattened both pairs with
+reduce-only IOC buys and halted the book. Both fills inside the 10 bps cap.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th></th>
+<th>BTC</th>
+<th>ETH</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bought back</td>
+<td>0.00534 in 5 fills, avg 76,714.9 (limit 76,769)</td>
+<td>0.1647 in 3 fills, avg 2,251.96 (limit 2,252.1)</td>
+</tr>
+<tr>
+<td>vs testnet reference mid</td>
+<td>76,692.5: +2.9 bps</td>
+<td>2,249.95: +8.9 bps</td>
+</tr>
+<tr>
+<td>Mainnet mids at the exit (perp / spot)</td>
+<td>76,916.5 / 76,809</td>
+<td>2,249.95 / 2,247.65</td>
+</tr>
+<tr>
+<td>Testnet fees of the flatten</td>
+<td>0.184 USD</td>
+<td>0.167 USD</td>
+</tr>
+<tr>
+<td>Testnet perp P&amp;L, entry → exit (not in the shadow book)</td>
+<td>(84,712 − 76,714.9) × 0.00534 = +42.70 USD</td>
+<td>(2,728 − 2,251.96) × 0.1647 = +78.40 USD</td>
+</tr>
+<tr>
+<td>Shadow pair, closed: funding / fees perp+spot / slippage perp+spot / haircut / basis realised</td>
+<td>+3.646 / −0.989 / −0.209 / −1.309 / −0.655</td>
+<td>+2.776 / −0.943 / −0.585 / −1.309 / −0.165</td>
+</tr>
+<tr>
+<td><strong>Shadow P&amp;L, closed</strong> (model)</td>
+<td><strong>+0.48</strong> (+1.18)</td>
+<td><strong>−0.23</strong> (+0.03)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Book closed at <strong>+0.26 USD</strong> of shadow P&amp;L against the model's +1.21
+(graded part −0.95 USD = −0.053 % of 1,800). Since the graded end
+(10-29 14:00: +1.24 vs +1.75) the book gained +0.64 of funding (BTC +0.50,
+ETH +0.14) and paid the exit: fees, slippage and the realised basis
+(BTC −0.66: the mainnet perp sat 14 bps above spot at the exit). The
+model's own exit costs take it from +2.41 to +1.21. Testnet account
+after the flatten: 1,025.26 USDC, no position; testnet funding paid over
+the run (journaled, not in the P&amp;L): BTC −11.68, ETH −83.78 USD. Both
+coins HALTED, the funding accrual of the exit hour closes by itself.</p>
+<p>Journal: <code>exports/h9e_paper_run_2026-09-29.sql</code> (local, not in git, as H9d; <code>wrangler d1 export</code>
+at 20:34, between ticks; 9,663,564 bytes, 3,291 ticks; no secret in it: the 64-hex values
+are fill transaction hashes). The database <code>hl-executor</code>
+(3ee998de-…) is kept, unbound from the Worker from the H9f deploys on.</p>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>5da0be1</code> · updated 2026-11-03<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>
