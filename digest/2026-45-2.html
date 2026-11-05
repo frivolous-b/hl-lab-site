@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Strategy loop — batch 2026-45 · hl lab</title>
+<link rel="stylesheet" href="../assets/style.css"></head><body>
+<header class="top"><a class="brand" href="../index.html">hl lab</a><nav><a href="../index.html">Home</a><a href="../method.html">Method</a><a href="../ledger.html">Ledger</a><a href="../results/index.html">Results</a><a href="../digest.html" class="on">Digest</a></nav></header>
+<main>
+<h1 id="strategy-loop-batch-2026-45">Strategy loop — batch 2026-45</h1>
+<p>This week the loop tested 25 trading ideas, each with one fixed set of settings written down before it ran, on market data from May 2023 to June 2025. 2 of them did well enough, after allowing for the luck that comes from testing many ideas at once, to earn a second test on a later year of data (July 2025 to June 2026) that the first test never looked at. No idea passed the second test, so nothing new goes forward to paper trading. Ideas that only trade one direction are judged in bitcoin terms, against simply holding bitcoin, which rose strongly over this period; ideas that are hedged are judged in dollars against holding cash. A failed idea is a normal outcome here: the point of the loop is to reject ideas cheaply and honestly.</p>
+<p><strong>Note on directional ideas:</strong> they are judged in BTC, against simply holding BTC (the lab's north star). Over this data BTC rose about 4×, so any time out of the market costs a lot of BTC: a directional idea that sat in cash shows a large BTC-denominated loss even if it lost few dollars. That is intended.</p>
+<p><em>Generated 2026-11-05 16:33 UTC by <code>lab/loop.py</code>. Level 1: 2023-05-12 → 2025-06-30, <code>daily_returns</code> v2 statistic, BH-FDR q = 0.1 over the batch (p_up ≤ 0.00000). Level 2: 2025-07-01 → 2026-06-28, level-2 rule of 2026-11-05 (VALIDATION_GATE section 7), recorded in the discovery ledger only. Ideas and their exact parameters: docs/DISCOVERY_LEDGER.md, batch 2026-45.</em></p>
+<p><strong>Data:</strong> Data rebuilt in CI in 268 s (441 monthly partitions fetched, the rest from actions/cache); 396 months match the lab's cache (sha256), no coverage gap.</p>
+<h2 id="where-the-ideas-came-from">Where the ideas came from</h2>
+<p>Intake (<code>ideas/intake.md</code>, accepted entries) first, then the next unrun rows of the template registry (<code>ideas/registry.csv</code>, 84 rows, 0 run before this batch), in registry order, 25 in all. Nothing is chosen by results.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>id</th>
+<th>source</th>
+<th>idea file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-2026-45-09</td>
+<td>registry T0001</td>
+<td><code>ideas/registry/T0001_carry_threshold_t3_h3_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-10</td>
+<td>registry T0002</td>
+<td><code>ideas/registry/T0002_carry_filter_adx20_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-11</td>
+<td>registry T0003</td>
+<td><code>ideas/registry/T0003_funding_extremes_carry_w7d_p80_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-12</td>
+<td>registry T0005</td>
+<td><code>ideas/registry/T0005_btc_trend_breakout_1d_n10_low.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-13</td>
+<td>registry T0007</td>
+<td><code>ideas/registry/T0007_mean_reversion_regime_r25_a20_1h_b.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-14</td>
+<td>registry T0009</td>
+<td><code>ideas/registry/T0009_carry_threshold_t3_h3_bes.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-15</td>
+<td>registry T0010</td>
+<td><code>ideas/registry/T0010_carry_filter_adx20_bes.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-16</td>
+<td>registry T0011</td>
+<td><code>ideas/registry/T0011_funding_extremes_carry_w7d_p80_bes.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-17</td>
+<td>registry T0013</td>
+<td><code>ideas/registry/T0013_btc_trend_breakout_1d_n10_atr3.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-18</td>
+<td>registry T0015</td>
+<td><code>ideas/registry/T0015_mean_reversion_regime_r25_a20_1h_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-19</td>
+<td>registry T0017</td>
+<td><code>ideas/registry/T0017_carry_threshold_t3_h7_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-20</td>
+<td>registry T0018</td>
+<td><code>ideas/registry/T0018_carry_filter_adx30_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-21</td>
+<td>registry T0019</td>
+<td><code>ideas/registry/T0019_funding_extremes_carry_w7d_p90_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-22</td>
+<td>registry T0021</td>
+<td><code>ideas/registry/T0021_btc_trend_breakout_1d_n20_low.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-23</td>
+<td>registry T0023</td>
+<td><code>ideas/registry/T0023_mean_reversion_regime_r25_a20_4h_b.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-24</td>
+<td>registry T0025</td>
+<td><code>ideas/registry/T0025_carry_threshold_t3_h7_bes.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-25</td>
+<td>registry T0026</td>
+<td><code>ideas/registry/T0026_carry_filter_adx30_bes.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-26</td>
+<td>registry T0027</td>
+<td><code>ideas/registry/T0027_funding_extremes_carry_w7d_p90_bes.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-27</td>
+<td>registry T0029</td>
+<td><code>ideas/registry/T0029_btc_trend_breakout_1d_n20_atr3.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-28</td>
+<td>registry T0031</td>
+<td><code>ideas/registry/T0031_mean_reversion_regime_r25_a20_4h_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-29</td>
+<td>registry T0033</td>
+<td><code>ideas/registry/T0033_carry_threshold_t3_h14_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-30</td>
+<td>registry T0034</td>
+<td><code>ideas/registry/T0034_carry_filter_sma200h_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-31</td>
+<td>registry T0035</td>
+<td><code>ideas/registry/T0035_funding_extremes_carry_w30d_p80_be.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-32</td>
+<td>registry T0036</td>
+<td><code>ideas/registry/T0036_btc_trend_breakout_1d_n50_low.yaml</code></td>
+</tr>
+<tr>
+<td>D-2026-45-33</td>
+<td>registry T0038</td>
+<td><code>ideas/registry/T0038_mean_reversion_regime_r25_a25_1h_b.yaml</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Skipped: on docs/IDEA_INTAKE.md's rejected list with no override row naming the idea. They stay unrun and run once an override row exists.</p>
+<ul>
+<li>T0004 <code>funding_extremes_fade_hi_h24</code>: R2 on the rejected list, no override row.</li>
+<li>T0006 <code>btc_trend_ema_e10x30_1d</code>: R6 on the rejected list, no override row.</li>
+<li>T0008 <code>funding_settlement_hour_s00_long_h2</code>: R9, R10 on the rejected list, no override row.</li>
+<li>T0012 <code>funding_extremes_fade_hi_h72</code>: R2 on the rejected list, no override row.</li>
+<li>T0014 <code>btc_trend_ema_e10x30_4h</code>: R6 on the rejected list, no override row.</li>
+<li>T0016 <code>funding_settlement_hour_s00_long_h4</code>: R9, R10 on the rejected list, no override row.</li>
+<li>T0020 <code>funding_extremes_fade_lo_h24</code>: R2 on the rejected list, no override row.</li>
+<li>T0022 <code>btc_trend_ema_e20x50_1d</code>: R6 on the rejected list, no override row.</li>
+<li>T0024 <code>funding_settlement_hour_s00_short_h2</code>: R9, R10 on the rejected list, no override row.</li>
+<li>T0028 <code>funding_extremes_fade_lo_h72</code>: R2 on the rejected list, no override row.</li>
+<li>T0030 <code>btc_trend_ema_e20x50_4h</code>: R6 on the rejected list, no override row.</li>
+<li>T0032 <code>funding_settlement_hour_s00_short_h4</code>: R9, R10 on the rejected list, no override row.</li>
+<li>T0037 <code>btc_trend_ema_e50x100_1d</code>: R6 on the rejected list, no override row.</li>
+</ul>
+<h2 id="level-1-every-idea">Level 1 — every idea</h2>
+<p>Return, max drawdown and Sharpe are in the idea's numeraire: USD for market-neutral ideas (benchmark cash), BTC units for directional ideas (benchmark HODL BTC, so 0 % means "as good as holding BTC").</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>id</th>
+<th>rule</th>
+<th>numeraire</th>
+<th style="text-align: right;">return</th>
+<th style="text-align: right;">max DD</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">worst year</th>
+<th style="text-align: right;">round trips</th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-2026-45-09</td>
+<td>Carry (H9f mechanics) on BTC, ETH, entry when the trailing 168 h mean funding is above a fixed 3 %/yr (not the cost breakeven), minimum hold 3 d</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">+18.43 %</td>
+<td style="text-align: right;">-0.50 %</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">+0.98 %</td>
+<td style="text-align: right;">13</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-10</td>
+<td>H9f carry on BTC, ETH, entries only while ADX(14) on 1h bars is below 20; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-72.35 %</td>
+<td style="text-align: right;">-72.35 %</td>
+<td style="text-align: right;">-13.39</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">-46.19 %</td>
+<td style="text-align: right;">516</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-11</td>
+<td>H9f carry on BTC, ETH, entries only while the latest hourly funding is above the 80th percentile of the last 7 days; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-233.39 %</td>
+<td style="text-align: right;">-233.39 %</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.2876</td>
+<td style="text-align: right;">-349.52 %</td>
+<td style="text-align: right;">1615</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-12</td>
+<td>Long BTC 1x on a close above the highest high of the previous 10 bars (daily bars), exit on a close below the lowest low of the previous N bars; cash otherwise</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-66.85 %</td>
+<td style="text-align: right;">-67.42 %</td>
+<td style="text-align: right;">-1.54</td>
+<td style="text-align: right;">0.9951</td>
+<td style="text-align: right;">-40.87 %</td>
+<td style="text-align: right;">15</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-13</td>
+<td>Long BTC when RSI(14) &lt; 25 while ADX(14) &lt; 20 (range regime), exit at the middle Bollinger band or a 2x ATR(14) stop (1h bars)</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-76.29 %</td>
+<td style="text-align: right;">-78.26 %</td>
+<td style="text-align: right;">-1.21</td>
+<td style="text-align: right;">0.9650</td>
+<td style="text-align: right;">-56.66 %</td>
+<td style="text-align: right;">13</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-14</td>
+<td>Carry (H9f mechanics) on BTC, ETH, SOL, entry when the trailing 168 h mean funding is above a fixed 3 %/yr (not the cost breakeven), minimum hold 3 d</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">+18.13 %</td>
+<td style="text-align: right;">-0.74 %</td>
+<td style="text-align: right;">10.75</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">+0.33 %</td>
+<td style="text-align: right;">23</td>
+<td><strong>SURVIVOR</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-15</td>
+<td>H9f carry on BTC, ETH, SOL, entries only while ADX(14) on 1h bars is below 20; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-83.32 %</td>
+<td style="text-align: right;">-83.32 %</td>
+<td style="text-align: right;">-10.91</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">-57.43 %</td>
+<td style="text-align: right;">727</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-16</td>
+<td>H9f carry on BTC, ETH, SOL, entries only while the latest hourly funding is above the 80th percentile of the last 7 days; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-92.80 %</td>
+<td style="text-align: right;">-99.89 %</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.2491</td>
+<td style="text-align: right;">-81.72 %</td>
+<td style="text-align: right;">2283</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-17</td>
+<td>Long BTC 1x on a close above the highest high of the previous 10 bars (daily bars), exit on a 3x ATR(14) trailing stop; cash otherwise</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-63.92 %</td>
+<td style="text-align: right;">-64.54 %</td>
+<td style="text-align: right;">-1.71</td>
+<td style="text-align: right;">0.9742</td>
+<td style="text-align: right;">-39.90 %</td>
+<td style="text-align: right;">12</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-18</td>
+<td>Long BTC, ETH when RSI(14) &lt; 25 while ADX(14) &lt; 20 (range regime), exit at the middle Bollinger band or a 2x ATR(14) stop (1h bars)</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-75.91 %</td>
+<td style="text-align: right;">-77.88 %</td>
+<td style="text-align: right;">-1.18</td>
+<td style="text-align: right;">0.9613</td>
+<td style="text-align: right;">-55.73 %</td>
+<td style="text-align: right;">17</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-19</td>
+<td>Carry (H9f mechanics) on BTC, ETH, entry when the trailing 168 h mean funding is above a fixed 3 %/yr (not the cost breakeven), minimum hold 7 d</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">+18.43 %</td>
+<td style="text-align: right;">-0.49 %</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">+0.99 %</td>
+<td style="text-align: right;">13</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-20</td>
+<td>H9f carry on BTC, ETH, entries only while ADX(14) on 1h bars is below 30; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-51.56 %</td>
+<td style="text-align: right;">-51.56 %</td>
+<td style="text-align: right;">-12.40</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">-30.73 %</td>
+<td style="text-align: right;">425</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-21</td>
+<td>H9f carry on BTC, ETH, entries only while the latest hourly funding is above the 90th percentile of the last 7 days; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-99.54 %</td>
+<td style="text-align: right;">-101.11 %</td>
+<td style="text-align: right;">-0.56</td>
+<td style="text-align: right;">0.7551</td>
+<td style="text-align: right;">-99.51 %</td>
+<td style="text-align: right;">1324</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-22</td>
+<td>Long BTC 1x on a close above the highest high of the previous 20 bars (daily bars), exit on a close below the lowest low of the previous N bars; cash otherwise</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-60.56 %</td>
+<td style="text-align: right;">-64.15 %</td>
+<td style="text-align: right;">-1.35</td>
+<td style="text-align: right;">0.9779</td>
+<td style="text-align: right;">-50.54 %</td>
+<td style="text-align: right;">8</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-23</td>
+<td>Long BTC when RSI(14) &lt; 25 while ADX(14) &lt; 20 (range regime), exit at the middle Bollinger band or a 2x ATR(14) stop (4h bars)</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-73.99 %</td>
+<td style="text-align: right;">-77.50 %</td>
+<td style="text-align: right;">-1.10</td>
+<td style="text-align: right;">0.9468</td>
+<td style="text-align: right;">-54.81 %</td>
+<td style="text-align: right;">1</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-24</td>
+<td>Carry (H9f mechanics) on BTC, ETH, SOL, entry when the trailing 168 h mean funding is above a fixed 3 %/yr (not the cost breakeven), minimum hold 7 d</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">+18.13 %</td>
+<td style="text-align: right;">-0.74 %</td>
+<td style="text-align: right;">10.76</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">+0.33 %</td>
+<td style="text-align: right;">23</td>
+<td><strong>SURVIVOR</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-25</td>
+<td>H9f carry on BTC, ETH, SOL, entries only while ADX(14) on 1h bars is below 30; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-64.27 %</td>
+<td style="text-align: right;">-64.27 %</td>
+<td style="text-align: right;">-12.09</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">-40.92 %</td>
+<td style="text-align: right;">624</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-26</td>
+<td>H9f carry on BTC, ETH, SOL, entries only while the latest hourly funding is above the 90th percentile of the last 7 days; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-46.38 %</td>
+<td style="text-align: right;">-94.71 %</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.0940</td>
+<td style="text-align: right;">-57.15 %</td>
+<td style="text-align: right;">1878</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-27</td>
+<td>Long BTC 1x on a close above the highest high of the previous 20 bars (daily bars), exit on a 3x ATR(14) trailing stop; cash otherwise</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-58.98 %</td>
+<td style="text-align: right;">-62.79 %</td>
+<td style="text-align: right;">-1.20</td>
+<td style="text-align: right;">0.9681</td>
+<td style="text-align: right;">-46.11 %</td>
+<td style="text-align: right;">9</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-28</td>
+<td>Long BTC, ETH when RSI(14) &lt; 25 while ADX(14) &lt; 20 (range regime), exit at the middle Bollinger band or a 2x ATR(14) stop (4h bars)</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-73.62 %</td>
+<td style="text-align: right;">-77.47 %</td>
+<td style="text-align: right;">-1.09</td>
+<td style="text-align: right;">0.9442</td>
+<td style="text-align: right;">-54.81 %</td>
+<td style="text-align: right;">3</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-29</td>
+<td>Carry (H9f mechanics) on BTC, ETH, entry when the trailing 168 h mean funding is above a fixed 3 %/yr (not the cost breakeven), minimum hold 14 d</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">+18.83 %</td>
+<td style="text-align: right;">-0.39 %</td>
+<td style="text-align: right;">12.49</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">+1.12 %</td>
+<td style="text-align: right;">11</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-30</td>
+<td>H9f carry on BTC, ETH, entries only while the 1h close is above its SMA200; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-63.81 %</td>
+<td style="text-align: right;">-63.84 %</td>
+<td style="text-align: right;">-9.14</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">-36.77 %</td>
+<td style="text-align: right;">510</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-31</td>
+<td>H9f carry on BTC, ETH, entries only while the latest hourly funding is above the 80th percentile of the last 30 days; a held pair exits when it is not</td>
+<td>USD vs cash</td>
+<td style="text-align: right;">-99.34 %</td>
+<td style="text-align: right;">-99.96 %</td>
+<td style="text-align: right;">-0.14</td>
+<td style="text-align: right;">0.5711</td>
+<td style="text-align: right;">-99.52 %</td>
+<td style="text-align: right;">1313</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-32</td>
+<td>Long BTC 1x on a close above the highest high of the previous 50 bars (daily bars), exit on a close below the lowest low of the previous N bars; cash otherwise</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-57.43 %</td>
+<td style="text-align: right;">-60.04 %</td>
+<td style="text-align: right;">-1.11</td>
+<td style="text-align: right;">0.9523</td>
+<td style="text-align: right;">-34.42 %</td>
+<td style="text-align: right;">3</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-33</td>
+<td>Long BTC when RSI(14) &lt; 25 while ADX(14) &lt; 25 (range regime), exit at the middle Bollinger band or a 2x ATR(14) stop (1h bars)</td>
+<td>BTC vs HODL</td>
+<td style="text-align: right;">-75.80 %</td>
+<td style="text-align: right;">-78.51 %</td>
+<td style="text-align: right;">-1.19</td>
+<td style="text-align: right;">0.9587</td>
+<td style="text-align: right;">-55.96 %</td>
+<td style="text-align: right;">26</td>
+<td><strong>out</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Why each idea is out:</p>
+<ul>
+<li>D-2026-45-09 (carry_threshold_t3_h3_be): 13 round trips &lt; 20.</li>
+<li>D-2026-45-10 (carry_filter_adx20_be): p_up 1.0000 not significant under BH-FDR q = 0.1; a calendar year at -46.19 % &lt; -2 %.</li>
+<li>D-2026-45-11 (funding_extremes_carry_w7d_p80_be): p_up 0.2876 not significant under BH-FDR q = 0.1; a calendar year at -349.52 % &lt; -2 %.</li>
+<li>D-2026-45-12 (btc_trend_breakout_1d_n10_low): p_up 0.9951 not significant under BH-FDR q = 0.1; a calendar year at -40.87 % &lt; -2 %; 15 round trips &lt; 20.</li>
+<li>D-2026-45-13 (mean_reversion_regime_r25_a20_1h_b): p_up 0.9650 not significant under BH-FDR q = 0.1; a calendar year at -56.66 % &lt; -2 %; 13 round trips &lt; 20.</li>
+<li>D-2026-45-15 (carry_filter_adx20_bes): p_up 1.0000 not significant under BH-FDR q = 0.1; a calendar year at -57.43 % &lt; -2 %.</li>
+<li>D-2026-45-16 (funding_extremes_carry_w7d_p80_bes): p_up 0.2491 not significant under BH-FDR q = 0.1; a calendar year at -81.72 % &lt; -2 %.</li>
+<li>D-2026-45-17 (btc_trend_breakout_1d_n10_atr3): p_up 0.9742 not significant under BH-FDR q = 0.1; a calendar year at -39.90 % &lt; -2 %; 12 round trips &lt; 20.</li>
+<li>D-2026-45-18 (mean_reversion_regime_r25_a20_1h_be): p_up 0.9613 not significant under BH-FDR q = 0.1; a calendar year at -55.73 % &lt; -2 %; 17 round trips &lt; 20.</li>
+<li>D-2026-45-19 (carry_threshold_t3_h7_be): 13 round trips &lt; 20.</li>
+<li>D-2026-45-20 (carry_filter_adx30_be): p_up 1.0000 not significant under BH-FDR q = 0.1; a calendar year at -30.73 % &lt; -2 %.</li>
+<li>D-2026-45-21 (funding_extremes_carry_w7d_p90_be): p_up 0.7551 not significant under BH-FDR q = 0.1; a calendar year at -99.51 % &lt; -2 %.</li>
+<li>D-2026-45-22 (btc_trend_breakout_1d_n20_low): p_up 0.9779 not significant under BH-FDR q = 0.1; a calendar year at -50.54 % &lt; -2 %; 8 round trips &lt; 20.</li>
+<li>D-2026-45-23 (mean_reversion_regime_r25_a20_4h_b): p_up 0.9468 not significant under BH-FDR q = 0.1; a calendar year at -54.81 % &lt; -2 %; 1 round trips &lt; 20.</li>
+<li>D-2026-45-25 (carry_filter_adx30_bes): p_up 1.0000 not significant under BH-FDR q = 0.1; a calendar year at -40.92 % &lt; -2 %.</li>
+<li>D-2026-45-26 (funding_extremes_carry_w7d_p90_bes): p_up 0.0940 not significant under BH-FDR q = 0.1; a calendar year at -57.15 % &lt; -2 %.</li>
+<li>D-2026-45-27 (btc_trend_breakout_1d_n20_atr3): p_up 0.9681 not significant under BH-FDR q = 0.1; a calendar year at -46.11 % &lt; -2 %; 9 round trips &lt; 20.</li>
+<li>D-2026-45-28 (mean_reversion_regime_r25_a20_4h_be): p_up 0.9442 not significant under BH-FDR q = 0.1; a calendar year at -54.81 % &lt; -2 %; 3 round trips &lt; 20.</li>
+<li>D-2026-45-29 (carry_threshold_t3_h14_be): 11 round trips &lt; 20.</li>
+<li>D-2026-45-30 (carry_filter_sma200h_be): p_up 1.0000 not significant under BH-FDR q = 0.1; a calendar year at -36.77 % &lt; -2 %.</li>
+<li>D-2026-45-31 (funding_extremes_carry_w30d_p80_be): p_up 0.5711 not significant under BH-FDR q = 0.1; a calendar year at -99.52 % &lt; -2 %.</li>
+<li>D-2026-45-32 (btc_trend_breakout_1d_n50_low): p_up 0.9523 not significant under BH-FDR q = 0.1; a calendar year at -34.42 % &lt; -2 %; 3 round trips &lt; 20.</li>
+<li>D-2026-45-33 (mean_reversion_regime_r25_a25_1h_b): p_up 0.9587 not significant under BH-FDR q = 0.1; a calendar year at -55.96 % &lt; -2 %.</li>
+</ul>
+<h2 id="survivors-and-level-2">Survivors and level 2</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>id</th>
+<th>idea</th>
+<th>verdict</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">return</th>
+<th style="text-align: right;">benchmark</th>
+<th style="text-align: right;">max DD</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">round trips (min)</th>
+<th style="text-align: right;">worst quarter</th>
+<th>why not</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-2026-45-14</td>
+<td>carry_threshold_t3_h3_bes</td>
+<td><strong>FAIL</strong></td>
+<td style="text-align: right;">361</td>
+<td style="text-align: right;">+0.61 %</td>
+<td style="text-align: right;">+0.00 %</td>
+<td style="text-align: right;">-1.51 %</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">0.3047</td>
+<td style="text-align: right;">23 (10)</td>
+<td style="text-align: right;">2026Q2 -0.99 %</td>
+<td>p_up 0.3047 &gt; 0.1</td>
+</tr>
+<tr>
+<td>D-2026-45-24</td>
+<td>carry_threshold_t3_h7_bes</td>
+<td><strong>FAIL</strong></td>
+<td style="text-align: right;">361</td>
+<td style="text-align: right;">+0.57 %</td>
+<td style="text-align: right;">+0.00 %</td>
+<td style="text-align: right;">-1.54 %</td>
+<td style="text-align: right;">1.06</td>
+<td style="text-align: right;">0.3162</td>
+<td style="text-align: right;">23 (10)</td>
+<td style="text-align: right;">2026Q2 -1.02 %</td>
+<td>p_up 0.3162 &gt; 0.1</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quarters (net return, numeraire): D-2026-45-14: 2025Q3 +1.93 %, 2025Q4 +0.00 %, 2026Q1 -0.31 %, 2026Q2 -0.99 %; D-2026-45-24: 2025Q3 +1.93 %, 2025Q4 -0.01 %, 2026Q1 -0.31 %, 2026Q2 -1.02 %.</p>
+<h2 id="runtime">Runtime</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>step</th>
+<th style="text-align: right;">seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>carry_threshold_t3_h3_be</td>
+<td style="text-align: right;">19.8</td>
+</tr>
+<tr>
+<td>carry_filter_adx20_be</td>
+<td style="text-align: right;">9.5</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p80_be</td>
+<td style="text-align: right;">11.8</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n10_low</td>
+<td style="text-align: right;">0.9</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_1h_b</td>
+<td style="text-align: right;">3.1</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h3_bes</td>
+<td style="text-align: right;">27.4</td>
+</tr>
+<tr>
+<td>carry_filter_adx20_bes</td>
+<td style="text-align: right;">13.1</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p80_bes</td>
+<td style="text-align: right;">16.1</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n10_atr3</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_1h_be</td>
+<td style="text-align: right;">6.0</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h7_be</td>
+<td style="text-align: right;">19.5</td>
+</tr>
+<tr>
+<td>carry_filter_adx30_be</td>
+<td style="text-align: right;">14.6</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p90_be</td>
+<td style="text-align: right;">9.6</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n20_low</td>
+<td style="text-align: right;">0.9</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_4h_b</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h7_bes</td>
+<td style="text-align: right;">27.7</td>
+</tr>
+<tr>
+<td>carry_filter_adx30_bes</td>
+<td style="text-align: right;">20.2</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p90_bes</td>
+<td style="text-align: right;">13.0</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n20_atr3</td>
+<td style="text-align: right;">0.9</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_4h_be</td>
+<td style="text-align: right;">1.9</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h14_be</td>
+<td style="text-align: right;">19.7</td>
+</tr>
+<tr>
+<td>carry_filter_sma200h_be</td>
+<td style="text-align: right;">12.7</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w30d_p80_be</td>
+<td style="text-align: right;">11.1</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n50_low</td>
+<td style="text-align: right;">0.9</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a25_1h_b</td>
+<td style="text-align: right;">3.2</td>
+</tr>
+<tr>
+<td>L2 carry_threshold_t3_h3_bes</td>
+<td style="text-align: right;">12.3</td>
+</tr>
+<tr>
+<td>L2 carry_threshold_t3_h7_bes</td>
+<td style="text-align: right;">12.5</td>
+</tr>
+<tr>
+<td>batch</td>
+<td style="text-align: right;">290.4</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="per-coin-round-trips-and-costs-level-1">Per-coin round trips and costs (level 1)</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>idea</th>
+<th>round trips per coin</th>
+<th>details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>carry_threshold_t3_h3_be</td>
+<td>BTC 5, ETH 8</td>
+<td>entries: 15; liquidations: 0; rebalances: 9; filter_exits: 0</td>
+</tr>
+<tr>
+<td>carry_filter_adx20_be</td>
+<td>BTC 255, ETH 261</td>
+<td>entries: 516; liquidations: 0; rebalances: 0; filter_exits: 516</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p80_be</td>
+<td>BTC 783, ETH 832</td>
+<td>entries: 1616; liquidations: 0; rebalances: 0; filter_exits: 1615</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n10_low</td>
+<td>BTC 15</td>
+<td>BTC: funding_usd 428.24, fees_usd 16.17, slippage_usd 3.59, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_1h_b</td>
+<td>BTC 13</td>
+<td>BTC: funding_usd 4.16, fees_usd 11.30, slippage_usd 2.51, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h3_bes</td>
+<td>BTC 5, ETH 8, SOL 10</td>
+<td>entries: 26; liquidations: 0; rebalances: 20; filter_exits: 0</td>
+</tr>
+<tr>
+<td>carry_filter_adx20_bes</td>
+<td>BTC 255, ETH 261, SOL 211</td>
+<td>entries: 727; liquidations: 0; rebalances: 0; filter_exits: 727</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p80_bes</td>
+<td>BTC 783, ETH 832, SOL 668</td>
+<td>entries: 2285; liquidations: 0; rebalances: 1; filter_exits: 2283</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n10_atr3</td>
+<td>BTC 12</td>
+<td>BTC: funding_usd 489.40, fees_usd 13.71, slippage_usd 3.05, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_1h_be</td>
+<td>BTC 13, ETH 4</td>
+<td>BTC: funding_usd 4.16, fees_usd 11.30, slippage_usd 2.51, reduces 0, pauses 0; ETH: funding_usd -0.29, fees_usd 3.53, slippage_usd 2.35, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h7_be</td>
+<td>BTC 5, ETH 8</td>
+<td>entries: 15; liquidations: 0; rebalances: 9; filter_exits: 0</td>
+</tr>
+<tr>
+<td>carry_filter_adx30_be</td>
+<td>BTC 228, ETH 197</td>
+<td>entries: 426; liquidations: 0; rebalances: 0; filter_exits: 425</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p90_be</td>
+<td>BTC 646, ETH 678</td>
+<td>entries: 1325; liquidations: 0; rebalances: 0; filter_exits: 1324</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n20_low</td>
+<td>BTC 8</td>
+<td>BTC: funding_usd 552.83, fees_usd 9.65, slippage_usd 2.14, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_4h_b</td>
+<td>BTC 1</td>
+<td>BTC: funding_usd -0.00, fees_usd 0.92, slippage_usd 0.20, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h7_bes</td>
+<td>BTC 5, ETH 8, SOL 10</td>
+<td>entries: 26; liquidations: 0; rebalances: 20; filter_exits: 0</td>
+</tr>
+<tr>
+<td>carry_filter_adx30_bes</td>
+<td>BTC 228, ETH 197, SOL 199</td>
+<td>entries: 625; liquidations: 0; rebalances: 0; filter_exits: 624</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p90_bes</td>
+<td>BTC 646, ETH 678, SOL 554</td>
+<td>entries: 1880; liquidations: 0; rebalances: 0; filter_exits: 1878</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n20_atr3</td>
+<td>BTC 9</td>
+<td>BTC: funding_usd 544.68, fees_usd 11.54, slippage_usd 2.57, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_4h_be</td>
+<td>BTC 1, ETH 2</td>
+<td>BTC: funding_usd -0.00, fees_usd 0.92, slippage_usd 0.20, reduces 0, pauses 0; ETH: funding_usd 1.31, fees_usd 1.87, slippage_usd 1.25, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h14_be</td>
+<td>BTC 4, ETH 7</td>
+<td>entries: 13; liquidations: 0; rebalances: 9; filter_exits: 0</td>
+</tr>
+<tr>
+<td>carry_filter_sma200h_be</td>
+<td>BTC 242, ETH 268</td>
+<td>entries: 511; liquidations: 0; rebalances: 2; filter_exits: 509</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w30d_p80_be</td>
+<td>BTC 604, ETH 709</td>
+<td>entries: 1314; liquidations: 0; rebalances: 2; filter_exits: 1313</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n50_low</td>
+<td>BTC 3</td>
+<td>BTC: funding_usd 462.31, fees_usd 3.97, slippage_usd 0.88, reduces 0, pauses 0</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a25_1h_b</td>
+<td>BTC 26</td>
+<td>BTC: funding_usd 6.20, fees_usd 22.65, slippage_usd 5.03, reduces 0, pauses 0</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="calendar-years-level-1-numeraire-return">Calendar years (level 1, numeraire return %)</h2>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>idea</th>
+<th style="text-align: right;">2023</th>
+<th style="text-align: right;">2024</th>
+<th style="text-align: right;">2025</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>carry_threshold_t3_h3_be</td>
+<td style="text-align: right;">+5.54</td>
+<td style="text-align: right;">+11.13</td>
+<td style="text-align: right;">+0.98</td>
+</tr>
+<tr>
+<td>carry_filter_adx20_be</td>
+<td style="text-align: right;">-18.13</td>
+<td style="text-align: right;">-46.19</td>
+<td style="text-align: right;">-37.24</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p80_be</td>
+<td style="text-align: right;">-64.83</td>
+<td style="text-align: right;">-349.52</td>
+<td style="text-align: right;">+52.00</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n10_low</td>
+<td style="text-align: right;">-29.72</td>
+<td style="text-align: right;">-40.87</td>
+<td style="text-align: right;">-20.22</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_1h_b</td>
+<td style="text-align: right;">-38.58</td>
+<td style="text-align: right;">-56.66</td>
+<td style="text-align: right;">-10.93</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h3_bes</td>
+<td style="text-align: right;">+5.48</td>
+<td style="text-align: right;">+11.62</td>
+<td style="text-align: right;">+0.33</td>
+</tr>
+<tr>
+<td>carry_filter_adx20_bes</td>
+<td style="text-align: right;">-18.14</td>
+<td style="text-align: right;">-57.43</td>
+<td style="text-align: right;">-52.14</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p80_bes</td>
+<td style="text-align: right;">-72.54</td>
+<td style="text-align: right;">-81.72</td>
+<td style="text-align: right;">+43.35</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n10_atr3</td>
+<td style="text-align: right;">-27.39</td>
+<td style="text-align: right;">-39.90</td>
+<td style="text-align: right;">-17.32</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_1h_be</td>
+<td style="text-align: right;">-38.07</td>
+<td style="text-align: right;">-55.73</td>
+<td style="text-align: right;">-12.16</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h7_be</td>
+<td style="text-align: right;">+5.53</td>
+<td style="text-align: right;">+11.13</td>
+<td style="text-align: right;">+0.99</td>
+</tr>
+<tr>
+<td>carry_filter_adx30_be</td>
+<td style="text-align: right;">-12.11</td>
+<td style="text-align: right;">-30.73</td>
+<td style="text-align: right;">-20.44</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p90_be</td>
+<td style="text-align: right;">-52.77</td>
+<td style="text-align: right;">-99.51</td>
+<td style="text-align: right;">+98.36</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n20_low</td>
+<td style="text-align: right;">-10.24</td>
+<td style="text-align: right;">-50.54</td>
+<td style="text-align: right;">-11.17</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_4h_b</td>
+<td style="text-align: right;">-34.09</td>
+<td style="text-align: right;">-54.81</td>
+<td style="text-align: right;">-12.67</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h7_bes</td>
+<td style="text-align: right;">+5.48</td>
+<td style="text-align: right;">+11.63</td>
+<td style="text-align: right;">+0.33</td>
+</tr>
+<tr>
+<td>carry_filter_adx30_bes</td>
+<td style="text-align: right;">-13.69</td>
+<td style="text-align: right;">-40.92</td>
+<td style="text-align: right;">-29.92</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w7d_p90_bes</td>
+<td style="text-align: right;">-57.15</td>
+<td style="text-align: right;">-28.56</td>
+<td style="text-align: right;">+75.17</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n20_atr3</td>
+<td style="text-align: right;">-10.04</td>
+<td style="text-align: right;">-46.11</td>
+<td style="text-align: right;">-15.38</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a20_4h_be</td>
+<td style="text-align: right;">-33.15</td>
+<td style="text-align: right;">-54.81</td>
+<td style="text-align: right;">-12.67</td>
+</tr>
+<tr>
+<td>carry_threshold_t3_h14_be</td>
+<td style="text-align: right;">+5.75</td>
+<td style="text-align: right;">+11.13</td>
+<td style="text-align: right;">+1.12</td>
+</tr>
+<tr>
+<td>carry_filter_sma200h_be</td>
+<td style="text-align: right;">-14.31</td>
+<td style="text-align: right;">-36.77</td>
+<td style="text-align: right;">-33.21</td>
+</tr>
+<tr>
+<td>funding_extremes_carry_w30d_p80_be</td>
+<td style="text-align: right;">-44.57</td>
+<td style="text-align: right;">-99.52</td>
+<td style="text-align: right;">+145.73</td>
+</tr>
+<tr>
+<td>btc_trend_breakout_1d_n50_low</td>
+<td style="text-align: right;">-34.42</td>
+<td style="text-align: right;">-25.68</td>
+<td style="text-align: right;">-12.66</td>
+</tr>
+<tr>
+<td>mean_reversion_regime_r25_a25_1h_b</td>
+<td style="text-align: right;">-38.91</td>
+<td style="text-align: right;">-55.96</td>
+<td style="text-align: right;">-10.04</td>
+</tr>
+</tbody>
+</table></div>
+</main>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>a8e15ab</code> · updated 2026-11-05<br>
+Generated from a private research repository. Nothing here is investment advice.</footer>
+
+</body></html>
