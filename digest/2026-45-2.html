@@ -982,8 +982,90 @@
 </tr>
 </tbody>
 </table></div>
+<h2 id="correction-2026-11-05-1713-utc-ruin-rule-level-1-five-ideas">Correction 2026-11-05 17:13 UTC: ruin rule (level 1, five ideas)</h2>
+<p>Ruin rule (2026-11-05): equity cannot go below zero. The carry engine used to let a coin's $2,000 sleeve keep paying fees, slippage and the stress haircut on its fixed $1,000 legs after its equity was gone; the daily returns across zero then compounded below −100 %. Now a sleeve whose equity (book + P&amp;L) reaches ≤ 0 is ruined: its positions are written off at the mark, it never trades again, its return that day is −100 % and it leaves the pooled mean; when every sleeve is ruined the idea's return is −100 % (backtest/multi_pair_engine.py step 6, lab/carry.py, tests/test_ruin.py). Round trips no longer count trades made after a sleeve's ruin.</p>
+<p>All 33 ideas of week 2026-45 were re-run on level 1 with the rule as a check: 28 never reach zero and reproduce their recorded p_up, worst year and round trips exactly; only the five below were ruined, all <code>funding_extremes_carry</code>. BH-FDR q = 0.1 recomputed over D-2026-45-09..33 with the corrected p-values: significant 09, 14, 19, 24, 29 (p_up ≤ 0.00000); survivors unchanged (D-2026-45-14, D-2026-45-24). Level 2 untouched (its two runs had max DD −1.5 %, far from ruin).</p>
+<p><strong>Verdicts: unchanged.</strong> All five were out and stay out.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>id</th>
+<th>idea</th>
+<th>return was → now</th>
+<th>max DD was → now</th>
+<th>Sharpe was → now</th>
+<th>p_up was → now</th>
+<th>worst year was → now</th>
+<th>round trips was → now</th>
+<th>ruined (UTC)</th>
+<th>verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-2026-45-11</td>
+<td>funding_extremes_carry_w7d_p80_be</td>
+<td>-233.39 % → -100.00 %</td>
+<td>-233.39 % → -100.00 %</td>
+<td>0.39 → -3.72</td>
+<td>0.2876 → 0.9704</td>
+<td>-349.52 % → -100.00 %</td>
+<td>1615 → 703</td>
+<td>ETH 2024-02-26 16:00, BTC 2024-06-03 20:00</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-16</td>
+<td>funding_extremes_carry_w7d_p80_bes</td>
+<td>-92.80 % → -100.00 %</td>
+<td>-99.89 % → -100.00 %</td>
+<td>0.44 → -4.15</td>
+<td>0.2491 → 0.9915</td>
+<td>-81.72 % → -100.00 %</td>
+<td>2283 → 920</td>
+<td>SOL 2024-02-10 16:00, ETH 2024-02-26 16:00, BTC 2024-06-03 20:00</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-21</td>
+<td>funding_extremes_carry_w7d_p90_be</td>
+<td>-99.54 % → -100.00 %</td>
+<td>-101.11 % → -100.00 %</td>
+<td>-0.56 → -3.81</td>
+<td>0.7551 → 0.9729</td>
+<td>-99.51 % → -100.00 %</td>
+<td>1324 → 697</td>
+<td>ETH 2024-05-02 17:00, BTC 2024-09-06 09:00</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-26</td>
+<td>funding_extremes_carry_w7d_p90_bes</td>
+<td>-46.38 % → -100.00 %</td>
+<td>-94.71 % → -100.00 %</td>
+<td>0.52 → -4.25</td>
+<td>0.0940 → 0.9959</td>
+<td>-57.15 % → -100.00 %</td>
+<td>1878 → 913</td>
+<td>SOL 2024-03-25 23:00, ETH 2024-05-02 17:00, BTC 2024-09-06 09:00</td>
+<td><strong>out</strong></td>
+</tr>
+<tr>
+<td>D-2026-45-31</td>
+<td>funding_extremes_carry_w30d_p80_be</td>
+<td>-99.34 % → -100.00 %</td>
+<td>-99.96 % → -100.00 %</td>
+<td>-0.14 → -3.58</td>
+<td>0.5711 → 0.9901</td>
+<td>-99.52 % → -100.00 %</td>
+<td>1313 → 719</td>
+<td>ETH 2024-05-27 08:00, BTC 2024-11-14 12:00</td>
+<td><strong>out</strong></td>
+</tr>
+</tbody>
+</table></div>
 </main>
-<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>a8e15ab</code> · updated 2026-11-05<br>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>61b8f88</code> · updated 2026-11-05<br>
 Generated from a private research repository. Nothing here is investment advice.</footer>
 
 </body></html>
