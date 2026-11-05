@@ -6,6 +6,7 @@
 <main>
 <h1 id="strategy-loop-batch-2026-45">Strategy loop — batch 2026-45</h1>
 <p>This week the loop tested 8 trading ideas, each with one fixed set of settings written down before it ran, on market data from May 2023 to June 2025. 1 of them did well enough, after allowing for the luck that comes from testing many ideas at once, to earn a second test on a later year of data (July 2025 to June 2026) that the first test never looked at. No idea passed the second test, so nothing new goes forward to paper trading. Ideas that only trade one direction are judged in bitcoin terms, against simply holding bitcoin, which rose strongly over this period; ideas that are hedged are judged in dollars against holding cash. A failed idea is a normal outcome here: the point of the loop is to reject ideas cheaply and honestly.</p>
+<p><strong>Note on directional ideas:</strong> they are judged in BTC, against simply holding BTC (the lab's north star). Over this data BTC rose about 4×, so any time out of the market costs a lot of BTC: a directional idea that sat in cash shows a large BTC-denominated loss even if it lost few dollars. That is intended.</p>
 <p><em>Generated 2026-11-05 14:16 UTC by <code>lab/loop.py</code>. Level 1: 2023-05-12 → 2025-06-30, <code>daily_returns</code> v2 statistic, BH-FDR q = 0.1 over the batch (p_up ≤ 0.00000). Level 2: 2025-07-01 → 2026-06-28, full gate (VALIDATION_GATE 3.7), Bonferroni 0.10 / m. Ideas and their exact parameters: docs/DISCOVERY_LEDGER.md, batch 2026-45.</em></p>
 <h2 id="level-1-every-idea">Level 1 — every idea</h2>
 <p>Return, max drawdown and Sharpe are in the idea's numeraire: USD for market-neutral ideas (benchmark cash), BTC units for directional ideas (benchmark HODL BTC, so 0 % means "as good as holding BTC").</p>
@@ -302,8 +303,59 @@
 </tr>
 </tbody>
 </table></div>
+<h2 id="level-2-re-run-under-the-rule-of-2026-11-05-2026-11-05-1432-utc">Level 2 re-run under the rule of 2026-11-05 (2026-11-05 14:32 UTC)</h2>
+<p>VALIDATION_GATE.md section 7 replaces the full-gate level 2 above, which could only return INSUFFICIENT_DATA on a one-year window. Level 2 is now recorded in docs/DISCOVERY_LEDGER.md only; the hypothesis-ledger row it produced (H14) is marked superseded.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>id</th>
+<th>idea</th>
+<th>verdict</th>
+<th style="text-align: right;">days</th>
+<th style="text-align: right;">return</th>
+<th style="text-align: right;">benchmark</th>
+<th style="text-align: right;">max DD</th>
+<th style="text-align: right;">Sharpe</th>
+<th style="text-align: right;">p_up</th>
+<th style="text-align: right;">round trips (min)</th>
+<th style="text-align: right;">worst quarter</th>
+<th>why not</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-2026-45-03</td>
+<td>carry_h9f_btc_eth_sol</td>
+<td><strong>FAIL</strong></td>
+<td style="text-align: right;">361</td>
+<td style="text-align: right;">+1.38 %</td>
+<td style="text-align: right;">+0.00 %</td>
+<td style="text-align: right;">-0.89 %</td>
+<td style="text-align: right;">3.17</td>
+<td style="text-align: right;">0.1011</td>
+<td style="text-align: right;">17 (10)</td>
+<td style="text-align: right;">2026Q2 -0.43 %</td>
+<td>p_up 0.1011 &gt; 0.1</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quarters (net return, numeraire): D-2026-45-03: 2025Q3 +1.88 %, 2025Q4 +0.16 %, 2026Q1 -0.22 %, 2026Q2 -0.43 %.</p>
+<div class="wide"><table>
+<thead>
+<tr>
+<th>step</th>
+<th style="text-align: right;">seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L2 carry_h9f_btc_eth_sol</td>
+<td style="text-align: right;">7.9</td>
+</tr>
+</tbody>
+</table></div>
 </main>
-<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>cd205b9</code> · updated 2026-11-05<br>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>4d8103b</code> · updated 2026-11-05<br>
 Generated from a private research repository. Nothing here is investment advice.</footer>
 
 </body></html>

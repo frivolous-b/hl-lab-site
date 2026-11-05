@@ -956,8 +956,48 @@ They are binding for step 2 and later.</p>
 <li><strong>Regime classifier fixed:</strong> the 200-day SMA of daily closes plus
    its slope (20 daily bars), computed at bar close. See 3.5.</li>
 </ol>
+<hr>
+<h2 id="7-strategy-loop-level-2-added-2026-11-05-owner-decision">7. Strategy-loop level 2 (added 2026-11-05, owner decision)</h2>
+<p><strong>Gate change, recorded openly.</strong> The strategy loop (<code>lab/loop.py</code>,
+<span class="muted">DISCOVERY_LEDGER.md</span>) discovers on 2023-05-12 →
+2025-06-30 and confirms on 2025-07-01 → 2026-06-28: the only data its
+level 1 never saw, <strong>one year</strong>. Section 3.7 needs 3 years
+(<code>MIN_DAYS_DAILY</code> = 1,095) before it grades anything, so a loop
+confirmation under 3.7 could only ever be INSUFFICIENT_DATA (batch
+2026-45, H14). This section adds a level-2 rule for loop ideas. It does
+not change sections 3.1-3.7, which still grade every hypothesis
+registered in the ledger.</p>
+<p><strong>Rule</strong> (<code>lab/level2.py</code>, constants frozen). On the level-2 window,
+with the idea's daily series in its numeraire (USD against cash for a
+market-neutral idea, BTC units against HODL BTC for a directional one),
+the idea PASSes only if all five hold:</p>
+<ol>
+<li>its total return over the window is greater than the benchmark's;</li>
+<li><code>p_up</code> ≤ 0.10, one-sided, on the <code>daily_returns</code> v2 statistic (3.7:
+   circular block bootstrap of the Sharpe difference, block 20 days,
+   B = 10,000, seed 0). α = 0.10 is not adjusted (owner decision);</li>
+<li>no calendar quarter with at least 30 days in the window has a net
+   return below −2 %;</li>
+<li>its max drawdown is strictly within the 10 % cap (|max DD| &lt; 10 %),
+   in its numeraire;</li>
+<li>it has at least <code>ceil(min_trades × 362 / 781)</code> round trips: the
+   idea's level-1 minimum scaled by the calendar lengths of the two
+   windows (level 2: 362 days, level 1: 781 days; 20 → 10).</li>
+</ol>
+<p>Otherwise FAIL.</p>
+<p><strong>Recording.</strong> Level 2 is registered (before the run) and recorded
+(after it) in DISCOVERY_LEDGER.md only. A level-2 PASS is a paper-run
+candidate. It is appended to <a href="ledger.html">HYPOTHESIS_LEDGER.md</a>,
+and so raises m, only when the owner approves its paper run; the paper
+run is its out-of-sample test. A candidate that matches the rejected
+list of <span class="muted">IDEA_INTAKE.md</span> also needs an override row there
+first (intake rule 4).</p>
+<p><strong>H14.</strong> The loop's first survivor was registered as H14 under the
+earlier design and graded INSUFFICIENT_DATA under 3.7. It is superseded:
+moved to discovery as D-2026-45-03 and re-run under this rule. H14 still
+counts toward m (m only grows).</p>
 </main>
-<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>cd205b9</code> · updated 2026-11-05<br>
+<footer><a href="https://github.com/frivolous-b">Ivo Karabashev · github.com/frivolous-b</a> · built from commit <code>4d8103b</code> · updated 2026-11-05<br>
 Generated from a private research repository. Nothing here is investment advice.</footer>
 
 </body></html>
